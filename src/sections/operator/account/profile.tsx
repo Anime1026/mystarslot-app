@@ -16,14 +16,18 @@ import Divider from '@mui/material/Divider';
 
 // hooks
 import { useAuthContext } from 'src/auth/hooks';
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+import { useRouter } from 'src/routes/hooks';
+
+// apis
+import { getInOutAmount, update } from 'src/api';
+
 // utils
 import { fData } from 'src/utils/format-number';
+import { paths } from 'src/routes/paths';
 // components
 import { useSnackbar } from 'src/components/snackbar';
 import Scrollbar from 'src/components/scrollbar';
 import { IUserItem } from 'src/types/user';
-import { update } from 'src/api';
 import FormProvider, { RHFTextField, RHFUploadAvatar, RHFSelect } from 'src/components/hook-form';
 
 import { useLocation } from 'react-router-dom';
@@ -35,8 +39,9 @@ import TotalCredit from './account-profile/total-credit';
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useAuthContext();
+  const { user, getMe } = useAuthContext();
   const location = useLocation();
   const params: IUserItem = location.state;
 
@@ -45,16 +50,29 @@ export default function AccountGeneral() {
   // add credit
   const [values, setCreditAdd] = useState(params.balance);
   const [fido, setFido] = useState(Number(params.fidoAmount));
+  const [inAmount, setInAmount] = useState(0);
+  const [outAmount, setOutAmount] = useState(0);
   const [availableBalance, setAvailable] = useState(0);
   const [availableFido, setAvaliableFido] = useState(0);
-  const availableCredit = 150;
 
   useEffect(() => {
     if (user) {
-      setAvailable(user.balance);
-      setAvaliableFido(user.fido_amount);
+      setAvailable(user.balance + params.balance);
+      setAvaliableFido(user.fido_amount + params.fidoAmount);
     }
-  }, [user])
+  }, [user, params]);
+
+  const operator = async (userName: string) => {
+    const result = await getInOutAmount({ userName });
+    if (result.status) {
+      console.log(result);
+      setInAmount(Number(result.inAmount));
+      setOutAmount(Number(result.outAmount));
+    }
+  }
+  useEffect(() => {
+    operator(params.userName);
+  }, [params.userName]);
 
   const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required'),
@@ -102,6 +120,8 @@ export default function AccountGeneral() {
       const result = await update(formData);
       if (result.status) {
         enqueueSnackbar('Update success!');
+        await getMe();
+        router.push(paths.operator.list);
       }
     } catch (error) {
       console.error(error);
@@ -112,7 +132,7 @@ export default function AccountGeneral() {
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      const newFile = Object.assign(file, {
+      Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
 
@@ -157,7 +177,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Total"
               percent={100}
-              price={123}
+              price={inAmount + outAmount + params.balance}
               icon="solar:bill-list-bold-duotone"
               color={theme.palette.info.main}
             />
@@ -165,7 +185,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="In"
               percent={50}
-              price={50}
+              price={inAmount}
               icon="solar:file-check-bold-duotone"
               color={theme.palette.success.main}
             />
@@ -173,7 +193,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Out"
               percent={60}
-              price={60}
+              price={outAmount}
               icon="solar:sort-by-time-bold-duotone"
               color={theme.palette.warning.main}
             />
@@ -181,7 +201,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="User Credit"
               percent={70}
-              price={75}
+              price={params.balance}
               icon="solar:file-corrupted-bold-duotone"
               color={theme.palette.error.main}
             />
@@ -239,7 +259,7 @@ export default function AccountGeneral() {
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {availableBalance}
+                      Available: {user?.balance ? user.balance : 0}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -260,7 +280,7 @@ export default function AccountGeneral() {
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {availableFido}
+                      Available: {user?.fido_amount ? user.fido_amount : 0}
                     </Typography>
                   </Stack>
                 </Stack>

@@ -93,7 +93,6 @@ type tableType = {
 
 export default function UserListView() {
   const table = useTable();
-
   const settings = useSettingsContext();
 
   const router = useRouter();

@@ -45,6 +45,11 @@ export async function getTransactions() {
   return res.data;
 }
 
+export async function getInOutAmount(data: any) {
+  const res = await axios.post(endpoints.transaction.getInOut, data);
+  return res.data;
+}
+
 // add game-management
 
 export async function allProviders() {

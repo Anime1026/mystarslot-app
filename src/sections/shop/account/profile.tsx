@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,14 +16,17 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 
 // hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+import { useAuthContext } from 'src/auth/hooks';
+import { useRouter } from 'src/routes/hooks';
+// apis
+import { getInOutAmount, update } from 'src/api';
 // utils
 import { fData } from 'src/utils/format-number';
+import { paths } from 'src/routes/paths';
 // components
 import { useSnackbar } from 'src/components/snackbar';
 import Scrollbar from 'src/components/scrollbar';
 import { IUserItem } from 'src/types/user';
-import { update } from 'src/api';
 import FormProvider, { RHFTextField, RHFUploadAvatar, RHFSelect } from 'src/components/hook-form';
 
 import IncrementerButton from './account-profile/addcredit';
@@ -33,14 +36,39 @@ import TotalCredit from './account-profile/total-credit';
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
+  const { user, getMe } = useAuthContext();
   const location = useLocation();
   const params: IUserItem = location.state;
 
   // add credit
   const [values, setCreditAdd] = useState(params.balance);
   const [fido, setFido] = useState(Number(params.fidoAmount));
-  const availableCredit = 150;
+  const [inAmount, setInAmount] = useState(0);
+  const [outAmount, setOutAmount] = useState(0);
+  const [availableBalance, setAvailable] = useState(0);
+  const [availableFido, setAvaliableFido] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      setAvailable(user.balance + params.balance);
+      setAvaliableFido(user.fido_amount + params.fidoAmount);
+    }
+  }, [user, params]);
+
+  const shoper = async (userName: string) => {
+    const result = await getInOutAmount({ userName });
+    if (result.status) {
+      console.log(result);
+      setInAmount(Number(result.inAmount));
+      setOutAmount(Number(result.outAmount));
+    }
+  }
+
+  useEffect(() => {
+    shoper(params.userName);
+  }, [params.userName]);
 
   const theme = useTheme();
 
@@ -93,6 +121,8 @@ export default function AccountGeneral() {
       const result = await update(formData);
       if (result.status) {
         enqueueSnackbar('Update success!');
+        await getMe();
+        router.push(paths.shop.list);
       }
     } catch (err) {
       console.log(err)
@@ -103,7 +133,7 @@ export default function AccountGeneral() {
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      const newFile = Object.assign(file, {
+      Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
 
@@ -115,13 +145,22 @@ export default function AccountGeneral() {
   );
 
   const creditadd = (data: number) => {
-    if (availableCredit >= parseFloat(data.toString())) {
+    if (availableBalance >= parseFloat(data.toString())) {
       setCreditAdd(data);
     } else {
       console.log(data, 'data', values);
       enqueueSnackbar('credit not enough!', { variant: 'warning' });
     }
   };
+
+  const fidoAdd = (data: number) => {
+    if (availableFido >= parseFloat(data.toString())) {
+      setFido(data);
+    } else {
+      console.log(data, 'data', values);
+      enqueueSnackbar('credit not enough!', { variant: 'warning' });
+    }
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -139,7 +178,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Total"
               percent={100}
-              price={123}
+              price={inAmount + outAmount + params.balance}
               icon="solar:bill-list-bold-duotone"
               color={theme.palette.info.main}
             />
@@ -147,7 +186,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="In"
               percent={50}
-              price={50}
+              price={inAmount}
               icon="solar:file-check-bold-duotone"
               color={theme.palette.success.main}
             />
@@ -155,7 +194,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Out"
               percent={60}
-              price={60}
+              price={outAmount}
               icon="solar:sort-by-time-bold-duotone"
               color={theme.palette.warning.main}
             />
@@ -163,7 +202,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="User Credit"
               percent={70}
-              price={75}
+              price={params.balance}
               icon="solar:file-corrupted-bold-duotone"
               color={theme.palette.error.main}
             />
@@ -215,13 +254,13 @@ export default function AccountGeneral() {
                       name="addcredit"
                       quantity={values}
                       disabledDecrease={values <= 1}
-                      disabledIncrease={values >= 150}
+                      disabledIncrease={values >= availableBalance}
                       onIncrease={(e) => creditadd(e)}
                       onDecrease={() => setCreditAdd(values - 1)}
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {150}
+                      Available: {user?.balance ? user.balance : 0}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -236,13 +275,13 @@ export default function AccountGeneral() {
                       name="addfido"
                       quantity={fido}
                       disabledDecrease={fido <= 1}
-                      disabledIncrease={fido >= 10}
-                      onIncrease={() => setFido(fido + 1)}
+                      disabledIncrease={fido >= availableFido}
+                      onIncrease={() => fidoAdd(fido + 1)}
                       onDecrease={() => setFido(fido - 1)}
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {10}
+                      Available: {user?.fido_amount ? user.fido_amount : 0}
                     </Typography>
                   </Stack>
                 </Stack>
