@@ -30,13 +30,13 @@ export const endpoints = {
   kanban: '/api/kanban',
   calendar: '/api/calendar',
   dashboard: {
-    getUserTree: '/api/get-user-tree'
+    getUserTree: '/api/get-user-tree',
   },
   auth: {
     me: '/api/auth/me',
     login: '/api/user-login',
     register: '/api/auth/register',
-    password: '/api/change-password'
+    password: '/api/change-password',
   },
   mail: {
     list: '/api/mail/list',
@@ -59,9 +59,13 @@ export const endpoints = {
     create: 'api/user-create',
     update: '/api/user-update',
     remove: '/api/user-delete',
-    getCategories: '/api/get-categories'
+    getCategories: '/api/get-categories',
   },
   transaction: {
-    get: '/api/get-transactions'
-  }
+    get: '/api/get-transactions',
+  },
+  games: {
+    allProviders: '/api/get-allprovider',
+    addCategory: '/api/add-category',
+  },
 };

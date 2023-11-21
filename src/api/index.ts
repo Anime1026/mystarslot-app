@@ -44,3 +44,15 @@ export async function getTransactions() {
   const res = await axios.get(endpoints.transaction.get);
   return res.data;
 }
+
+// add game-management
+
+export async function allProviders() {
+  const res = await axios.get(endpoints.games.allProviders);
+  return res.data;
+}
+
+export async function addCategory(data: any) {
+  const res = await axios.post(endpoints.games.addCategory, data);
+  return res.data;
+}

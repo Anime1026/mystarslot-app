@@ -7,6 +7,7 @@ const ROOTS = {
   SHOP: '/shop',
   USER: '/user',
   PROFILE: '/profile',
+  GAMES: '/game-management',
 };
 
 // ----------------------------------------------------------------------
@@ -27,6 +28,13 @@ export const paths = {
     gamestatics: `${ROOTS.DASHBOARD}/gamestatics`,
     transaction: `${ROOTS.DASHBOARD}/transaction`,
     commission: `${ROOTS.DASHBOARD}/commissionstats`,
+  },
+  // game management
+  games: {
+    index: `${ROOTS.GAMES}`,
+    category: `${ROOTS.GAMES}/category`,
+    provider: `${ROOTS.GAMES}/provider`,
+    game: `${ROOTS.GAMES}/game`,
   },
   // Operators
   operator: {

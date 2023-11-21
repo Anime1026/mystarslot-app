@@ -142,3 +142,9 @@ export type IUserAccountChangePassword = {
   newPassword: string;
   confirmNewPassword: string;
 };
+
+export type ICategoryType = {
+  createdAt: string;
+  name: string;
+  status: boolean;
+};

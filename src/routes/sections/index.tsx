@@ -7,6 +7,7 @@ import { mainRoutes } from './main';
 import { authRoutes } from './auth';
 import { dashboardRoutes } from './dashboard';
 import { operatorRoutes } from './operator';
+import { gameRoutes } from './games';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,9 @@ export default function Router() {
 
     // Operator routes
     ...operatorRoutes,
+
+    // Game routes
+    ...gameRoutes,
 
     // Main routes
     ...mainRoutes,
