@@ -45,12 +45,15 @@ export default function AccountGeneral() {
   // add credit
   const [values, setCreditAdd] = useState(params.balance);
   const [fido, setFido] = useState(Number(params.fidoAmount));
-  const [availableBalance, setAvailable] = useState(100);
+  const [availableBalance, setAvailable] = useState(0);
+  const [availableFido, setAvaliableFido] = useState(0);
   const availableCredit = 150;
 
   useEffect(() => {
-    if (user)
+    if (user) {
       setAvailable(user.balance);
+      setAvaliableFido(user.fido_amount);
+    }
   }, [user])
 
   const UpdateUserSchema = Yup.object().shape({
@@ -232,7 +235,7 @@ export default function AccountGeneral() {
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {150}
+                      Available: {availableBalance}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -247,13 +250,13 @@ export default function AccountGeneral() {
                       name="addfido"
                       quantity={fido}
                       disabledDecrease={fido <= 1}
-                      disabledIncrease={fido >= 10}
+                      disabledIncrease={fido >= availableFido}
                       onIncrease={(e) => fidoAdd(e)}
                       onDecrease={() => setFido(fido - 1)}
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {10}
+                      Available: {availableFido}
                     </Typography>
                   </Stack>
                 </Stack>
