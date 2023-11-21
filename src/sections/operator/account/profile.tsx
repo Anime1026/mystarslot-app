@@ -124,7 +124,7 @@ export default function AccountGeneral() {
   );
 
   const creditadd = (data: number) => {
-    if (availableCredit >= parseFloat(data.toString())) {
+    if (availableBalance >= parseFloat(data.toString())) {
       setCreditAdd(data);
     } else {
       console.log(data, 'data', values);
@@ -132,9 +132,13 @@ export default function AccountGeneral() {
     }
   };
 
-  const fidoAdd = (data: string) => {
-    if (data === '') data = '0';
-    setFido(Number(data));
+  const fidoAdd = (data: number) => {
+    if (availableFido >= parseFloat(data.toString())) {
+      setFido(data);
+    } else {
+      console.log(data, 'data', values);
+      enqueueSnackbar('credit not enough!', { variant: 'warning' });
+    }
   }
 
   return (
