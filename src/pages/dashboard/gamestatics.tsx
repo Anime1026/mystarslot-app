@@ -5,13 +5,13 @@ import GameStatics from 'src/sections/gamestatics';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return (
-    <>
-      <Helmet>
-        <title> Dashboard: Game Statics</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> Dashboard: Game Statics</title>
+            </Helmet>
 
-      <GameStatics />
-    </>
-  );
+            <GameStatics />
+        </>
+    );
 }

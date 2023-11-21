@@ -11,29 +11,29 @@ import UserNewEditForm from '../create/new-edit-form';
 // ----------------------------------------------------------------------
 
 export default function UserCreateView() {
-  const settings = useSettingsContext();
+    const settings = useSettingsContext();
 
-  return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      <CustomBreadcrumbs
-        heading="Create a new operator"
-        links={[
-          {
-            name: 'Dashboard',
-            href: paths.dashboard.root,
-          },
-          {
-            name: 'Operator',
-            href: paths.operator.list,
-          },
-          { name: 'New operator' },
-        ]}
-        sx={{
-          mb: { xs: 3, md: 5 },
-        }}
-      />
+    return (
+        <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+            <CustomBreadcrumbs
+                heading="Create a new operator"
+                links={[
+                    {
+                        name: 'Dashboard',
+                        href: paths.dashboard.root
+                    },
+                    {
+                        name: 'Operator',
+                        href: paths.operator.list
+                    },
+                    { name: 'New operator' }
+                ]}
+                sx={{
+                    mb: { xs: 3, md: 5 }
+                }}
+            />
 
-      <UserNewEditForm />
-    </Container>
-  );
+            <UserNewEditForm />
+        </Container>
+    );
 }

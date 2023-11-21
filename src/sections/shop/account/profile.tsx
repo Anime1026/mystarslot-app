@@ -36,39 +36,14 @@ import TotalCredit from './account-profile/total-credit';
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
-  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { user, getMe } = useAuthContext();
   const location = useLocation();
   const params: IUserItem = location.state;
 
   // add credit
   const [values, setCreditAdd] = useState(params.balance);
   const [fido, setFido] = useState(Number(params.fidoAmount));
-  const [inAmount, setInAmount] = useState(0);
-  const [outAmount, setOutAmount] = useState(0);
-  const [availableBalance, setAvailable] = useState(0);
-  const [availableFido, setAvaliableFido] = useState(0);
-
-  useEffect(() => {
-    if (user) {
-      setAvailable(user.balance + params.balance);
-      setAvaliableFido(user.fido_amount + params.fidoAmount);
-    }
-  }, [user, params]);
-
-  const shoper = async (userName: string) => {
-    const result = await getInOutAmount({ userName });
-    if (result.status) {
-      console.log(result);
-      setInAmount(Number(result.inAmount));
-      setOutAmount(Number(result.outAmount));
-    }
-  }
-
-  useEffect(() => {
-    shoper(params.userName);
-  }, [params.userName]);
+  const availableCredit = 150;
 
   const theme = useTheme();
 
@@ -79,7 +54,7 @@ export default function AccountGeneral() {
     currency: Yup.string().required('Currency is required'),
     timezone: Yup.string().required('timezone is required'),
     ip_address: Yup.string().required('City is required'),
-    last_login: Yup.string().required('Zip code is required'),
+    last_login: Yup.string().required('Zip code is required')
     // not required
   });
 
@@ -93,18 +68,18 @@ export default function AccountGeneral() {
     currency: 'TND',
     timezone: 'UTC',
     ip_address: params?.ipAddress || '78.453.276.12',
-    last_login: params?.lastLogin || '16/09/2023 11:00pm',
+    last_login: params?.lastLogin || '16/09/2023 11:00pm'
   };
 
   const methods = useForm({
     resolver: yupResolver(UpdateUserSchema),
-    defaultValues,
+    defaultValues
   });
 
   const {
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting }
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
@@ -121,8 +96,6 @@ export default function AccountGeneral() {
       const result = await update(formData);
       if (result.status) {
         enqueueSnackbar('Update success!');
-        await getMe();
-        router.push(paths.shop.list);
       }
     } catch (err) {
       console.log(err)
@@ -133,7 +106,7 @@ export default function AccountGeneral() {
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      Object.assign(file, {
+      const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
 
@@ -145,22 +118,13 @@ export default function AccountGeneral() {
   );
 
   const creditadd = (data: number) => {
-    if (availableBalance >= parseFloat(data.toString())) {
+    if (availableCredit >= parseFloat(data.toString())) {
       setCreditAdd(data);
     } else {
       console.log(data, 'data', values);
       enqueueSnackbar('credit not enough!', { variant: 'warning' });
     }
   };
-
-  const fidoAdd = (data: number) => {
-    if (availableFido >= parseFloat(data.toString())) {
-      setFido(data);
-    } else {
-      console.log(data, 'data', values);
-      enqueueSnackbar('credit not enough!', { variant: 'warning' });
-    }
-  }
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -178,7 +142,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Total"
               percent={100}
-              price={inAmount + outAmount + params.balance}
+              price={123}
               icon="solar:bill-list-bold-duotone"
               color={theme.palette.info.main}
             />
@@ -186,7 +150,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="In"
               percent={50}
-              price={inAmount}
+              price={50}
               icon="solar:file-check-bold-duotone"
               color={theme.palette.success.main}
             />
@@ -194,7 +158,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Out"
               percent={60}
-              price={outAmount}
+              price={60}
               icon="solar:sort-by-time-bold-duotone"
               color={theme.palette.warning.main}
             />
@@ -202,7 +166,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="User Credit"
               percent={70}
-              price={params.balance}
+              price={75}
               icon="solar:file-corrupted-bold-duotone"
               color={theme.palette.error.main}
             />
@@ -226,7 +190,7 @@ export default function AccountGeneral() {
                       mx: 'auto',
                       display: 'block',
                       textAlign: 'center',
-                      color: 'text.disabled',
+                      color: 'text.disabled'
                     }}
                   >
                     Allowed *.jpeg, *.jpg, *.png, *.gif
@@ -254,13 +218,13 @@ export default function AccountGeneral() {
                       name="addcredit"
                       quantity={values}
                       disabledDecrease={values <= 1}
-                      disabledIncrease={values >= availableBalance}
+                      disabledIncrease={values >= 150}
                       onIncrease={(e) => creditadd(e)}
                       onDecrease={() => setCreditAdd(values - 1)}
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {user?.balance ? user.balance : 0}
+                      Available: {150}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -275,13 +239,13 @@ export default function AccountGeneral() {
                       name="addfido"
                       quantity={fido}
                       disabledDecrease={fido <= 1}
-                      disabledIncrease={fido >= availableFido}
-                      onIncrease={() => fidoAdd(fido + 1)}
+                      disabledIncrease={fido >= 10}
+                      onIncrease={() => setFido(fido + 1)}
                       onDecrease={() => setFido(fido - 1)}
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {user?.fido_amount ? user.fido_amount : 0}
+                      Available: {10}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -337,8 +301,8 @@ export default function AccountGeneral() {
                     { label: 'Evolution', value: 5435 },
                     { label: 'Amatic', value: 1443 },
                     { label: 'NetEnt', value: 4443 },
-                    { label: 'Playtech', value: 4443 },
-                  ],
+                    { label: 'Playtech', value: 4443 }
+                  ]
                 }}
               />
             </Grid>
@@ -351,8 +315,8 @@ export default function AccountGeneral() {
                     { label: 'Evolution', value: 5435 },
                     { label: 'Amatic', value: 1443 },
                     { label: 'NetEnt', value: 4443 },
-                    { label: 'Playtech', value: 4443 },
-                  ],
+                    { label: 'Playtech', value: 4443 }
+                  ]
                 }}
               />
             </Grid>

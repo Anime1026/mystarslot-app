@@ -5,13 +5,13 @@ import Dashboard from 'src/sections/dashboard/view';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return (
-    <>
-      <Helmet>
-        <title> Dashboard</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> Dashboard</title>
+            </Helmet>
 
-      <Dashboard />
-    </>
-  );
+            <Dashboard />
+        </>
+    );
 }

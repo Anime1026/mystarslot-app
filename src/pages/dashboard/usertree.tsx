@@ -5,13 +5,13 @@ import UserTreeView from 'src/sections/usertree/view';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return (
-    <>
-      <Helmet>
-        <title> Dashboard: User Tree</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> Dashboard: User Tree</title>
+            </Helmet>
 
-      <UserTreeView />
-    </>
-  );
+            <UserTreeView />
+        </>
+    );
 }

@@ -36,7 +36,7 @@ import {
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom,
+  TablePaginationCustom
 } from 'src/components/table';
 // types
 import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
@@ -56,13 +56,13 @@ const TABLE_HEAD = [
   { id: 'ip_address', label: 'Ip Address', width: 220 },
   { id: 'lastLogin', label: 'Last Login', width: 180 },
   { id: 'status', label: 'Status', width: 100 },
-  { id: '', width: 88 },
+  { id: '', width: 88 }
 ];
 
 const defaultFilters: IUserTableFilters = {
   name: '',
   role: [],
-  status: 'all',
+  status: 'all'
 };
 
 type tableType = {
@@ -93,6 +93,7 @@ type tableType = {
 
 export default function UserListView() {
   const table = useTable();
+
   const settings = useSettingsContext();
 
   const router = useRouter();
@@ -110,7 +111,7 @@ export default function UserListView() {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters,
+    filters
   });
 
   const operator = async () => {
@@ -139,7 +140,7 @@ export default function UserListView() {
         phoneNumber: result[i].phoneNumber ? result[i].phoneNumber : '',
         status: result[i].status ? result[i].status : '',
         lastLogin: result[i].updatedAt,
-        ipAddress: result[i].ipAddress ? result[i].ipAddress : '',
+        ipAddress: result[i].ipAddress ? result[i].ipAddress : ''
       });
     }
     setTableData(tableList);
@@ -165,7 +166,7 @@ export default function UserListView() {
       table.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
-        [name]: value,
+        [name]: value
       }));
     },
     [table]
@@ -187,12 +188,12 @@ export default function UserListView() {
   const handleEnableRow = useCallback(async (id: string, status: string) => {
     const result = await update({ id, status });
     if (result.status) operator();
-  }, [])
+  }, []);
 
   const handleDisableRow = useCallback(async (id: string, status: string) => {
     const result = await update({ id, status });
     if (result.status) operator();
-  }, [])
+  }, []);
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
@@ -201,7 +202,7 @@ export default function UserListView() {
     table.onUpdatePageDeleteRows({
       totalRows: tableData.length,
       totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
+      totalRowsFiltered: dataFiltered.length
     });
   }, [dataFiltered.length, dataInPage.length, table, tableData]);
 
@@ -231,7 +232,7 @@ export default function UserListView() {
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
             { name: 'Operators', href: paths.operator.list },
-            { name: 'List' },
+            { name: 'List' }
           ]}
           action={
             <Button
@@ -244,7 +245,7 @@ export default function UserListView() {
             </Button>
           }
           sx={{
-            mb: { xs: 3, md: 5 },
+            mb: { xs: 3, md: 5 }
           }}
         />
 
@@ -254,7 +255,7 @@ export default function UserListView() {
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -266,7 +267,8 @@ export default function UserListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') ||
+                      'soft'
                     }
                     color={
                       (tab.value === 'active' && 'success') ||
@@ -473,7 +475,7 @@ export default function UserListView() {
 function applyFilter({
   inputData,
   comparator,
-  filters,
+  filters
 }: {
   inputData: IUserItem[];
   comparator: (a: any, b: any) => number;
@@ -492,9 +494,7 @@ function applyFilter({
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter((user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1);
   }
 
   if (status !== 'all') {

@@ -5,13 +5,13 @@ import { menuItem } from '../../css';
 // ----------------------------------------------------------------------
 
 export function menu(theme: Theme) {
-  return {
-    MuiMenuItem: {
-      styleOverrides: {
-        root: {
-          ...menuItem(theme),
-        },
-      },
-    },
-  };
+    return {
+        MuiMenuItem: {
+            styleOverrides: {
+                root: {
+                    ...menuItem(theme)
+                }
+            }
+        }
+    };
 }

@@ -4,7 +4,7 @@ import { useParams as _useParams } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 export function useParams() {
-  const params = _useParams();
+    const params = _useParams();
 
-  return useMemo(() => params, [params]);
+    return useMemo(() => params, [params]);
 }

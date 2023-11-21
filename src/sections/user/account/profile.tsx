@@ -28,86 +28,86 @@ import BestCharts from './account-profile/best-charts';
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
-  const { enqueueSnackbar } = useSnackbar();
-  const location = useLocation();
-  const params: IUserItem = location.state;
-  const { user } = useMockedUser();
+    const { enqueueSnackbar } = useSnackbar();
+    const location = useLocation();
+    const params: IUserItem = location.state;
+    const { user } = useMockedUser();
 
-  const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
-    currency: Yup.string().required('Currency is required'),
-    timezone: Yup.string().required('timezone is required'),
-    ip_address: Yup.string().required('City is required'),
-    last_login: Yup.string().required('Zip code is required'),
-    credit: Yup.number(),
-  });
+    const UpdateUserSchema = Yup.object().shape({
+        displayName: Yup.string().required('Name is required'),
+        email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+        photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
+        currency: Yup.string().required('Currency is required'),
+        timezone: Yup.string().required('timezone is required'),
+        ip_address: Yup.string().required('City is required'),
+        last_login: Yup.string().required('Zip code is required'),
+        credit: Yup.number()
+    });
 
-  const defaultValues = {
-    displayName: params?.name || '',
-    email: params?.email || '',
-    photoURL: params?.avatar || null,
-    phoneNumber: params?.phoneNumber || '',
-    country: params?.country || '',
-    address: params?.address || '',
-    currency: 'TND',
-    timezone: 'UTC',
-    ip_address: '78.453.276.12',
-    last_login: '16/09/2023 11:00pm',
-    credit: params.balance,
-  };
+    const defaultValues = {
+        displayName: params?.name || '',
+        email: params?.email || '',
+        photoURL: params?.avatar || null,
+        phoneNumber: params?.phoneNumber || '',
+        country: params?.country || '',
+        address: params?.address || '',
+        currency: 'TND',
+        timezone: 'UTC',
+        ip_address: '78.453.276.12',
+        last_login: '16/09/2023 11:00pm',
+        credit: params.balance
+    };
 
-  const methods = useForm({
-    resolver: yupResolver(UpdateUserSchema),
-    defaultValues,
-  });
+    const methods = useForm({
+        resolver: yupResolver(UpdateUserSchema),
+        defaultValues
+    });
 
-  const {
-    setValue,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+    const {
+        setValue,
+        handleSubmit,
+        formState: { isSubmitting }
+    } = methods;
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      const formData = new FormData();
-      formData.append('image', data.photoURL);
-      formData.append('id', params.id);
-      formData.append('username', data.displayName);
-      formData.append('email', data.email);
-      formData.append('timezone', data.timezone);
-      formData.append('currency', data.currency);
-      const result = await update(formData);
-      console.log(data);
-      if (result.status) {
-        enqueueSnackbar('Update success!');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  });
+    const onSubmit = handleSubmit(async (data) => {
+        try {
+            const formData = new FormData();
+            formData.append('image', data.photoURL);
+            formData.append('id', params.id);
+            formData.append('username', data.displayName);
+            formData.append('email', data.email);
+            formData.append('timezone', data.timezone);
+            formData.append('currency', data.currency);
+            const result = await update(formData);
+            console.log(data);
+            if (result.status) {
+                enqueueSnackbar('Update success!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
-  const handleDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
+    const handleDrop = useCallback(
+        (acceptedFiles: File[]) => {
+            const file = acceptedFiles[0];
 
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
+            const newFile = Object.assign(file, {
+                preview: URL.createObjectURL(file)
+            });
 
-      if (file) {
-        setValue('photoURL', file, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
+            if (file) {
+                setValue('photoURL', file, { shouldValidate: true });
+            }
+        },
+        [setValue]
+    );
 
-  // add credit
+    // add credit
 
-  return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      {/* <Card
+    return (
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+            {/* <Card
         sx={{
           mb: { xs: 1, md: 3 },
         }}
@@ -153,41 +153,41 @@ export default function AccountGeneral() {
         </Scrollbar>
       </Card> */}
 
-      <Card sx={{ p: 3 }}>
-        <Grid container spacing={3}>
-          <Grid xs={12} md={6} lg={4}>
-            <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
-              <RHFUploadAvatar
-                name="photoURL"
-                maxSize={3145728}
-                onDrop={handleDrop}
-                helperText={
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      mt: 3,
-                      mx: 'auto',
-                      display: 'block',
-                      textAlign: 'center',
-                      color: 'text.disabled',
-                    }}
-                  >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
-                  </Typography>
-                }
-              />
-
-              <Button variant="soft" color="error" sx={{ mt: 3 }}>
-                Delete User
-              </Button>
-            </Card>
-          </Grid>
-
-          <Grid xs={12} md={6} lg={4}>
             <Card sx={{ p: 3 }}>
-              <Box rowGap={3} columnGap={2} display="grid">
-                {/* <Stack direction="row">
+                <Grid container spacing={3}>
+                    <Grid xs={12} md={6} lg={4}>
+                        <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
+                            <RHFUploadAvatar
+                                name="photoURL"
+                                maxSize={3145728}
+                                onDrop={handleDrop}
+                                helperText={
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            mt: 3,
+                                            mx: 'auto',
+                                            display: 'block',
+                                            textAlign: 'center',
+                                            color: 'text.disabled'
+                                        }}
+                                    >
+                                        Allowed *.jpeg, *.jpg, *.png, *.gif
+                                        <br /> max size of {fData(3145728)}
+                                    </Typography>
+                                }
+                            />
+
+                            <Button variant="soft" color="error" sx={{ mt: 3 }}>
+                                Delete User
+                            </Button>
+                        </Card>
+                    </Grid>
+
+                    <Grid xs={12} md={6} lg={4}>
+                        <Card sx={{ p: 3 }}>
+                            <Box rowGap={3} columnGap={2} display="grid">
+                                {/* <Stack direction="row">
                   <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
                     Add Credits
                   </Typography>
@@ -228,65 +228,65 @@ export default function AccountGeneral() {
                     </Typography>
                   </Stack>
                 </Stack> */}
-                <RHFTextField name="credit" label="Credit" disabled />
-                <RHFTextField name="displayName" label="Name" />
-                <RHFTextField name="email" label="Email Address" />
-                <RHFSelect
-                  fullWidth
-                  name="timezone"
-                  label="Time Zone"
-                  InputLabelProps={{ shrink: true }}
-                  PaperPropsSx={{ textTransform: 'capitalize' }}
-                >
-                  {['UTC', 'pending', 'overdue', 'draft'].map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </RHFSelect>
-                <RHFSelect
-                  fullWidth
-                  name="currency"
-                  label="Currency"
-                  InputLabelProps={{ shrink: true }}
-                  PaperPropsSx={{ textTransform: 'capitalize' }}
-                >
-                  {['EUR', 'USD', 'TND'].map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </RHFSelect>
+                                <RHFTextField name="credit" label="Credit" disabled />
+                                <RHFTextField name="displayName" label="Name" />
+                                <RHFTextField name="email" label="Email Address" />
+                                <RHFSelect
+                                    fullWidth
+                                    name="timezone"
+                                    label="Time Zone"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['UTC', 'pending', 'overdue', 'draft'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
+                                <RHFSelect
+                                    fullWidth
+                                    name="currency"
+                                    label="Currency"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['EUR', 'USD', 'TND'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
 
-                <RHFTextField name="ip_address" disabled label="Ip address" />
-                <RHFTextField name="last_login" disabled label="Last Login" />
-                {/* <RHFTextField name="phoneNumber" label="Phone Number" />
+                                <RHFTextField name="ip_address" disabled label="Ip address" />
+                                <RHFTextField name="last_login" disabled label="Last Login" />
+                                {/* <RHFTextField name="phoneNumber" label="Phone Number" />
               <RHFTextField name="address" label="Address" /> */}
-              </Box>
+                            </Box>
 
-              <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  Save Changes
-                </LoadingButton>
-              </Stack>
-            </Card>
-          </Grid>
-          <Grid container xs={12} md={12} lg={4}>
-            <Grid xs={12} md={6} lg={12}>
-              <BestCharts
-                title="Best 5 Shops"
-                chart={{
-                  series: [
-                    { label: 'Pragmatic Play', value: 4344 },
-                    { label: 'Evolution', value: 5435 },
-                    { label: 'Amatic', value: 1443 },
-                    { label: 'NetEnt', value: 4443 },
-                    { label: 'Playtech', value: 4443 },
-                  ],
-                }}
-              />
-            </Grid>
-            {/* <Grid xs={12} md={6} lg={12}>
+                            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+                                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                                    Save Changes
+                                </LoadingButton>
+                            </Stack>
+                        </Card>
+                    </Grid>
+                    <Grid container xs={12} md={12} lg={4}>
+                        <Grid xs={12} md={6} lg={12}>
+                            <BestCharts
+                                title="Best 5 Shops"
+                                chart={{
+                                    series: [
+                                        { label: 'Pragmatic Play', value: 4344 },
+                                        { label: 'Evolution', value: 5435 },
+                                        { label: 'Amatic', value: 1443 },
+                                        { label: 'NetEnt', value: 4443 },
+                                        { label: 'Playtech', value: 4443 }
+                                    ]
+                                }}
+                            />
+                        </Grid>
+                        {/* <Grid xs={12} md={6} lg={12}>
               <BestCharts
                 title="Best Categories"
                 chart={{
@@ -300,8 +300,8 @@ export default function AccountGeneral() {
                 }}
               />
             </Grid> */}
-          </Grid>
-          {/* <Grid xs={12} md={6} lg={8} container spacing={2}>
+                    </Grid>
+                    {/* <Grid xs={12} md={6} lg={8} container spacing={2}>
             <Grid xs={12} md={12} lg={12}>
               <BestCategories title="Best 5 Providers" data={_ecommerceSalesOverview} />
             </Grid>
@@ -322,8 +322,8 @@ export default function AccountGeneral() {
               }}
             />
           </Grid> */}
-        </Grid>
-      </Card>
-    </FormProvider>
-  );
+                </Grid>
+            </Card>
+        </FormProvider>
+    );
 }

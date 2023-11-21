@@ -28,94 +28,94 @@ const Profile = lazy(() => import('src/pages/profile'));
 // ----------------------------------------------------------------------
 
 export const operatorRoutes = [
-  {
-    path: 'operator',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <List />, index: true },
-      { path: 'list', element: <List /> },
-      {
-        path: 'account',
+    {
+        path: 'operator',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
         children: [
-          {
-            path: ':id',
-            element: <Account />,
-          },
-        ],
-      },
-      { path: 'create', element: <Create /> },
-    ],
-  },
-  {
-    path: 'shop',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <ShopList />, index: true },
-      { path: 'list', element: <ShopList /> },
-      {
-        path: 'account',
+            { element: <List />, index: true },
+            { path: 'list', element: <List /> },
+            {
+                path: 'account',
+                children: [
+                    {
+                        path: ':id',
+                        element: <Account />
+                    }
+                ]
+            },
+            { path: 'create', element: <Create /> }
+        ]
+    },
+    {
+        path: 'shop',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
         children: [
-          {
-            path: ':id',
-            element: <ShopAccount />,
-          },
-        ],
-      },
-      { path: 'create', element: <ShopCreate /> },
-    ],
-  },
-  {
-    path: 'user',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <UserList />, index: true },
-      { path: 'list', element: <UserList /> },
-      {
-        path: 'account',
+            { element: <ShopList />, index: true },
+            { path: 'list', element: <ShopList /> },
+            {
+                path: 'account',
+                children: [
+                    {
+                        path: ':id',
+                        element: <ShopAccount />
+                    }
+                ]
+            },
+            { path: 'create', element: <ShopCreate /> }
+        ]
+    },
+    {
+        path: 'user',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
         children: [
-          {
-            path: ':id',
-            element: <UserAccount />,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: 'profile',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [{ element: <Profile />, index: true }],
-  },
+            { element: <UserList />, index: true },
+            { path: 'list', element: <UserList /> },
+            {
+                path: 'account',
+                children: [
+                    {
+                        path: ':id',
+                        element: <UserAccount />
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        path: 'profile',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
+        children: [{ element: <Profile />, index: true }]
+    }
 ];

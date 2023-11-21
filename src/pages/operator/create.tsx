@@ -5,13 +5,13 @@ import { Create } from 'src/sections/operator/view';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return (
-    <>
-      <Helmet>
-        <title> create</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> create</title>
+            </Helmet>
 
-      <Create />
-    </>
-  );
+            <Create />
+        </>
+    );
 }

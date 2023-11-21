@@ -6,13 +6,9 @@ import { AuthContext } from './auth-context';
 // ----------------------------------------------------------------------
 
 type Props = {
-  children: React.ReactNode;
+    children: React.ReactNode;
 };
 
 export function AuthConsumer({ children }: Props) {
-  return (
-    <AuthContext.Consumer>
-      {(auth) => (auth.loading ? <SplashScreen /> : children)}
-    </AuthContext.Consumer>
-  );
+    return <AuthContext.Consumer>{(auth) => (auth.loading ? <SplashScreen /> : children)}</AuthContext.Consumer>;
 }

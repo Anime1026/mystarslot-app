@@ -18,37 +18,37 @@ import { HeaderShadow } from '../_common';
 // ----------------------------------------------------------------------
 
 function NavHorizontal() {
-  const theme = useTheme();
+    const theme = useTheme();
 
-  const { user } = useAuthContext();
+    const { user } = useAuthContext();
 
-  const navData = useNavData();
+    const navData = useNavData();
 
-  return (
-    <AppBar
-      component="nav"
-      sx={{
-        top: HEADER.H_DESKTOP_OFFSET,
-      }}
-    >
-      <Toolbar
-        sx={{
-          ...bgBlur({
-            color: theme.palette.background.default,
-          }),
-        }}
-      >
-        <NavSectionHorizontal
-          data={navData}
-          config={{
-            currentRole: user?.role || 'admin',
-          }}
-        />
-      </Toolbar>
+    return (
+        <AppBar
+            component="nav"
+            sx={{
+                top: HEADER.H_DESKTOP_OFFSET
+            }}
+        >
+            <Toolbar
+                sx={{
+                    ...bgBlur({
+                        color: theme.palette.background.default
+                    })
+                }}
+            >
+                <NavSectionHorizontal
+                    data={navData}
+                    config={{
+                        currentRole: user?.role || 'admin'
+                    }}
+                />
+            </Toolbar>
 
-      <HeaderShadow />
-    </AppBar>
-  );
+            <HeaderShadow />
+        </AppBar>
+    );
 }
 
 export default memo(NavHorizontal);

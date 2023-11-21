@@ -5,13 +5,13 @@ import { Account } from 'src/sections/user/view';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return (
-    <>
-      <Helmet>
-        <title> Account</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> Account</title>
+            </Helmet>
 
-      <Account />
-    </>
-  );
+            <Account />
+        </>
+    );
 }

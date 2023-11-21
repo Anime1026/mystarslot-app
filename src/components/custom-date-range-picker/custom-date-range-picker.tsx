@@ -17,103 +17,103 @@ import { DateRangePickerProps } from './types';
 // ----------------------------------------------------------------------
 
 export default function CustomDateRangePicker({
-  title = 'Select date range',
-  variant = 'input',
-  //
-  startDate,
-  endDate,
-  //
-  onChangeStartDate,
-  onChangeEndDate,
-  //
-  open,
-  onClose,
-  //
-  error,
+    title = 'Select date range',
+    variant = 'input',
+    //
+    startDate,
+    endDate,
+    //
+    onChangeStartDate,
+    onChangeEndDate,
+    //
+    open,
+    onClose,
+    //
+    error
 }: DateRangePickerProps) {
-  const mdUp = useResponsive('up', 'md');
+    const mdUp = useResponsive('up', 'md');
 
-  const isCalendarView = variant === 'calendar';
+    const isCalendarView = variant === 'calendar';
 
-  return (
-    <Dialog
-      fullWidth
-      maxWidth={isCalendarView ? false : 'xs'}
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        sx: {
-          ...(isCalendarView && {
-            maxWidth: 720,
-          }),
-        },
-      }}
-    >
-      <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
-
-      <DialogContent
-        sx={{
-          ...(isCalendarView &&
-            mdUp && {
-              overflow: 'unset',
-            }),
-        }}
-      >
-        <Stack
-          justifyContent="center"
-          spacing={isCalendarView ? 3 : 2}
-          direction={isCalendarView && mdUp ? 'row' : 'column'}
-          sx={{ pt: 1 }}
+    return (
+        <Dialog
+            fullWidth
+            maxWidth={isCalendarView ? false : 'xs'}
+            open={open}
+            onClose={onClose}
+            PaperProps={{
+                sx: {
+                    ...(isCalendarView && {
+                        maxWidth: 720
+                    })
+                }
+            }}
         >
-          {isCalendarView ? (
-            <>
-              <Paper
-                variant="outlined"
+            <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
+
+            <DialogContent
                 sx={{
-                  borderRadius: 2,
-                  borderColor: 'divider',
-                  borderStyle: 'dashed',
+                    ...(isCalendarView &&
+                        mdUp && {
+                            overflow: 'unset'
+                        })
                 }}
-              >
-                <DateCalendar value={startDate} onChange={onChangeStartDate} />
-              </Paper>
+            >
+                <Stack
+                    justifyContent="center"
+                    spacing={isCalendarView ? 3 : 2}
+                    direction={isCalendarView && mdUp ? 'row' : 'column'}
+                    sx={{ pt: 1 }}
+                >
+                    {isCalendarView ? (
+                        <>
+                            <Paper
+                                variant="outlined"
+                                sx={{
+                                    borderRadius: 2,
+                                    borderColor: 'divider',
+                                    borderStyle: 'dashed'
+                                }}
+                            >
+                                <DateCalendar value={startDate} onChange={onChangeStartDate} />
+                            </Paper>
 
-              <Paper
-                variant="outlined"
-                sx={{
-                  borderRadius: 2,
-                  borderColor: 'divider',
-                  borderStyle: 'dashed',
-                }}
-              >
-                <DateCalendar value={endDate} onChange={onChangeEndDate} />
-              </Paper>
-            </>
-          ) : (
-            <>
-              <DatePicker label="Start date" value={startDate} onChange={onChangeStartDate} />
+                            <Paper
+                                variant="outlined"
+                                sx={{
+                                    borderRadius: 2,
+                                    borderColor: 'divider',
+                                    borderStyle: 'dashed'
+                                }}
+                            >
+                                <DateCalendar value={endDate} onChange={onChangeEndDate} />
+                            </Paper>
+                        </>
+                    ) : (
+                        <>
+                            <DatePicker label="Start date" value={startDate} onChange={onChangeStartDate} />
 
-              <DatePicker label="End date" value={endDate} onChange={onChangeEndDate} />
-            </>
-          )}
-        </Stack>
+                            <DatePicker label="End date" value={endDate} onChange={onChangeEndDate} />
+                        </>
+                    )}
+                </Stack>
 
-        {error && (
-          <FormHelperText error sx={{ px: 2 }}>
-            End date must be later than start date
-          </FormHelperText>
-        )}
-      </DialogContent>
+                {error && (
+                    <FormHelperText error sx={{ px: 2 }}>
+                        End date must be later than start date
+                    </FormHelperText>
+                )}
+            </DialogContent>
 
-      <DialogActions>
-        <Button variant="outlined" color="inherit" onClick={onClose}>
-          Cancel
-        </Button>
+            <DialogActions>
+                <Button variant="outlined" color="inherit" onClick={onClose}>
+                    Cancel
+                </Button>
 
-        <Button disabled={error} variant="contained" onClick={onClose}>
-          Apply
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
+                <Button disabled={error} variant="contained" onClick={onClose}>
+                    Apply
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
 }

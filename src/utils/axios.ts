@@ -63,7 +63,6 @@ export const endpoints = {
   },
   transaction: {
     get: '/api/get-transactions',
-    getInOut: '/api/get-inoutAmount',
   },
   games: {
     allProviders: '/api/get-allprovider',

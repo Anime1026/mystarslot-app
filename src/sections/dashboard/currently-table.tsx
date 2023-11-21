@@ -16,81 +16,75 @@ import { TableHeadCustom } from 'src/components/table';
 // ----------------------------------------------------------------------
 
 type RowProps = {
-  id: any;
-  from: any;
-  to: any;
-  in: any;
-  out: any;
-  date: any;
+    id: any;
+    from: any;
+    to: any;
+    in: any;
+    out: any;
+    date: any;
 };
 
 interface Props extends CardProps {
-  title?: string;
-  subheader?: string;
-  tableData: RowProps[];
-  tableLabels: any;
+    title?: string;
+    subheader?: string;
+    tableData: RowProps[];
+    tableLabels: any;
 }
 
-export default function EcommerceBestSalesman({
-  title,
-  subheader,
-  tableData,
-  tableLabels,
-  ...other
-}: Props) {
-  return (
-    <Card {...other}>
-      <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
+export default function EcommerceBestSalesman({ title, subheader, tableData, tableLabels, ...other }: Props) {
+    return (
+        <Card {...other}>
+            <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
-      <TableContainer sx={{ overflow: 'unset' }}>
-        <Scrollbar>
-          <Table sx={{ minWidth: 640 }}>
-            <TableHeadCustom headLabel={tableLabels} />
+            <TableContainer sx={{ overflow: 'unset' }}>
+                <Scrollbar>
+                    <Table sx={{ minWidth: 640 }}>
+                        <TableHeadCustom headLabel={tableLabels} />
 
-            <TableBody>
-              {tableData.map((row) => (
-                <EcommerceBestSalesmanRow key={row.id} row={row} />
-              ))}
-            </TableBody>
-          </Table>
-        </Scrollbar>
-      </TableContainer>
-    </Card>
-  );
+                        <TableBody>
+                            {tableData.map((row) => (
+                                <EcommerceBestSalesmanRow key={row.id} row={row} />
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Scrollbar>
+            </TableContainer>
+        </Card>
+    );
 }
 
 // ----------------------------------------------------------------------
 
 type EcommerceBestSalesmanRowProps = {
-  row: RowProps;
+    row: RowProps;
 };
 
 function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
-  return (
-    <TableRow>
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>{row.id}</TableCell>
+    return (
+        <TableRow>
+            <TableCell sx={{ display: 'flex', alignItems: 'center' }}>{row.id}</TableCell>
 
-      <TableCell>{row.from}</TableCell>
+            <TableCell>{row.from}</TableCell>
 
-      <TableCell align="center">{row.to}</TableCell>
+            <TableCell align="center">{row.to}</TableCell>
 
-      <TableCell align="right">{fCurrency(row.in)}</TableCell>
+            <TableCell align="right">{fCurrency(row.in)}</TableCell>
 
-      <TableCell align="right">
-        <Label
-          variant="soft"
-          color={
-            (row.out === 'Top 1' && 'primary') ||
-            (row.out === 'Top 2' && 'info') ||
-            (row.out === 'Top 3' && 'success') ||
-            (row.out === 'Top 4' && 'warning') ||
-            'error'
-          }
-        >
-          {fCurrency(row.out)}
-        </Label>
-      </TableCell>
-      <TableCell align="right">{row.date}</TableCell>
-    </TableRow>
-  );
+            <TableCell align="right">
+                <Label
+                    variant="soft"
+                    color={
+                        (row.out === 'Top 1' && 'primary') ||
+                        (row.out === 'Top 2' && 'info') ||
+                        (row.out === 'Top 3' && 'success') ||
+                        (row.out === 'Top 4' && 'warning') ||
+                        'error'
+                    }
+                >
+                    {fCurrency(row.out)}
+                </Label>
+            </TableCell>
+            <TableCell align="right">{row.date}</TableCell>
+        </TableRow>
+    );
 }

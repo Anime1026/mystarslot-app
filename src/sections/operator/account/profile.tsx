@@ -25,8 +25,8 @@ import { getInOutAmount, update } from 'src/api';
 import { fData } from 'src/utils/format-number';
 import { paths } from 'src/routes/paths';
 // components
-import { useSnackbar } from 'src/components/snackbar';
 import Scrollbar from 'src/components/scrollbar';
+import { useSnackbar } from 'src/components/snackbar';
 import { IUserItem } from 'src/types/user';
 import FormProvider, { RHFTextField, RHFUploadAvatar, RHFSelect } from 'src/components/hook-form';
 
@@ -39,9 +39,8 @@ import TotalCredit from './account-profile/total-credit';
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
-  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { user, getMe } = useAuthContext();
+  const { user } = useAuthContext();
   const location = useLocation();
   const params: IUserItem = location.state;
 
@@ -50,29 +49,16 @@ export default function AccountGeneral() {
   // add credit
   const [values, setCreditAdd] = useState(params.balance);
   const [fido, setFido] = useState(Number(params.fidoAmount));
-  const [inAmount, setInAmount] = useState(0);
-  const [outAmount, setOutAmount] = useState(0);
   const [availableBalance, setAvailable] = useState(0);
   const [availableFido, setAvaliableFido] = useState(0);
+  const availableCredit = 150;
 
   useEffect(() => {
     if (user) {
-      setAvailable(user.balance + params.balance);
-      setAvaliableFido(user.fido_amount + params.fidoAmount);
+      setAvailable(user.balance);
+      setAvaliableFido(user.fido_amount);
     }
-  }, [user, params]);
-
-  const operator = async (userName: string) => {
-    const result = await getInOutAmount({ userName });
-    if (result.status) {
-      console.log(result);
-      setInAmount(Number(result.inAmount));
-      setOutAmount(Number(result.outAmount));
-    }
-  }
-  useEffect(() => {
-    operator(params.userName);
-  }, [params.userName]);
+  }, [user])
 
   const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required'),
@@ -81,7 +67,7 @@ export default function AccountGeneral() {
     currency: Yup.string().required('Currency is required'),
     timezone: Yup.string().required('timezone is required'),
     ip_address: Yup.string().required('City is required'),
-    last_login: Yup.string().required('Zip code is required'),
+    last_login: Yup.string().required('Zip code is required')
     // not required
   });
 
@@ -92,18 +78,18 @@ export default function AccountGeneral() {
     currency: 'TND',
     timezone: 'UTC',
     ip_address: params?.ipAddress || '78.453.276.12',
-    last_login: params?.lastLogin || '16/09/2023 11:00pm',
+    last_login: params?.lastLogin || '16/09/2023 11:00pm'
   };
 
   const methods = useForm({
     resolver: yupResolver(UpdateUserSchema),
-    defaultValues,
+    defaultValues
   });
 
   const {
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting }
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
@@ -120,8 +106,6 @@ export default function AccountGeneral() {
       const result = await update(formData);
       if (result.status) {
         enqueueSnackbar('Update success!');
-        await getMe();
-        router.push(paths.operator.list);
       }
     } catch (error) {
       console.error(error);
@@ -132,7 +116,7 @@ export default function AccountGeneral() {
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      Object.assign(file, {
+      const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
 
@@ -159,7 +143,7 @@ export default function AccountGeneral() {
       console.log(data, 'data', values);
       enqueueSnackbar('credit not enough!', { variant: 'warning' });
     }
-  }
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -177,7 +161,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Total"
               percent={100}
-              price={inAmount + outAmount + params.balance}
+              price={123}
               icon="solar:bill-list-bold-duotone"
               color={theme.palette.info.main}
             />
@@ -185,7 +169,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="In"
               percent={50}
-              price={inAmount}
+              price={50}
               icon="solar:file-check-bold-duotone"
               color={theme.palette.success.main}
             />
@@ -193,7 +177,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="Out"
               percent={60}
-              price={outAmount}
+              price={60}
               icon="solar:sort-by-time-bold-duotone"
               color={theme.palette.warning.main}
             />
@@ -201,7 +185,7 @@ export default function AccountGeneral() {
             <TotalCredit
               title="User Credit"
               percent={70}
-              price={params.balance}
+              price={75}
               icon="solar:file-corrupted-bold-duotone"
               color={theme.palette.error.main}
             />
@@ -225,7 +209,7 @@ export default function AccountGeneral() {
                       mx: 'auto',
                       display: 'block',
                       textAlign: 'center',
-                      color: 'text.disabled',
+                      color: 'text.disabled'
                     }}
                   >
                     Allowed *.jpeg, *.jpg, *.png, *.gif
@@ -259,7 +243,7 @@ export default function AccountGeneral() {
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {user?.balance ? user.balance : 0}
+                      Available: {availableBalance}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -280,7 +264,7 @@ export default function AccountGeneral() {
                     />
 
                     <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                      Available: {user?.fido_amount ? user.fido_amount : 0}
+                      Available: {availableFido}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -336,8 +320,8 @@ export default function AccountGeneral() {
                     { label: 'Evolution', value: 5435 },
                     { label: 'Amatic', value: 1443 },
                     { label: 'NetEnt', value: 4443 },
-                    { label: 'Playtech', value: 4443 },
-                  ],
+                    { label: 'Playtech', value: 4443 }
+                  ]
                 }}
               />
             </Grid>
@@ -350,8 +334,8 @@ export default function AccountGeneral() {
                     { label: 'Evolution', value: 5435 },
                     { label: 'Amatic', value: 1443 },
                     { label: 'NetEnt', value: 4443 },
-                    { label: 'Playtech', value: 4443 },
-                  ],
+                    { label: 'Playtech', value: 4443 }
+                  ]
                 }}
               />
             </Grid>
