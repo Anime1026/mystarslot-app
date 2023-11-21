@@ -26,104 +26,104 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
-  const { login } = useAuthContext();
+    const { login } = useAuthContext();
 
-  const router = useRouter();
+    const router = useRouter();
 
-  const [errorMsg, setErrorMsg] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
 
-  const searchParams = useSearchParams();
+    const searchParams = useSearchParams();
 
-  const returnTo = searchParams.get('returnTo');
+    const returnTo = searchParams.get('returnTo');
 
-  const password = useBoolean();
+    const password = useBoolean();
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required'),
-    password: Yup.string().required('Password is required'),
-  });
+    const LoginSchema = Yup.object().shape({
+        email: Yup.string().required('Email is required'),
+        password: Yup.string().required('Password is required')
+    });
 
-  const defaultValues = {
-    email: 'mateo',
-    password: '123456',
-  };
+    const defaultValues = {
+        email: 'mateo',
+        password: '123456'
+    };
 
-  const methods = useForm({
-    resolver: yupResolver(LoginSchema),
-    defaultValues,
-  });
+    const methods = useForm({
+        resolver: yupResolver(LoginSchema),
+        defaultValues
+    });
 
-  const {
-    reset,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+    const {
+        reset,
+        handleSubmit,
+        formState: { isSubmitting }
+    } = methods;
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await login?.(data.email, data.password);
+    const onSubmit = handleSubmit(async (data) => {
+        try {
+            await login?.(data.email, data.password);
 
-      router.push(returnTo || PATH_AFTER_LOGIN);
-    } catch (error) {
-      console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
-    }
-  });
+            router.push(returnTo || PATH_AFTER_LOGIN);
+        } catch (error) {
+            console.error(error);
+            reset();
+            setErrorMsg(typeof error === 'string' ? error : error.message);
+        }
+    });
 
-  const renderHead = (
-    <Stack spacing={2} sx={{ mb: 5 }}>
-      <Typography variant="h4">Sign in to AreaDev</Typography>
-    </Stack>
-  );
+    const renderHead = (
+        <Stack spacing={2} sx={{ mb: 5 }}>
+            <Typography variant="h4">Sign in to AreaDev</Typography>
+        </Stack>
+    );
 
-  const renderForm = (
-    <Stack spacing={2.5}>
-      {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+    const renderForm = (
+        <Stack spacing={2.5}>
+            {!!errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
-      <RHFTextField name="email" label="Email address or Username" />
+            <RHFTextField name="email" label="Email address or Username" />
 
-      <RHFTextField
-        name="password"
-        label="Password"
-        type={password.value ? 'text' : 'password'}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={password.onToggle} edge="end">
-                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+            <RHFTextField
+                name="password"
+                label="Password"
+                type={password.value ? 'text' : 'password'}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton onClick={password.onToggle} edge="end">
+                                <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                            </IconButton>
+                        </InputAdornment>
+                    )
+                }}
+            />
 
-      <Link variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
-        Forgot password?
-      </Link>
+            <Link variant="body2" color="inherit" underline="always" sx={{ alignSelf: 'flex-end' }}>
+                Forgot password?
+            </Link>
 
-      <LoadingButton
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitting}
-      >
-        Login
-      </LoadingButton>
-    </Stack>
-  );
+            <LoadingButton
+                fullWidth
+                color="inherit"
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+            >
+                Login
+            </LoadingButton>
+        </Stack>
+    );
 
-  return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      {renderHead}
+    return (
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+            {renderHead}
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-      </Alert>
+            <Alert severity="info" sx={{ mb: 3 }}>
+                Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
+            </Alert>
 
-      {renderForm}
-    </FormProvider>
-  );
+            {renderForm}
+        </FormProvider>
+    );
 }

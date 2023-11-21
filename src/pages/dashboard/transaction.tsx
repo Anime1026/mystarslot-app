@@ -5,13 +5,13 @@ import Transaction from 'src/sections/transaction';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return (
-    <>
-      <Helmet>
-        <title> Dashboard: Transaction</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> Dashboard: Transaction</title>
+            </Helmet>
 
-      <Transaction />
-    </>
-  );
+            <Transaction />
+        </>
+    );
 }

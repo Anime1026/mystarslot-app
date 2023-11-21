@@ -5,13 +5,13 @@ import Profile from 'src/sections/profile';
 // ----------------------------------------------------------------------
 
 export default function LoginPage() {
-  return (
-    <>
-      <Helmet>
-        <title> Jwt: Login</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> Jwt: Login</title>
+            </Helmet>
 
-      <Profile />
-    </>
-  );
+            <Profile />
+        </>
+    );
 }

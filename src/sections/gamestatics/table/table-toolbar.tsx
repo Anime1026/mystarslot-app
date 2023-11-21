@@ -20,179 +20,171 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 type Props = {
-  filters: IOrderTableFilters;
-  onFilters: (name: string, value: IOrderTableFilterValue) => void;
-  //
-  canReset: boolean;
-  onResetFilters: VoidFunction;
+    filters: IOrderTableFilters;
+    onFilters: (name: string, value: IOrderTableFilterValue) => void;
+    //
+    canReset: boolean;
+    onResetFilters: VoidFunction;
 };
 
-const categories = [
-  'Casino',
-  'Live Casino',
-  'Sports',
-  'Live Sports',
-  'Virtual',
-  'Racing',
-  'E-Sports',
-];
+const categories = ['Casino', 'Live Casino', 'Sports', 'Live Sports', 'Virtual', 'Racing', 'E-Sports'];
 const providers = ['netent', 'novomatic', 'amatic', 'Igt', 'habanero', 'bomba', 'aviatar'];
 
 export default function OrderTableToolbar({
-  filters,
-  onFilters,
-  //
-  canReset,
-  onResetFilters,
+    filters,
+    onFilters,
+    //
+    canReset,
+    onResetFilters
 }: Props) {
-  const handleFilterName = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters('name', event.target.value);
-    },
-    [onFilters]
-  );
-
-  const handleFilterStartDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('startDate', newValue);
-    },
-    [onFilters]
-  );
-
-  const handleFilterEndDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('endDate', newValue);
-    },
-    [onFilters]
-  );
-
-  const [personName, setPersonName] = useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
+    const handleFilterName = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            onFilters('name', event.target.value);
+        },
+        [onFilters]
     );
-  };
 
-  return (
-    <Stack
-      spacing={2}
-      alignItems={{ xs: 'flex-end', md: 'center' }}
-      direction={{
-        xs: 'column',
-        md: 'row',
-      }}
-      sx={{
-        p: 2.5,
-        pr: { xs: 2.5, md: 1 },
-      }}
-    >
-      <DatePicker
-        label="Start date"
-        value={filters.startDate}
-        onChange={handleFilterStartDate}
-        slotProps={{
-          textField: {
-            fullWidth: true,
-          },
-        }}
-        sx={{
-          maxWidth: { md: 200 },
-        }}
-      />
+    const handleFilterStartDate = useCallback(
+        (newValue: Date | null) => {
+            onFilters('startDate', newValue);
+        },
+        [onFilters]
+    );
 
-      <DatePicker
-        label="End date"
-        value={filters.endDate}
-        onChange={handleFilterEndDate}
-        slotProps={{ textField: { fullWidth: true } }}
-        sx={{
-          maxWidth: { md: 200 },
-        }}
-      />
+    const handleFilterEndDate = useCallback(
+        (newValue: Date | null) => {
+            onFilters('endDate', newValue);
+        },
+        [onFilters]
+    );
 
-      <FormControl
-        sx={{
-          flexShrink: 0,
-          width: { xs: 1, md: 180 },
-        }}
-      >
-        <InputLabel id="demo-multiple-checkbox-label">Categories</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput label="Categories" />}
-          renderValue={(selected) => selected.join(', ')}
-          sx={{ textTransform: 'capitalize' }}
+    const [personName, setPersonName] = useState<string[]>([]);
+
+    const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+        const {
+            target: { value }
+        } = event;
+        setPersonName(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value
+        );
+    };
+
+    return (
+        <Stack
+            spacing={2}
+            alignItems={{ xs: 'flex-end', md: 'center' }}
+            direction={{
+                xs: 'column',
+                md: 'row'
+            }}
+            sx={{
+                p: 2.5,
+                pr: { xs: 2.5, md: 1 }
+            }}
         >
-          {categories.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+            <DatePicker
+                label="Start date"
+                value={filters.startDate}
+                onChange={handleFilterStartDate}
+                slotProps={{
+                    textField: {
+                        fullWidth: true
+                    }
+                }}
+                sx={{
+                    maxWidth: { md: 200 }
+                }}
+            />
 
-      <FormControl
-        sx={{
-          flexShrink: 0,
-          width: { xs: 1, md: 180 },
-        }}
-      >
-        <InputLabel id="demo-multiple-checkbox-label">Game Provider</InputLabel>
-        <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput label="Game Provider" />}
-          renderValue={(selected) => selected.join(', ')}
-          sx={{ textTransform: 'capitalize' }}
-        >
-          {providers.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+            <DatePicker
+                label="End date"
+                value={filters.endDate}
+                onChange={handleFilterEndDate}
+                slotProps={{ textField: { fullWidth: true } }}
+                sx={{
+                    maxWidth: { md: 200 }
+                }}
+            />
 
-      <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
-        <TextField
-          fullWidth
-          value={filters.name}
-          onChange={handleFilterName}
-          placeholder="Search Id or Username..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
+            <FormControl
+                sx={{
+                    flexShrink: 0,
+                    width: { xs: 1, md: 180 }
+                }}
+            >
+                <InputLabel id="demo-multiple-checkbox-label">Categories</InputLabel>
+                <Select
+                    labelId="demo-multiple-checkbox-label"
+                    id="demo-multiple-checkbox"
+                    multiple
+                    value={personName}
+                    onChange={handleChange}
+                    input={<OutlinedInput label="Categories" />}
+                    renderValue={(selected) => selected.join(', ')}
+                    sx={{ textTransform: 'capitalize' }}
+                >
+                    {categories.map((name) => (
+                        <MenuItem key={name} value={name}>
+                            <Checkbox checked={personName.indexOf(name) > -1} />
+                            {name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
 
-      {canReset && (
-        <Button
-          color="error"
-          sx={{ flexShrink: 0 }}
-          onClick={onResetFilters}
-          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-        >
-          Clear
-        </Button>
-      )}
-    </Stack>
-  );
+            <FormControl
+                sx={{
+                    flexShrink: 0,
+                    width: { xs: 1, md: 180 }
+                }}
+            >
+                <InputLabel id="demo-multiple-checkbox-label">Game Provider</InputLabel>
+                <Select
+                    labelId="demo-multiple-checkbox-label"
+                    id="demo-multiple-checkbox"
+                    multiple
+                    value={personName}
+                    onChange={handleChange}
+                    input={<OutlinedInput label="Game Provider" />}
+                    renderValue={(selected) => selected.join(', ')}
+                    sx={{ textTransform: 'capitalize' }}
+                >
+                    {providers.map((name) => (
+                        <MenuItem key={name} value={name}>
+                            <Checkbox checked={personName.indexOf(name) > -1} />
+                            {name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+
+            <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
+                <TextField
+                    fullWidth
+                    value={filters.name}
+                    onChange={handleFilterName}
+                    placeholder="Search Id or Username..."
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                            </InputAdornment>
+                        )
+                    }}
+                />
+            </Stack>
+
+            {canReset && (
+                <Button
+                    color="error"
+                    sx={{ flexShrink: 0 }}
+                    onClick={onResetFilters}
+                    startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                >
+                    Clear
+                </Button>
+            )}
+        </Stack>
+    );
 }

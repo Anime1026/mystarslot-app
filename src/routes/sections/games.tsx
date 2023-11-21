@@ -17,22 +17,22 @@ const Games = lazy(() => import('src/pages/game/games'));
 // ----------------------------------------------------------------------
 
 export const gameRoutes = [
-  {
-    path: 'game-management',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <Cateigory />, index: true },
-      { path: 'category', element: <Cateigory /> },
-      { path: 'provider', element: <Provider /> },
-      { path: 'game', element: <Games /> },
-    ],
-  },
+    {
+        path: 'game-management',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
+        children: [
+            { element: <Cateigory />, index: true },
+            { path: 'category', element: <Cateigory /> },
+            { path: 'provider', element: <Provider /> },
+            { path: 'game', element: <Games /> }
+        ]
+    }
 ];

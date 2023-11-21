@@ -5,13 +5,13 @@ import { Games } from 'src/sections/game-management/view';
 // ----------------------------------------------------------------------
 
 export default function Page() {
-  return (
-    <>
-      <Helmet>
-        <title> Games</title>
-      </Helmet>
+    return (
+        <>
+            <Helmet>
+                <title> Games</title>
+            </Helmet>
 
-      <Games />
-    </>
-  );
+            <Games />
+        </>
+    );
 }

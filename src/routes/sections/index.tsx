@@ -12,28 +12,28 @@ import { gameRoutes } from './games';
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  return useRoutes([
-    {
-      path: '/',
-      element: <Navigate to={PATH_AFTER_LOGIN} replace />,
-    },
+    return useRoutes([
+        {
+            path: '/',
+            element: <Navigate to={PATH_AFTER_LOGIN} replace />
+        },
 
-    // Auth routes
-    ...authRoutes,
+        // Auth routes
+        ...authRoutes,
 
-    // Dashboard routes
-    ...dashboardRoutes,
+        // Dashboard routes
+        ...dashboardRoutes,
 
-    // Operator routes
-    ...operatorRoutes,
+        // Operator routes
+        ...operatorRoutes,
 
-    // Game routes
-    ...gameRoutes,
+        // Game routes
+        ...gameRoutes,
 
-    // Main routes
-    ...mainRoutes,
+        // Main routes
+        ...mainRoutes,
 
-    // No match 404
-    { path: '*', element: <Navigate to="/404" replace /> },
-  ]);
+        // No match 404
+        { path: '*', element: <Navigate to="/404" replace /> }
+    ]);
 }

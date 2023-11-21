@@ -16,13 +16,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 // routes
 import { paths } from 'src/routes/paths';
 // hooks
@@ -34,13 +28,13 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
-  useTable,
-  emptyRows,
-  TableNoData,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
+    useTable,
+    emptyRows,
+    TableNoData,
+    TableEmptyRows,
+    TableHeadCustom,
+    TableSelectedAction,
+    TablePaginationCustom
 } from 'src/components/table';
 // types
 import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
@@ -55,307 +49,305 @@ const checkedIcon = <CheckBoxIcon fontSize="small" />;
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'Id' },
-  { id: 'name', label: 'Name' },
-  { id: 'createAt', label: 'Create Time' },
-  { id: 'status', label: 'Status' },
-  { id: '' },
+    { id: 'id', label: 'Id' },
+    { id: 'name', label: 'Name' },
+    { id: 'createAt', label: 'Create Time' },
+    { id: 'status', label: 'Status' },
+    { id: '' }
 ];
 
 const defaultFilters: IUserTableFilters = {
-  name: '',
-  role: [],
-  status: 'all',
+    name: '',
+    role: [],
+    status: 'all'
 };
 
 // ----------------------------------------------------------------------
 
 export default function Categoreis() {
-  const table = useTable();
+    const table = useTable();
 
-  const settings = useSettingsContext();
+    const settings = useSettingsContext();
 
-  const confirm = useBoolean();
+    const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState<any>([]);
+    const [tableData, setTableData] = useState<any>([]);
 
-  const [filters, setFilters] = useState(defaultFilters);
+    const [filters, setFilters] = useState(defaultFilters);
 
-  const dataInPage = tableData.slice(
-    table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage
-  );
+    const dataInPage = tableData.slice(
+        table.page * table.rowsPerPage,
+        table.page * table.rowsPerPage + table.rowsPerPage
+    );
 
-  const denseHeight = table.dense ? 52 : 72;
+    const denseHeight = table.dense ? 52 : 72;
 
-  const canReset = !isEqual(defaultFilters, filters);
+    const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = (!tableData.length && canReset) || !tableData.length;
+    const notFound = (!tableData.length && canReset) || !tableData.length;
 
-  const handleFilters = useCallback(
-    (name: string, value: IUserTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
+    const handleFilters = useCallback(
+        (name: string, value: IUserTableFilterValue) => {
+            table.onResetPage();
+            setFilters((prevState) => ({
+                ...prevState,
+                [name]: value
+            }));
+        },
+        [table]
+    );
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row: any) => row.id !== id);
-      setTableData(deleteRow);
+    const handleDeleteRow = useCallback(
+        (id: string) => {
+            const deleteRow = tableData.filter((row: any) => row.id !== id);
+            setTableData(deleteRow);
 
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
+            table.onUpdatePageDeleteRow(dataInPage.length);
+        },
+        [dataInPage.length, table, tableData]
+    );
 
-  const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
-    setTableData(deleteRows);
+    const handleDeleteRows = useCallback(() => {
+        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
+        setTableData(deleteRows);
 
-    table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: tableData.length,
+        table.onUpdatePageDeleteRows({
+            totalRows: tableData.length,
+            totalRowsInPage: dataInPage.length,
+            totalRowsFiltered: tableData.length
+        });
+    }, [dataInPage.length, table, tableData]);
+
+    const handleResetFilters = useCallback(() => {
+        setFilters(defaultFilters);
+    }, []);
+
+    // caregorie add
+
+    const [open, setOpen] = useState(false);
+    const [addArray, setAddArray] = useState<any>({
+        category: '',
+        providers: []
     });
-  }, [dataInPage.length, table, tableData]);
 
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
-
-  // caregorie add
-
-  const [open, setOpen] = useState(false);
-  const [addArray, setAddArray] = useState<any>({
-    category: '',
-    providers: [],
-  });
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleAutocompleteChange = (event: any, values: any) => {
-    setAddArray({ ...addArray, providers: values });
-  };
-
-  const addCategories = async () => {
-    const res = await addCategory(addArray);
-    setTableData(res.data);
-  };
-
-  const [displayProviders, setDisplayProviders] = useState<any>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const allProvider = await allProviders();
-      setDisplayProviders(allProvider.data.provider);
-      setTableData(allProvider.data.category);
+    const handleClickOpen = () => {
+        setOpen(true);
     };
-    fetchData();
-  }, []);
 
-  return (
-    <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Categories"
-          links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Games', href: paths.games.category },
-            { name: 'Categories' },
-          ]}
-          action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              onClick={handleClickOpen}
-            >
-              New Cateory
-            </Button>
-          }
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        />
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-        <Card>
-          {canReset && (
-            <UserTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              onResetFilters={handleResetFilters}
-              results={tableData.length}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )}
+    const handleAutocompleteChange = (event: any, values: any) => {
+        setAddArray({ ...addArray, providers: values });
+    };
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={table.dense}
-              numSelected={table.selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  tableData.map((row: any) => row._id)
-                )
-              }
-              action={
-                <>
-                  <Tooltip title="Disable">
-                    <IconButton color="primary" onClick={confirm.onTrue}>
-                      <Typography>Disable</Typography>
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Enable">
-                    <IconButton color="primary" onClick={confirm.onTrue}>
-                      <Typography>Enable</Typography>
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete">
-                    <IconButton color="primary" onClick={confirm.onTrue}>
-                      <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                  </Tooltip>
-                </>
-              }
-            />
+    const addCategories = async () => {
+        const res = await addCategory(addArray);
+        setTableData(res.data);
+    };
 
-            <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
+    const [displayProviders, setDisplayProviders] = useState<any>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const allProvider = await allProviders();
+            setDisplayProviders(allProvider.data.provider);
+            setTableData(allProvider.data.category);
+        };
+        fetchData();
+    }, []);
+
+    return (
+        <>
+            <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+                <CustomBreadcrumbs
+                    heading="Categories"
+                    links={[
+                        { name: 'Dashboard', href: paths.dashboard.root },
+                        { name: 'Games', href: paths.games.category },
+                        { name: 'Categories' }
+                    ]}
+                    action={
+                        <Button
+                            variant="contained"
+                            startIcon={<Iconify icon="mingcute:add-line" />}
+                            onClick={handleClickOpen}
+                        >
+                            New Cateory
+                        </Button>
+                    }
+                    sx={{
+                        mb: { xs: 3, md: 5 }
+                    }}
                 />
 
-                <TableBody>
-                  {tableData
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row: any) => (
-                      <UserTableRow
-                        key={row._id}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                      />
-                    ))}
+                <Card>
+                    {canReset && (
+                        <UserTableFiltersResult
+                            filters={filters}
+                            onFilters={handleFilters}
+                            onResetFilters={handleResetFilters}
+                            results={tableData.length}
+                            sx={{ p: 2.5, pt: 0 }}
+                        />
+                    )}
 
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
-                  />
+                    <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+                        <TableSelectedAction
+                            dense={table.dense}
+                            numSelected={table.selected.length}
+                            rowCount={tableData.length}
+                            onSelectAllRows={(checked) =>
+                                table.onSelectAllRows(
+                                    checked,
+                                    tableData.map((row: any) => row._id)
+                                )
+                            }
+                            action={
+                                <>
+                                    <Tooltip title="Disable">
+                                        <IconButton color="primary" onClick={confirm.onTrue}>
+                                            <Typography>Disable</Typography>
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Enable">
+                                        <IconButton color="primary" onClick={confirm.onTrue}>
+                                            <Typography>Enable</Typography>
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Delete">
+                                        <IconButton color="primary" onClick={confirm.onTrue}>
+                                            <Iconify icon="solar:trash-bin-trash-bold" />
+                                        </IconButton>
+                                    </Tooltip>
+                                </>
+                            }
+                        />
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+                        <Scrollbar>
+                            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                                <TableHeadCustom
+                                    order={table.order}
+                                    orderBy={table.orderBy}
+                                    headLabel={TABLE_HEAD}
+                                    rowCount={tableData.length}
+                                    numSelected={table.selected.length}
+                                    onSort={table.onSort}
+                                />
 
-          <TablePaginationCustom
-            count={tableData.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
-          />
-        </Card>
-      </Container>
+                                <TableBody>
+                                    {tableData
+                                        .slice(
+                                            table.page * table.rowsPerPage,
+                                            table.page * table.rowsPerPage + table.rowsPerPage
+                                        )
+                                        .map((row: any) => (
+                                            <UserTableRow
+                                                key={row._id}
+                                                row={row}
+                                                selected={table.selected.includes(row.id)}
+                                                onSelectRow={() => table.onSelectRow(row.id)}
+                                                onDeleteRow={() => handleDeleteRow(row.id)}
+                                            />
+                                        ))}
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Category</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Category Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(e: any) => {
-              setAddArray({ ...addArray, category: e.target.value });
-            }}
-          />
+                                    <TableEmptyRows
+                                        height={denseHeight}
+                                        emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                                    />
 
-          <DialogContentText sx={{ pt: 2, pb: 2 }}>
-            Please select the providers that fall into this category.
-          </DialogContentText>
+                                    <TableNoData notFound={notFound} />
+                                </TableBody>
+                            </Table>
+                        </Scrollbar>
+                    </TableContainer>
 
-          <Autocomplete
-            multiple
-            id="checkboxes-tags-demo"
-            options={displayProviders}
-            disableCloseOnSelect
-            getOptionLabel={(option) => option.name}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <Checkbox
-                  icon={icon}
-                  checkedIcon={checkedIcon}
-                  style={{ marginRight: 8 }}
-                  checked={selected}
-                />
-                {option.name}
-              </li>
-            )}
-            style={{ width: 500 }}
-            onChange={handleAutocompleteChange}
-            renderInput={(params) => (
-              <TextField {...params} label="Checkboxes" placeholder="Favorites" />
-            )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={addCategories}>Add</Button>
-        </DialogActions>
-      </Dialog>
+                    <TablePaginationCustom
+                        count={tableData.length}
+                        page={table.page}
+                        rowsPerPage={table.rowsPerPage}
+                        onPageChange={table.onChangePage}
+                        onRowsPerPageChange={table.onChangeRowsPerPage}
+                        //
+                        dense={table.dense}
+                        onChangeDense={table.onChangeDense}
+                    />
+                </Card>
+            </Container>
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
-    </>
-  );
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Add Category</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Category Name"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        onChange={(e: any) => {
+                            setAddArray({ ...addArray, category: e.target.value });
+                        }}
+                    />
+
+                    <DialogContentText sx={{ pt: 2, pb: 2 }}>
+                        Please select the providers that fall into this category.
+                    </DialogContentText>
+
+                    <Autocomplete
+                        multiple
+                        id="checkboxes-tags-demo"
+                        options={displayProviders}
+                        disableCloseOnSelect
+                        getOptionLabel={(option) => option.name}
+                        renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                                <Checkbox
+                                    icon={icon}
+                                    checkedIcon={checkedIcon}
+                                    style={{ marginRight: 8 }}
+                                    checked={selected}
+                                />
+                                {option.name}
+                            </li>
+                        )}
+                        style={{ width: 500 }}
+                        onChange={handleAutocompleteChange}
+                        renderInput={(params) => <TextField {...params} label="Checkboxes" placeholder="Favorites" />}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={addCategories}>Add</Button>
+                </DialogActions>
+            </Dialog>
+
+            <ConfirmDialog
+                open={confirm.value}
+                onClose={confirm.onFalse}
+                title="Delete"
+                content={
+                    <>
+                        Are you sure want to delete <strong> {table.selected.length} </strong> items?
+                    </>
+                }
+                action={
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                            handleDeleteRows();
+                            confirm.onFalse();
+                        }}
+                    >
+                        Delete
+                    </Button>
+                }
+            />
+        </>
+    );
 }
 
 // ----------------------------------------------------------------------

@@ -18,23 +18,23 @@ const CommissionStats = lazy(() => import('src/pages/dashboard/commissionstats')
 // ----------------------------------------------------------------------
 
 export const dashboardRoutes = [
-  {
-    path: 'dashboard',
-    element: (
-      <AuthGuard>
-        <DashboardLayout>
-          <Suspense fallback={<LoadingScreen />}>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
-      </AuthGuard>
-    ),
-    children: [
-      { element: <IndexPage />, index: true },
-      { path: 'usertree', element: <UserTree /> },
-      { path: 'gamestatics', element: <GameStatics /> },
-      { path: 'transaction', element: <Transaction /> },
-      { path: 'commissionstats', element: <CommissionStats /> },
-    ],
-  },
+    {
+        path: 'dashboard',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
+        children: [
+            { element: <IndexPage />, index: true },
+            { path: 'usertree', element: <UserTree /> },
+            { path: 'gamestatics', element: <GameStatics /> },
+            { path: 'transaction', element: <Transaction /> },
+            { path: 'commissionstats', element: <CommissionStats /> }
+        ]
+    }
 ];

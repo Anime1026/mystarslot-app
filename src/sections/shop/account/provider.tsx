@@ -9,392 +9,272 @@ import Grid from '@mui/material/Unstable_Grid2';
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 const Providers = () => (
-  <>
-    <Card sx={{ mt: 3 }}>
-      <CardHeader title="Casino" />
+    <>
+        <Card sx={{ mt: 3 }}>
+            <CardHeader title="Casino" />
 
-      <Stack spacing={2} sx={{ p: 3, typography: 'body2' }}>
-        <Grid container spacing={{ xs: 0.5, md: 2 }}>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-        </Grid>
-      </Stack>
-    </Card>
-    <Card sx={{ mt: 3 }}>
-      <CardHeader title="Live Casino" />
+            <Stack spacing={2} sx={{ p: 3, typography: 'body2' }}>
+                <Grid container spacing={{ xs: 0.5, md: 2 }}>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                </Grid>
+            </Stack>
+        </Card>
+        <Card sx={{ mt: 3 }}>
+            <CardHeader title="Live Casino" />
 
-      <Stack spacing={2} sx={{ p: 3, typography: 'body2' }}>
-        <Grid container spacing={{ xs: 0.5, md: 2 }}>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-        </Grid>
-      </Stack>
-    </Card>
-    <Card sx={{ mt: 3 }}>
-      <CardHeader title="Virtual" />
+            <Stack spacing={2} sx={{ p: 3, typography: 'body2' }}>
+                <Grid container spacing={{ xs: 0.5, md: 2 }}>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                </Grid>
+            </Stack>
+        </Card>
+        <Card sx={{ mt: 3 }}>
+            <CardHeader title="Virtual" />
 
-      <Stack spacing={2} sx={{ p: 3, typography: 'body2' }}>
-        <Grid container spacing={{ xs: 0.5, md: 2 }}>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-          <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
-            <FormControlLabel
-              label="Pragmatic Play"
-              control={
-                <Checkbox
-                  {...label}
-                  defaultChecked
-                  sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }}
-                />
-              }
-            />
-          </Grid>
-        </Grid>
-      </Stack>
-    </Card>
-  </>
+            <Stack spacing={2} sx={{ p: 3, typography: 'body2' }}>
+                <Grid container spacing={{ xs: 0.5, md: 2 }}>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                    <Grid xs={6} md={3} lg={2} sx={{ color: 'text.secondary' }}>
+                        <FormControlLabel
+                            label="Pragmatic Play"
+                            control={
+                                <Checkbox {...label} defaultChecked sx={{ '& .MuiSvgIcon-root': { fontSize: 24 } }} />
+                            }
+                        />
+                    </Grid>
+                </Grid>
+            </Stack>
+        </Card>
+    </>
 );
 
 export default Providers;

@@ -11,24 +11,24 @@ import TreeView from './tree-view';
 // ----------------------------------------------------------------------
 
 export default function TwoView() {
-  const settings = useSettingsContext();
+    const settings = useSettingsContext();
 
-  return (
-    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-      <Typography variant="h4"> User Tree </Typography>
+    return (
+        <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+            <Typography variant="h4"> User Tree </Typography>
 
-      <Box
-        sx={{
-          mt: 5,
-          width: 1,
-          borderRadius: 2,
-          p: 2,
-          bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
-          border: (theme) => `dashed 1px ${theme.palette.divider}`,
-        }}
-      >
-        <TreeView />
-      </Box>
-    </Container>
-  );
+            <Box
+                sx={{
+                    mt: 5,
+                    width: 1,
+                    borderRadius: 2,
+                    p: 2,
+                    bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
+                    border: (theme) => `dashed 1px ${theme.palette.divider}`
+                }}
+            >
+                <TreeView />
+            </Box>
+        </Container>
+    );
 }

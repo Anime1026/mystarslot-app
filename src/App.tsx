@@ -16,6 +16,7 @@ import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 import ProgressBar from 'src/components/progress-bar';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { SettingsProvider, SettingsDrawer } from 'src/components/settings';
+import { SnackbarProvider } from 'src/components/snackbar';
 // auth
 import { AuthProvider, AuthConsumer } from 'src/auth/context/jwt';
 // locales
@@ -35,17 +36,19 @@ export default function App() {
             themeContrast: 'default', // 'default' | 'bold'
             themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
             themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-            themeStretch: false,
+            themeStretch: false
           }}
         >
           <ThemeProvider>
-            <MotionLazy>
-              <SettingsDrawer />
-              <ProgressBar />
-              <AuthConsumer>
-                <Router />
-              </AuthConsumer>
-            </MotionLazy>
+            <SnackbarProvider>
+              <MotionLazy>
+                <SettingsDrawer />
+                <ProgressBar />
+                <AuthConsumer>
+                  <Router />
+                </AuthConsumer>
+              </MotionLazy>
+            </SnackbarProvider>
           </ThemeProvider>
         </SettingsProvider>
       </LocalizationProvider>

@@ -5,11 +5,11 @@ import { customShadows } from '../custom-shadows';
 // ----------------------------------------------------------------------
 
 export function darkMode(mode: 'light' | 'dark') {
-  const theme = {
-    palette: palette(mode),
-    shadows: shadows(mode),
-    customShadows: customShadows(mode),
-  };
+    const theme = {
+        palette: palette(mode),
+        shadows: shadows(mode),
+        customShadows: customShadows(mode)
+    };
 
-  return theme;
+    return theme;
 }
