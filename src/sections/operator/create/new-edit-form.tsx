@@ -100,7 +100,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
     const handleDrop = useCallback(
         (acceptedFiles: File[]) => {
             const file = acceptedFiles[0];
-            const newFile = Object.assign(file, {
+            Object.assign(file, {
                 preview: URL.createObjectURL(file)
             });
 

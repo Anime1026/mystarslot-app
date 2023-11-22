@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 // @mui
 import Table from '@mui/material/Table';
 import TableRow from '@mui/material/TableRow';
@@ -8,6 +9,8 @@ import Card, { CardProps } from '@mui/material/Card';
 import TableContainer from '@mui/material/TableContainer';
 // utils
 import { fCurrency } from 'src/utils/format-number';
+// type
+import { TransactionType } from 'src/types/invoice';
 // components
 import Label from 'src/components/label';
 import Scrollbar from 'src/components/scrollbar';
@@ -15,19 +18,10 @@ import { TableHeadCustom } from 'src/components/table';
 
 // ----------------------------------------------------------------------
 
-type RowProps = {
-    id: any;
-    from: any;
-    to: any;
-    in: any;
-    out: any;
-    date: any;
-};
-
 interface Props extends CardProps {
     title?: string;
     subheader?: string;
-    tableData: RowProps[];
+    tableData: TransactionType[];
     tableLabels: any;
 }
 
@@ -56,7 +50,7 @@ export default function EcommerceBestSalesman({ title, subheader, tableData, tab
 // ----------------------------------------------------------------------
 
 type EcommerceBestSalesmanRowProps = {
-    row: RowProps;
+    row: TransactionType;
 };
 
 function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
@@ -68,23 +62,23 @@ function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
 
             <TableCell align="center">{row.to}</TableCell>
 
-            <TableCell align="right">{fCurrency(row.in)}</TableCell>
+            <TableCell align="right">{fCurrency(row.inAmount)}</TableCell>
 
             <TableCell align="right">
                 <Label
                     variant="soft"
                     color={
-                        (row.out === 'Top 1' && 'primary') ||
-                        (row.out === 'Top 2' && 'info') ||
-                        (row.out === 'Top 3' && 'success') ||
-                        (row.out === 'Top 4' && 'warning') ||
+                        // (row.outAmount === 'Top 1' && 'primary') ||
+                        // (row.outAmount === 'Top 2' && 'info') ||
+                        // (row.outAmount === 'Top 3' && 'success') ||
+                        // (row.outAmount === 'Top 4' && 'warning') ||
                         'error'
                     }
                 >
-                    {fCurrency(row.out)}
+                    {fCurrency(row.outAmount)}
                 </Label>
             </TableCell>
-            <TableCell align="right">{row.date}</TableCell>
+            <TableCell align="right">{format(new Date(row.date), 'dd MMM yyyy')}</TableCell>
         </TableRow>
     );
 }

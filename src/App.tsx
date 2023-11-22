@@ -24,34 +24,34 @@ import { LocalizationProvider } from 'src/locales';
 // ----------------------------------------------------------------------
 
 export default function App() {
-  useScrollToTop();
+    useScrollToTop();
 
-  return (
-    <AuthProvider>
-      <LocalizationProvider>
-        <SettingsProvider
-          defaultSettings={{
-            themeMode: 'dark', // 'light' | 'dark'
-            themeDirection: 'ltr', //  'rtl' | 'ltr'
-            themeContrast: 'default', // 'default' | 'bold'
-            themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-            themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-            themeStretch: false
-          }}
-        >
-          <ThemeProvider>
-            <SnackbarProvider>
-              <MotionLazy>
-                <SettingsDrawer />
-                <ProgressBar />
-                <AuthConsumer>
-                  <Router />
-                </AuthConsumer>
-              </MotionLazy>
-            </SnackbarProvider>
-          </ThemeProvider>
-        </SettingsProvider>
-      </LocalizationProvider>
-    </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <LocalizationProvider>
+                <SettingsProvider
+                    defaultSettings={{
+                        themeMode: 'dark', // 'light' | 'dark'
+                        themeDirection: 'ltr', //  'rtl' | 'ltr'
+                        themeContrast: 'default', // 'default' | 'bold'
+                        themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+                        themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                        themeStretch: false
+                    }}
+                >
+                    <ThemeProvider>
+                        <SnackbarProvider>
+                            <MotionLazy>
+                                <SettingsDrawer />
+                                <ProgressBar />
+                                <AuthConsumer>
+                                    <Router />
+                                </AuthConsumer>
+                            </MotionLazy>
+                        </SnackbarProvider>
+                    </ThemeProvider>
+                </SettingsProvider>
+            </LocalizationProvider>
+        </AuthProvider>
+    );
 }

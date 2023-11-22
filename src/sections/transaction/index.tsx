@@ -17,7 +17,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // _mock
-import { _invoices, INVOICE_SERVICE_OPTIONS } from 'src/_mock';
+import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
 // api
 import { getTransactions } from 'src/api';
 // components
@@ -37,7 +37,7 @@ import {
     TablePaginationCustom
 } from 'src/components/table';
 // types
-import { IInvoice, IInvoiceTableFilters, IInvoiceTableFilterValue, TransactionType } from 'src/types/invoice';
+import { IInvoiceTableFilters, IInvoiceTableFilterValue, TransactionType } from 'src/types/invoice';
 // table tools
 import InvoiceTableRow from './table/invoice-table-row';
 import InvoiceTableToolbar from './table/invoice-table-toolbar';
@@ -52,8 +52,7 @@ const TABLE_HEAD = [
     { id: 'type', label: 'Type' },
     { id: 'price', label: 'In' },
     { id: 'sent', label: 'Out', align: 'center' },
-    { id: 'status', label: 'Date' },
-    { id: '' }
+    { id: 'status', label: 'Date' }
 ];
 
 const defaultFilters: IInvoiceTableFilters = {
@@ -261,6 +260,7 @@ export default function InvoiceListView() {
                                             tableData.map((row) => row.id)
                                         )
                                     }
+                                    transaction
                                 />
 
                                 <TableBody>
@@ -344,7 +344,7 @@ function applyFilter({
     filters: IInvoiceTableFilters;
     dateError: boolean;
 }) {
-    const { name, status, service, startDate, endDate } = filters;
+    const { name, startDate, endDate } = filters;
 
     const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 

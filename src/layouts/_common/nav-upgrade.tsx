@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 // hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
 import { useAuthContext } from 'src/auth/hooks';
 // ----------------------------------------------------------------------
 

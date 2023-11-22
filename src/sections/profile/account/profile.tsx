@@ -85,7 +85,7 @@ export default function AccountGeneral() {
         (acceptedFiles: File[]) => {
             const file = acceptedFiles[0];
 
-            const newFile = Object.assign(file, {
+            Object.assign(file, {
                 preview: URL.createObjectURL(file)
             });
 

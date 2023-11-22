@@ -7,8 +7,8 @@ import { HOST_API } from 'src/config-global';
 const axiosInstance = axios.create({ baseURL: HOST_API });
 
 axiosInstance.interceptors.response.use(
-  (res) => res,
-  (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
+    (res) => res,
+    (error) => Promise.reject((error.response && error.response.data) || 'Something went wrong')
 );
 
 export default axiosInstance;
@@ -16,57 +16,59 @@ export default axiosInstance;
 // ----------------------------------------------------------------------
 
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
-  const [url, config] = Array.isArray(args) ? args : [args];
+    const [url, config] = Array.isArray(args) ? args : [args];
 
-  const res = await axiosInstance.get(url, { ...config });
+    const res = await axiosInstance.get(url, { ...config });
 
-  return res.data;
+    return res.data;
 };
 
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  chat: '/api/chat',
-  kanban: '/api/kanban',
-  calendar: '/api/calendar',
-  dashboard: {
-    getUserTree: '/api/get-user-tree',
-  },
-  auth: {
-    me: '/api/auth/me',
-    login: '/api/user-login',
-    register: '/api/auth/register',
-    password: '/api/change-password',
-  },
-  mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels',
-  },
-  post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search',
-  },
-  product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search',
-  },
-  operator: {
-    list: '/api/get-user',
-    create: 'api/user-create',
-    update: '/api/user-update',
-    remove: '/api/user-delete',
-    getCategories: '/api/get-categories',
-  },
-  transaction: {
-    get: '/api/get-transactions',
-    getInOut: '/api/get-inoutAmount'
-  },
-  games: {
-    allProviders: '/api/get-allprovider',
-    addCategory: '/api/add-category',
-  },
+    chat: '/api/chat',
+    kanban: '/api/kanban',
+    calendar: '/api/calendar',
+    dashboard: {
+        getUserTree: '/api/get-user-tree',
+        getUserCounts: '/api/get-userCounts'
+    },
+    auth: {
+        me: '/api/auth/me',
+        login: '/api/user-login',
+        register: '/api/auth/register',
+        password: '/api/change-password'
+    },
+    mail: {
+        list: '/api/mail/list',
+        details: '/api/mail/details',
+        labels: '/api/mail/labels'
+    },
+    post: {
+        list: '/api/post/list',
+        details: '/api/post/details',
+        latest: '/api/post/latest',
+        search: '/api/post/search'
+    },
+    product: {
+        list: '/api/product/list',
+        details: '/api/product/details',
+        search: '/api/product/search'
+    },
+    operator: {
+        list: '/api/get-user',
+        create: 'api/user-create',
+        update: '/api/user-update',
+        remove: '/api/user-delete',
+        getCategories: '/api/get-categories'
+    },
+    transaction: {
+        get: '/api/get-transactions',
+        getInOut: '/api/get-inoutAmount',
+        getLatest: '/api/get-latestTransactions'
+    },
+    games: {
+        allProviders: '/api/get-allprovider',
+        addCategory: '/api/add-category'
+    }
 };

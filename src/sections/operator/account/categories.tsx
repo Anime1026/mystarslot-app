@@ -6,7 +6,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useState } from 'react';
 // components
 import { getCategories } from 'src/api';
-import { useAuthContext } from 'src/auth/hooks';
 // ----------------------------------------------------------------------
 
 const NOTIFICATIONS = [

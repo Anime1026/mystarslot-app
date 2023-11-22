@@ -40,14 +40,25 @@ export async function getCategories() {
     return res.data;
 }
 
+// transactions
 export async function getTransactions() {
     const res = await axios.get(endpoints.transaction.get);
     return res.data;
 }
 
 export async function getInOutAmount(data: any) {
-  const res = await axios.post(endpoints.transaction.getInOut, data);
-  return res.data;
+    const res = await axios.post(endpoints.transaction.getInOut, data);
+    return res.data;
+}
+
+export async function getLatestTransactions() {
+    const res = await axios.get(endpoints.transaction.getLatest);
+    return res.data;
+}
+
+export async function getUserCounts() {
+    const res = await axios.get(endpoints.dashboard.getUserCounts);
+    return res.data;
 }
 
 // add game-management

@@ -76,16 +76,16 @@ export function useNavData() {
             {
                 subheader: 'management',
                 items: [
-                    {
-                        title: 'Game Management',
-                        path: paths.games.index,
-                        icon: ICONS.invoice,
-                        children: [
-                            { title: 'Categories', path: paths.games.category },
-                            { title: 'Providers', path: paths.games.provider },
-                            { title: 'Games', path: paths.games.game }
-                        ]
-                    },
+                    // {
+                    //     title: 'Game Management',
+                    //     path: paths.games.index,
+                    //     icon: ICONS.invoice,
+                    //     children: [
+                    //         { title: 'Categories', path: paths.games.category },
+                    //         { title: 'Providers', path: paths.games.provider },
+                    //         { title: 'Games', path: paths.games.game }
+                    //     ]
+                    // },
                     {
                         title: 'Operators',
                         path: paths.operator.index,

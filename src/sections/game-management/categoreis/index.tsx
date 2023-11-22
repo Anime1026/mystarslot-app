@@ -37,7 +37,7 @@ import {
     TablePaginationCustom
 } from 'src/components/table';
 // types
-import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
+import { IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
 // api
 import { allProviders, addCategory } from 'src/api';
 //

@@ -49,8 +49,6 @@ export default function UserTableRow({
 }: Props) {
     const { name, avatar, company, role, status, email, phoneNumber } = row;
 
-    const confirm = useBoolean();
-
     const deleteUser = useBoolean();
 
     const enableUser = useBoolean();

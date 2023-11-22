@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 // @mui
 import { alpha } from '@mui/material/styles';

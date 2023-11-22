@@ -55,8 +55,6 @@ export default function UserTableRow({
 
     const disableUser = useBoolean();
 
-    const confirm = useBoolean();
-
     const quickEdit = useBoolean();
 
     const popover = usePopover();

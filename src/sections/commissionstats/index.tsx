@@ -16,8 +16,6 @@ import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/use-boolean';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
-// _mock
-import { _invoices } from 'src/_mock';
 // components
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -44,7 +42,7 @@ import InvoiceTableFiltersResult from './table/invoice-table-filters-result';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    { id: 'invoiceNumber', label: 'Id' },
+    { id: 'id', label: 'Id' },
     { id: 'invoiceNumber', label: 'Name' },
     { id: 'dueDate', label: 'Casino' },
     { id: 'price', label: 'Live Casino' },
@@ -73,7 +71,7 @@ export default function InvoiceListView() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState(_invoices);
+    const [tableData, setTableData] = useState<any>([]);
 
     const [filters, setFilters] = useState(defaultFilters);
 
@@ -115,7 +113,7 @@ export default function InvoiceListView() {
 
     const handleDeleteRow = useCallback(
         (id: string) => {
-            const deleteRow = tableData.filter((row) => row.id !== id);
+            const deleteRow = tableData.filter((row: any) => row.id !== id);
             setTableData(deleteRow);
 
             table.onUpdatePageDeleteRow(dataInPage.length);
@@ -124,7 +122,7 @@ export default function InvoiceListView() {
     );
 
     const handleDeleteRows = useCallback(() => {
-        const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
         setTableData(deleteRows);
 
         table.onUpdatePageDeleteRows({
@@ -203,7 +201,7 @@ export default function InvoiceListView() {
                             onSelectAllRows={(checked) =>
                                 table.onSelectAllRows(
                                     checked,
-                                    tableData.map((row) => row.id)
+                                    tableData.map((row: any) => row.id)
                                 )
                             }
                             action={
@@ -247,7 +245,7 @@ export default function InvoiceListView() {
                                     onSelectAllRows={(checked) =>
                                         table.onSelectAllRows(
                                             checked,
-                                            tableData.map((row) => row.id)
+                                            tableData.map((row: any) => row.id)
                                         )
                                     }
                                 />

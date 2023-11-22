@@ -48,7 +48,7 @@ export default function UserTableRow({
     onEnableRow,
     onDisableRow
 }: Props) {
-    const { name, avatar, status, email, balance, ipAddress, lastLogin } = row;
+    const { name, avatar, status, email, balance, ipAddress } = row;
 
     const deleteUser = useBoolean();
 

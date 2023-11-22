@@ -63,7 +63,7 @@ export default function InvoiceListView() {
 
     const [tableData, setTableData] = useState(_invoices);
 
-    const [filters, setFilters] = useState(defaultFilters);
+    const [filters] = useState(defaultFilters);
 
     const dateError =
         filters.startDate && filters.endDate ? filters.startDate.getTime() > filters.endDate.getTime() : false;

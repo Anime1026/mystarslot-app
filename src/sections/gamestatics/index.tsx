@@ -14,8 +14,6 @@ import Divider from '@mui/material/Divider';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-// _mock
-import { _orders } from 'src/_mock';
 
 // utils
 import { fTimestamp } from 'src/utils/format-time';
@@ -77,7 +75,7 @@ export default function OrderListView() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState(_orders);
+    const [tableData, setTableData] = useState<any>([]);
 
     const [filters, setFilters] = useState(defaultFilters);
 
@@ -115,7 +113,7 @@ export default function OrderListView() {
 
     const handleDeleteRow = useCallback(
         (id: string) => {
-            const deleteRow = tableData.filter((row) => row.id !== id);
+            const deleteRow = tableData.filter((row: any) => row.id !== id);
             setTableData(deleteRow);
 
             table.onUpdatePageDeleteRow(dataInPage.length);
@@ -124,7 +122,7 @@ export default function OrderListView() {
     );
 
     const handleDeleteRows = useCallback(() => {
-        const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
         setTableData(deleteRows);
 
         table.onUpdatePageDeleteRows({
@@ -180,7 +178,7 @@ export default function OrderListView() {
                             <TotalPrice
                                 title="Total In"
                                 percent={100}
-                                price={8970.25}
+                                price={0}
                                 icon="solar:bill-list-bold-duotone"
                                 color={theme.palette.info.main}
                             />
@@ -188,7 +186,7 @@ export default function OrderListView() {
                             <TotalPrice
                                 title="Total Out"
                                 percent={100}
-                                price={5234.75}
+                                price={0}
                                 icon="solar:file-check-bold-duotone"
                                 color={theme.palette.success.main}
                             />
@@ -196,7 +194,7 @@ export default function OrderListView() {
                             <TotalPrice
                                 title="SUM"
                                 percent={100}
-                                price={14202}
+                                price={0}
                                 icon="solar:sort-by-time-bold-duotone"
                                 color={theme.palette.warning.main}
                             />
@@ -233,7 +231,7 @@ export default function OrderListView() {
                             onSelectAllRows={(checked) =>
                                 table.onSelectAllRows(
                                     checked,
-                                    tableData.map((row) => row.id)
+                                    tableData.map((row: any) => row.id)
                                 )
                             }
                             action={
@@ -257,7 +255,7 @@ export default function OrderListView() {
                                     onSelectAllRows={(checked) =>
                                         table.onSelectAllRows(
                                             checked,
-                                            tableData.map((row) => row.id)
+                                            tableData.map((row: any) => row.id)
                                         )
                                     }
                                 />

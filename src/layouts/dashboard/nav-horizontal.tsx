@@ -1,12 +1,10 @@
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 // theme
 import { bgBlur } from 'src/theme/css';
-// hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
 // components
 import { NavSectionHorizontal } from 'src/components/nav-section';
 import { useAuthContext } from 'src/auth/hooks';

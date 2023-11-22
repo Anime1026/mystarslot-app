@@ -13,8 +13,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 
-// hooks
-import { useMockedUser } from 'src/hooks/use-mocked-user';
 // utils
 import { fData } from 'src/utils/format-number';
 import { IUserItem } from 'src/types/user';
@@ -31,7 +29,6 @@ export default function AccountGeneral() {
     const { enqueueSnackbar } = useSnackbar();
     const location = useLocation();
     const params: IUserItem = location.state;
-    const { user } = useMockedUser();
 
     const UpdateUserSchema = Yup.object().shape({
         displayName: Yup.string().required('Name is required'),
@@ -79,7 +76,6 @@ export default function AccountGeneral() {
             formData.append('timezone', data.timezone);
             formData.append('currency', data.currency);
             const result = await update(formData);
-            console.log(data);
             if (result.status) {
                 enqueueSnackbar('Update success!');
             }
@@ -92,7 +88,7 @@ export default function AccountGeneral() {
         (acceptedFiles: File[]) => {
             const file = acceptedFiles[0];
 
-            const newFile = Object.assign(file, {
+            Object.assign(file, {
                 preview: URL.createObjectURL(file)
             });
 

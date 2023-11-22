@@ -16,13 +16,11 @@ import { updateProfile } from 'src/api';
 import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
-import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
-    const { enqueueSnackbar } = useSnackbar();
     const { user } = useAuthContext();
     const password = useBoolean();
 
@@ -49,7 +47,6 @@ export default function AccountChangePassword() {
     });
 
     const {
-        reset,
         handleSubmit,
         formState: { isSubmitting }
     } = methods;
@@ -60,7 +57,6 @@ export default function AccountChangePassword() {
             const result = await updateProfile({ password: data.newPassword, id: user?.id });
             if (result.status) {
                 setSession(result.accessToken);
-                console.log('Data', result);
             }
         } catch (error) {
             console.error(error);
