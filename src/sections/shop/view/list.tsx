@@ -18,7 +18,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 // _mock
-import { _userList, _roles, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -101,7 +101,7 @@ export default function UserListView() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState<tableType[]>(_userList);
+    const [tableData, setTableData] = useState<tableType[]>([]);
 
     const [filters, setFilters] = useState(defaultFilters);
 

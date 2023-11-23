@@ -17,7 +17,7 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // _mock
-import { _userList, _roles, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -99,7 +99,7 @@ export default function UserListView() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState(_userList);
+    const [tableData, setTableData] = useState<tableType[]>([]);
 
     const [filters, setFilters] = useState(defaultFilters);
 
