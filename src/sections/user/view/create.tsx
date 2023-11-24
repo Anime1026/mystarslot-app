@@ -16,17 +16,17 @@ export default function UserCreateView() {
     return (
         <Container maxWidth={settings.themeStretch ? false : 'lg'}>
             <CustomBreadcrumbs
-                heading="Create a new operator"
+                heading="Create a new User"
                 links={[
                     {
                         name: 'Dashboard',
                         href: paths.dashboard.root
                     },
                     {
-                        name: 'Operator',
-                        href: paths.operator.list
+                        name: 'User',
+                        href: paths.user.list
                     },
-                    { name: 'New operator' }
+                    { name: 'New User' }
                 ]}
                 sx={{
                     mb: { xs: 3, md: 5 }

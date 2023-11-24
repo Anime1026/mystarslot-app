@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 // routes
 import { paths } from 'src/routes/paths';
 // components
 import SvgColor from 'src/components/svg-color';
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +45,60 @@ const ICONS = {
 // ----------------------------------------------------------------------
 
 export function useNavData() {
+    const { user } = useAuthContext();
+    const ShoperList = useMemo(() => [
+        {
+            title: 'Users',
+            path: paths.user.index,
+            icon: ICONS.user
+        },
+        {
+            title: 'Profile',
+            path: paths.profile.index,
+            icon: ICONS.job
+        }
+    ], []);
+
+    const defaultList = [
+        {
+            title: 'Operators',
+            path: paths.operator.index,
+            icon: ICONS.kanban,
+            children: [
+                { title: 'List', path: paths.operator.list },
+                { title: 'Create', path: paths.operator.create }
+            ]
+        },
+        {
+            title: 'Shops',
+            path: paths.shop.index,
+            icon: ICONS.order,
+            children: [
+                { title: 'List', path: paths.shop.list },
+                { title: 'Create', path: paths.shop.create }
+            ]
+        },
+        {
+            title: 'Users',
+            path: paths.user.index,
+            icon: ICONS.user
+        },
+        {
+            title: 'Profile',
+            path: paths.profile.index,
+            icon: ICONS.job
+        }
+    ]
+
+    const [realNavBar, setRealNavBar] = useState(defaultList);
+    // let realNavBar = defaultList;
+
+    useEffect(() => {
+        if (user?.roleId === "shop")
+            setRealNavBar(ShoperList);
+        // realNavBar = ShoperList;
+    }, [user, ShoperList])
+
     const data = useMemo(
         () => [
             // OVERVIEW
@@ -75,49 +130,10 @@ export function useNavData() {
             // ----------------------------------------------------------------------
             {
                 subheader: 'management',
-                items: [
-                    // {
-                    //     title: 'Game Management',
-                    //     path: paths.games.index,
-                    //     icon: ICONS.invoice,
-                    //     children: [
-                    //         { title: 'Categories', path: paths.games.category },
-                    //         { title: 'Providers', path: paths.games.provider },
-                    //         { title: 'Games', path: paths.games.game }
-                    //     ]
-                    // },
-                    {
-                        title: 'Operators',
-                        path: paths.operator.index,
-                        icon: ICONS.kanban,
-                        children: [
-                            { title: 'List', path: paths.operator.list },
-                            { title: 'Create', path: paths.operator.create }
-                        ]
-                    },
-                    {
-                        title: 'Shops',
-                        path: paths.shop.index,
-                        icon: ICONS.order,
-                        children: [
-                            { title: 'List', path: paths.shop.list },
-                            { title: 'Create', path: paths.shop.create }
-                        ]
-                    },
-                    {
-                        title: 'Users',
-                        path: paths.user.index,
-                        icon: ICONS.user
-                    },
-                    {
-                        title: 'Profile',
-                        path: paths.profile.index,
-                        icon: ICONS.job
-                    }
-                ]
+                items: realNavBar
             }
         ],
-        []
+        [realNavBar]
     );
 
     return data;

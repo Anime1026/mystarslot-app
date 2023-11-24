@@ -92,7 +92,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
                 router.push(paths.shop.list);
             }
         } catch (error) {
-            console.error(error);
+            enqueueSnackbar(error.message, { variant: 'error' });
         }
     });
 

@@ -52,7 +52,8 @@ export const paths = {
     user: {
         index: `${ROOTS.USER}`,
         list: `${ROOTS.USER}/list`,
-        edit: (id: string) => `${ROOTS.USER}/account/${id}`
+        edit: (id: string) => `${ROOTS.USER}/account/${id}`,
+        create: `${ROOTS.USER}/create`,
     },
     profile: {
         index: `${ROOTS.PROFILE}`

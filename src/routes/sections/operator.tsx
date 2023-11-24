@@ -22,6 +22,7 @@ const ShopAccount = lazy(() => import('src/pages/shop/account'));
 // user
 const UserList = lazy(() => import('src/pages/user/list'));
 const UserAccount = lazy(() => import('src/pages/user/account'));
+const UserCreate = lazy(() => import('src/pages/user/create'));
 // profile
 const Profile = lazy(() => import('src/pages/profile'));
 
@@ -102,7 +103,8 @@ export const operatorRoutes = [
                         element: <UserAccount />
                     }
                 ]
-            }
+            },
+            { path: 'create', element: <UserCreate /> }
         ]
     },
     {

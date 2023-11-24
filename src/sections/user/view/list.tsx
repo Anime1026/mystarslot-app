@@ -19,7 +19,9 @@ import { useRouter } from 'src/routes/hooks';
 // _mock
 import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
+import { useAuthContext } from 'src/auth/hooks';
 import { useBoolean } from 'src/hooks/use-boolean';
+import { RouterLink } from 'src/routes/components';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -92,6 +94,8 @@ const defaultFilters: IUserTableFilters = {
 
 export default function UserListView() {
     const table = useTable();
+
+    const { user } = useAuthContext();
 
     const settings = useSettingsContext();
 
@@ -229,6 +233,16 @@ export default function UserListView() {
                     sx={{
                         mb: { xs: 3, md: 5 }
                     }}
+                    action={user?.roleId !== "admin" && (
+                        <Button
+                            component={RouterLink}
+                            href={paths.user.create}
+                            variant="contained"
+                            startIcon={<Iconify icon="mingcute:add-line" />}
+                        >
+                            New User
+                        </Button>)
+                    }
                 />
 
                 <Card>
@@ -261,10 +275,10 @@ export default function UserListView() {
                                     >
                                         {tab.value === 'all' && tableData.length}
                                         {tab.value === 'active' &&
-                                            tableData.filter((user) => user.status === 'active').length}
+                                            tableData.filter((users) => users.status === 'active').length}
 
                                         {tab.value === 'disable' &&
-                                            tableData.filter((user) => user.status === 'disable').length}
+                                            tableData.filter((users) => users.status === 'disable').length}
                                     </Label>
                                 }
                             />

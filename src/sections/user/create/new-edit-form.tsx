@@ -17,6 +17,8 @@ import { fData } from 'src/utils/format-number';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+// api
+import { create } from 'src/api';
 // types
 import { IUserItem } from 'src/types/user';
 // components
@@ -42,6 +44,8 @@ export default function UserNewEditForm({ currentUser }: Props) {
         name: Yup.string().required('Name is required'),
         email: Yup.string().required('Email is required').email('Email must be a valid email address'),
         avatar: Yup.mixed<any>().nullable().required('Avatar is required'),
+        password: Yup.mixed<any>().nullable().required('password is required'),
+        userName: Yup.string().required('UserName is required'),
         // not required
         isVerified: Yup.boolean()
     });
@@ -51,6 +55,8 @@ export default function UserNewEditForm({ currentUser }: Props) {
             name: currentUser?.name || '',
             email: currentUser?.email || '',
             avatar: currentUser?.avatar || null,
+            userName: currentUser?.userName || '',
+            password: '',
             isVerified: currentUser?.isVerified || true
         }),
         [currentUser]
@@ -69,15 +75,24 @@ export default function UserNewEditForm({ currentUser }: Props) {
     } = methods;
 
     const onSubmit = handleSubmit(async (data) => {
-        console.log('error');
         try {
-            enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            reset();
-            router.push(paths.operator.list);
-            console.info('DATA', data);
+            const formData = new FormData();
+            formData.append('image', data.avatar);
+            formData.append('email', data.email);
+            formData.append('name', data.name);
+            formData.append('password', data.password);
+            formData.append('userName', data.userName);
+            formData.append('roleId', 'user');
+            const result = await create(formData);
+            if (result.status) {
+                reset();
+                enqueueSnackbar('Create success!');
+                router.push(paths.user.list);
+            } else {
+                enqueueSnackbar(result.message);
+            }
         } catch (error) {
-            console.error(error);
+            enqueueSnackbar(error.message, { variant: 'error' });
         }
     });
 
@@ -85,12 +100,12 @@ export default function UserNewEditForm({ currentUser }: Props) {
         (acceptedFiles: File[]) => {
             const file = acceptedFiles[0];
 
-            const newFile = Object.assign(file, {
+            Object.assign(file, {
                 preview: URL.createObjectURL(file)
             });
 
             if (file) {
-                setValue('avatar', newFile, { shouldValidate: true });
+                setValue('avatar', file, { shouldValidate: true });
             }
         },
         [setValue]
@@ -154,10 +169,11 @@ export default function UserNewEditForm({ currentUser }: Props) {
                     <Card sx={{ p: 3 }}>
                         <Box rowGap={3} columnGap={2} display="grid">
                             <RHFTextField name="name" label="Full Name" />
+                            <RHFTextField name="userName" label="User Name" />
                             <RHFTextField name="email" label="Email Address" autoComplete="offs" />
                             <RHFTextField
                                 autoComplete="new-password"
-                                name="newPassword"
+                                name="password"
                                 label="New Password"
                                 type={password.value ? 'text' : 'password'}
                                 InputProps={{
@@ -179,7 +195,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
                                 }
                             />
 
-                            <RHFTextField name="company" label="Assign to " />
+                            {/* <RHFTextField name="company" label="Assign to " /> */}
                         </Box>
 
                         <Stack alignItems="flex-end" sx={{ mt: 3 }}>
