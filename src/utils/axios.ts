@@ -70,5 +70,8 @@ export const endpoints = {
     games: {
         allProviders: '/api/get-allprovider',
         addCategory: '/api/add-category'
+    },
+    get: {
+        getFamily: '/api/get-family'
     }
 };

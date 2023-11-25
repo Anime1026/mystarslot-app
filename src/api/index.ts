@@ -61,6 +61,10 @@ export async function getUserCounts() {
     return res.data;
 }
 
+export async function getFamily(username: string) {
+    const res = await axios.post(endpoints.get.getFamily, { username });
+    return res.data;
+}
 // add game-management
 
 export async function allProviders() {

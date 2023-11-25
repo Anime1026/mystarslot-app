@@ -70,7 +70,7 @@ export default function Categoreis() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState(_userList);
+    const [tableData, setTableData] = useState<any>([]);
 
     const [filters, setFilters] = useState(defaultFilters);
 
@@ -104,7 +104,7 @@ export default function Categoreis() {
 
     const handleDeleteRow = useCallback(
         (id: string) => {
-            const deleteRow = tableData.filter((row) => row.id !== id);
+            const deleteRow = tableData.filter((row: any) => row.id !== id);
             setTableData(deleteRow);
 
             table.onUpdatePageDeleteRow(dataInPage.length);
@@ -113,7 +113,7 @@ export default function Categoreis() {
     );
 
     const handleDeleteRows = useCallback(() => {
-        const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
         setTableData(deleteRows);
 
         table.onUpdatePageDeleteRows({
@@ -192,7 +192,7 @@ export default function Categoreis() {
                     <UserTableToolbar
                         filters={filters}
                         onFilters={handleFilters}
-                        //
+                    //
                     />
 
                     {canReset && (
@@ -213,7 +213,7 @@ export default function Categoreis() {
                             onSelectAllRows={(checked) =>
                                 table.onSelectAllRows(
                                     checked,
-                                    tableData.map((row) => row.id)
+                                    tableData.map((row: any) => row.id)
                                 )
                             }
                             action={
@@ -244,7 +244,7 @@ export default function Categoreis() {
                                     onSelectAllRows={(checked) =>
                                         table.onSelectAllRows(
                                             checked,
-                                            tableData.map((row) => row.id)
+                                            tableData.map((row: any) => row.id)
                                         )
                                     }
                                 />

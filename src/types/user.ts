@@ -114,6 +114,10 @@ export type IUserItem = {
     password: string;
     lastLogin: string;
     ipAddress: string;
+    bonus: string;
+    casinortp: string;
+    virtualrtp: string;
+    minigamesrtp: string;
 };
 
 export type IUserAccount = {

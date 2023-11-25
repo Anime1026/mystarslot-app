@@ -87,6 +87,10 @@ type tableType = {
     fidoAmount: number;
     lastLogin: string;
     ipAddress: string;
+    bonus: string;
+    casinortp: string;
+    virtualrtp: string;
+    minigamesrtp: string;
 };
 
 // ----------------------------------------------------------------------
@@ -140,7 +144,11 @@ export default function UserListView() {
                 phoneNumber: result[i].phoneNumber ? result[i].phoneNumber : '',
                 status: result[i].status ? result[i].status : '',
                 lastLogin: result[i].updatedAt,
-                ipAddress: result[i].ipAddress ? result[i].ipAddress : ''
+                ipAddress: result[i].ipAddress ? result[i].ipAddress : '',
+                bonus: result[i].bonus ? result[i].bonus : '',
+                casinortp: result[i].casinortp ? result[i].casinortp : '',
+                virtualrtp: result[i].virtualrtp ? result[i].virtualrtp : '',
+                minigamesrtp: result[i].minigamesrtp ? result[i].minigamesrtp : '',
             });
         }
         setTableData(tableList);

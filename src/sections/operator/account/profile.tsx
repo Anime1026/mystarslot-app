@@ -19,7 +19,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import { useRouter } from 'src/routes/hooks';
 
 // apis
-import { update } from 'src/api';
+import { update, getFamily } from 'src/api';
 
 // utils
 import { fData } from 'src/utils/format-number';
@@ -52,6 +52,7 @@ export default function AccountGeneral() {
     const [fido, setFido] = useState(Number(params.fidoAmount));
     const [availableBalance, setAvailable] = useState(0);
     const [availableFido, setAvaliableFido] = useState(0);
+    const [family, setFamily] = useState<string[]>([]);
 
     useEffect(() => {
         if (user) {
@@ -60,6 +61,16 @@ export default function AccountGeneral() {
         }
     }, [user]);
 
+    const getUserFamily = useCallback(async () => {
+        const result = await getFamily(params.userName);
+        if (result.status) {
+            setFamily(result.data)
+        }
+    }, [params.userName])
+    useEffect(() => {
+        getUserFamily();
+    }, [getUserFamily])
+
     const UpdateUserSchema = Yup.object().shape({
         displayName: Yup.string().required('Name is required'),
         email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -67,7 +78,11 @@ export default function AccountGeneral() {
         currency: Yup.string().required('Currency is required'),
         timezone: Yup.string().required('timezone is required'),
         ip_address: Yup.string().required('City is required'),
-        last_login: Yup.string().required('Zip code is required')
+        last_login: Yup.string().required('Zip code is required'),
+        bonus: Yup.string().required('Must select Bonus Percent'),
+        casinortp: Yup.string().required('Must select casinortp Percent'),
+        virtualrtp: Yup.string().required('Must select virtualrtp Percent'),
+        minigamesrtp: Yup.string().required('Must select minigamesrtp Percent'),
         // not required
     });
 
@@ -78,7 +93,11 @@ export default function AccountGeneral() {
         currency: 'TND',
         timezone: 'UTC',
         ip_address: params?.ipAddress || '78.453.276.12',
-        last_login: params?.lastLogin || '16/09/2023 11:00pm'
+        last_login: params?.lastLogin || '16/09/2023 11:00pm',
+        bonus: params?.bonus || '5%',
+        casinortp: params?.casinortp || '70%',
+        virtualrtp: params?.virtualrtp || '70%',
+        minigamesrtp: params?.minigamesrtp || '70%'
     };
 
     const methods = useForm({
@@ -103,11 +122,15 @@ export default function AccountGeneral() {
             formData.append('fido_amount', String(fido));
             formData.append('timezone', data.timezone);
             formData.append('currency', data.currency);
+            formData.append('bouns', data.bonus);
+            formData.append('casinortp', data.casinortp);
+            formData.append('virtualrtp', data.virtualrtp);
+            formData.append('minigamesrtp', data.minigamesrtp);
             const result = await update(formData);
             if (result.status) {
                 enqueueSnackbar('Update success!');
                 await getMe();
-                router.push(paths.shop.list);
+                router.push(paths.operator.list);
             }
         } catch (error) {
             console.error(error);
@@ -299,8 +322,58 @@ export default function AccountGeneral() {
 
                                 <RHFTextField name="ip_address" disabled label="Ip address" />
                                 <RHFTextField name="last_login" disabled label="Last Login" />
-                                {/* <RHFTextField name="phoneNumber" label="Phone Number" />
-              <RHFTextField name="address" label="Address" /> */}
+                                <RHFSelect
+                                    fullWidth
+                                    name="bonus"
+                                    label="Bonus"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['5%', '10%', '15%', '20%'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
+                                <RHFSelect
+                                    fullWidth
+                                    name="casinortp"
+                                    label="RTP % Slot"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
+                                <RHFSelect
+                                    fullWidth
+                                    name="virtualrtp"
+                                    label="RTP % Virtuals"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
+                                <RHFSelect
+                                    fullWidth
+                                    name="minigamesrtp"
+                                    label="RTP % Mini Games"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
                             </Box>
 
                             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
@@ -340,29 +413,22 @@ export default function AccountGeneral() {
                             />
                         </Grid>
                     </Grid>
-                    {/* <Grid xs={12} md={6} lg={8} container spacing={2}>
-            <Grid xs={12} md={12} lg={12}>
-              <BestCategories title="Best 5 Providers" data={_ecommerceSalesOverview} />
-            </Grid>
-            <Grid xs={12} md={12} lg={12}>
-              <BestCategories title="Best 5 Games" data={_ecommerceSalesOverview} />
-            </Grid>
-          </Grid>
-          <Grid xs={12} md={6} lg={4}>
-            <TotalUsers
-              title="Oprator Total Credit"
-              chart={{
-                series: [
-                  { label: 'In Credit', value: 12244 },
-                  { label: 'Out Credit', value: 53345 },
-                  { label: 'Total', value: 44313 },
-                  { label: 'User Credit', value: 78343 },
-                ],
-              }}
-            />
-          </Grid> */}
+                </Grid>
+                <Grid container xs={12} md={12} lg={12} pt={4}>
+                    <Grid xs={2}>
+                        Family
+                    </Grid>
+                    <Grid xs={10}>
+                        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: `#324457`, padding: '4px 10px', borderRadius: '8px' }}>
+                            {family.map((item, index) => (
+                                <div key={index}>
+                                    {index > 0 && '>'} {item}
+                                </div>
+                            ))}
+                        </div>
+                    </Grid>
                 </Grid>
             </Card>
-        </FormProvider>
+        </FormProvider >
     );
 }
