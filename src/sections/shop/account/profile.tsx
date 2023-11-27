@@ -313,7 +313,7 @@ export default function AccountGeneral() {
                                     InputLabelProps={{ shrink: true }}
                                     PaperPropsSx={{ textTransform: 'capitalize' }}
                                 >
-                                    {['5%', '10%', '15%', '20%'].map((option) => (
+                                    {['0%', '5%', '10%', '15%', '20%'].map((option) => (
                                         <MenuItem key={option} value={option}>
                                             {option}
                                         </MenuItem>

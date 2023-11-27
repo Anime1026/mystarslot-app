@@ -12,6 +12,20 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
+import AddIcon from '@mui/icons-material/Add';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
+// add model
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FilledInput from '@mui/material/FilledInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
 
 // utils
 import { fData } from 'src/utils/format-number';
@@ -113,6 +127,23 @@ export default function AccountGeneral() {
 
     // add credit
 
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const [amountValue, setAmountValue] = useState(0);
+    const [bonusCheck, setBonusCheck] = useState(true);
+
+    const deposithandle = () => {
+        console.log();
+    };
+
     return (
         <FormProvider methods={methods} onSubmit={onSubmit}>
             <Card sx={{ p: 3 }}>
@@ -149,7 +180,16 @@ export default function AccountGeneral() {
                     <Grid xs={12} md={6} lg={4}>
                         <Card sx={{ p: 3 }}>
                             <Box rowGap={3} columnGap={2} display="grid">
-                                <RHFTextField name="credit" label="Credit" disabled />
+                                <RHFTextField
+                                    name="credit"
+                                    label="credit"
+                                    disabled
+                                    InputProps={{
+                                        endAdornment: <AddIcon onClick={handleClickOpen} sx={{ cursor: 'pointer' }} />
+                                    }}
+                                    sx={{ textAlign: 'center' }}
+                                />
+
                                 <RHFTextField name="displayName" label="Name" />
                                 <RHFTextField name="email" label="Email Address" />
                                 <RHFSelect
@@ -228,6 +268,48 @@ export default function AccountGeneral() {
                     </Grid>
                 </Grid>
             </Card>
+            <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+                <DialogTitle>Add Credit</DialogTitle>
+                <DialogContent>
+                    <FormControl fullWidth variant="filled">
+                        <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
+                        <FilledInput
+                            id="filled-adornment-amount"
+                            type="number"
+                            onChange={(e) => {
+                                setAmountValue(Number(e.target.value));
+                            }}
+                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        />
+                    </FormControl>
+                    <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                            <Checkbox
+                                defaultChecked
+                                onChange={(e) => {
+                                    setBonusCheck(e.target.checked);
+                                }}
+                            />
+                        }
+                        label="BonusBack"
+                    />
+                    <Box component="span" paddingLeft={2}>
+                        {bonusCheck ? amountValue * 0.2 : 0}
+                    </Box>
+                    <Stack component="span" direction="row" alignItems="center" sx={{ fontSize: 12, p: 2 }}>
+                        Bonuses are paid once every 24 hours upon deposit.
+                    </Stack>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="error" variant="outlined" onClick={handleClose}>
+                        Withdraw
+                    </Button>
+                    <Button color="success" variant="outlined" onClick={handleClose}>
+                        Deposit
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </FormProvider>
     );
 }
