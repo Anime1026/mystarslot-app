@@ -90,6 +90,7 @@ export default function InvoiceListView() {
 
     const transactions = async () => {
         const data = await getTransactions();
+        console.log(data, 'data');
         setTableData(data.data);
     };
     useEffect(() => {

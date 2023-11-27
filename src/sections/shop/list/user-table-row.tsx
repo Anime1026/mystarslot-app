@@ -47,7 +47,7 @@ export default function UserTableRow({
     onEnableRow,
     onDisableRow
 }: Props) {
-    const { name, avatar, status, email, balance, ipAddress, lastLogin, role } = row;
+    const { name, avatar, status, email, balance, ipAddress, lastLogin, role, fidoAmount } = row;
 
     const deleteUser = useBoolean();
 
@@ -88,6 +88,7 @@ export default function UserTableRow({
                     />
                 </TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fidoAmount}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{lastLogin}</TableCell>

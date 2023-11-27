@@ -285,8 +285,12 @@ export default function AccountGeneral() {
                                         <IncrementerButton
                                             name="addcredit"
                                             quantity={creditAmount}
-                                            disabledDecrease={creditAmount < 1}
-                                            disabledIncrease={creditAmount < 1}
+                                            disabledDecrease={creditAmount > totalBalance}
+                                            disabledIncrease={
+                                                user?.roleId === 'super_admin'
+                                                    ? false
+                                                    : creditAmount >= availableBalance + params.balance
+                                            }
                                             onChangeCredit={(e) => setCreditAmount(e)}
                                             onIncrease={depositCredit}
                                             onDecrease={withdrawCredit}
@@ -308,8 +312,12 @@ export default function AccountGeneral() {
                                         <IncrementerButton
                                             name="addfido"
                                             quantity={fidoAmount}
-                                            disabledDecrease={fidoAmount < 1}
-                                            disabledIncrease={fidoAmount < 1}
+                                            disabledDecrease={fidoAmount >= params.fidoAmount}
+                                            disabledIncrease={
+                                                user?.roleId === 'super_admin'
+                                                    ? false
+                                                    : fidoAmount >= availableFido + params.fidoAmount
+                                            }
                                             onChangeCredit={(e) => setFidoAmount(e)}
                                             onIncrease={depositFido}
                                             onDecrease={withdrawFido}

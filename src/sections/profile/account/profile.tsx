@@ -37,6 +37,7 @@ export default function AccountGeneral() {
         ip_address: Yup.string().required('City is required'),
         last_login: Yup.string().required('Zip code is required'),
         credit: Yup.mixed().required('Credit is required'),
+        fido: Yup.mixed().required('Fido is required'),
         // not required
         role: Yup.string().required('Role is required')
     });
@@ -52,6 +53,7 @@ export default function AccountGeneral() {
         ip_address: user?.ip || '78.453.276.12',
         last_login: user ? format(new Date(user.updatedAt), 'dd MMM yyyy') : '16/09/2023 11:00pm',
         credit: user?.roleId === 'super_admin' ? '∞' : user?.balance,
+        fido: user?.roleId === 'super_admin' ? '∞' : user?.fido_amount,
         role: user?.roleId === 'super_admin' ? 'Super Admin' : user?.roleId || ''
     };
 
@@ -194,6 +196,7 @@ export default function AccountGeneral() {
                                 <RHFTextField name="displayName" label="Name" />
                                 <RHFTextField name="email" label="Email Address" />
                                 <RHFTextField name="credit" label="Credit" disabled />
+                                <RHFTextField name="fido" label="Fido Amount" disabled />
                                 <RHFTextField name="role" label="Role" disabled />
                                 <RHFSelect
                                     fullWidth

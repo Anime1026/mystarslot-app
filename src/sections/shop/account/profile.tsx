@@ -19,7 +19,7 @@ import Divider from '@mui/material/Divider';
 import { useAuthContext } from 'src/auth/hooks';
 import { useRouter } from 'src/routes/hooks';
 // apis
-import { update, getFamily, getInOutAmount } from 'src/api';
+import { update, getFamily, getInOutAmount, changeCredit, changeFido } from 'src/api';
 // utils
 import { fData } from 'src/utils/format-number';
 import { paths } from 'src/routes/paths';
@@ -43,8 +43,6 @@ export default function AccountGeneral() {
     const params: IUserItem = location.state;
 
     // add credit
-    const [values, setCreditAdd] = useState(params.balance);
-    const [fido, setFido] = useState(Number(params.fidoAmount));
     const [family, setFamily] = useState<string[]>([]);
     const [availableBalance, setAvailable] = useState(0);
     const [availableFido, setAvaliableFido] = useState(0);
@@ -68,11 +66,11 @@ export default function AccountGeneral() {
         } catch (error) {
             // enqueueSnackbar(error.message, { variant: 'error' });
         }
-    }, [params])
+    }, [params]);
 
     useEffect(() => {
         getAmounts();
-    }, [getAmounts])
+    }, [getAmounts]);
 
     const theme = useTheme();
 
@@ -84,7 +82,6 @@ export default function AccountGeneral() {
         timezone: Yup.string().required('timezone is required'),
         ip_address: Yup.string().required('City is required'),
         last_login: Yup.string().required('Zip code is required'),
-        bonus: Yup.string().required('Must select Bonus Percent'),
         casinortp: Yup.string().required('Must select casinortp Percent'),
         virtualrtp: Yup.string().required('Must select virtualrtp Percent'),
         minigamesrtp: Yup.string().required('Must select minigamesrtp Percent')
@@ -102,7 +99,6 @@ export default function AccountGeneral() {
         timezone: 'UTC',
         ip_address: params?.ipAddress || '78.453.276.12',
         last_login: params?.lastLogin || '16/09/2023 11:00pm',
-        bonus: params?.bonus || '5%',
         casinortp: params?.casinortp || '70%',
         virtualrtp: params?.virtualrtp || '70%',
         minigamesrtp: params?.minigamesrtp || '70%'
@@ -136,11 +132,8 @@ export default function AccountGeneral() {
             formData.append('id', params.id);
             formData.append('username', data.displayName);
             formData.append('email', data.email);
-            formData.append('balance', String(values));
-            formData.append('fido_amount', String(fido));
             formData.append('timezone', data.timezone);
             formData.append('currency', data.currency);
-            formData.append('bonus', data.bonus);
             formData.append('casinortp', data.casinortp);
             formData.append('virtualrtp', data.virtualrtp);
             formData.append('minigamesrtp', data.minigamesrtp);
@@ -170,26 +163,45 @@ export default function AccountGeneral() {
         [setValue]
     );
 
-    const creditadd = (data: number) => {
-        if (user?.roleId === 'super_admin') {
-            setCreditAdd(data);
-        } else if (availableBalance + params.balance >= parseFloat(data.toString())) {
-            setCreditAdd(data);
-        } else {
-            enqueueSnackbar('credit not enough!', { variant: 'warning' });
-        }
+    const [totalBalance, setTotalBalance] = useState(0);
+    const [creditAmount, setCreditAmount] = useState(0);
+    const depositCredit = async () => {
+        const result = await changeCredit({ balance: creditAmount, type: 'deposit', username: params.name });
+        await getMe();
+        setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
+        setCreditAmount(0);
+        enqueueSnackbar(result.message);
     };
 
-    const fidoAdd = (data: number) => {
-        console.log()
-        if (user?.roleId === 'super_admin') {
-            setFido(data);
-        } else if (availableFido + params.fidoAmount >= parseFloat(data.toString())) {
-            setFido(data);
-        } else {
-            enqueueSnackbar('credit not enough!', { variant: 'warning' });
-        }
+    const withdrawCredit = async () => {
+        const result = await changeCredit({ balance: creditAmount, type: 'withdraw', username: params.name });
+        await getMe();
+        setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
+        setCreditAmount(0);
+        enqueueSnackbar(result.message);
     };
+
+    // add fido
+
+    const [fidoAmount, setFidoAmount] = useState(0);
+
+    const depositFido = async () => {
+        const result = await changeFido({ balance: fidoAmount, type: 'deposit', username: params.name });
+        enqueueSnackbar(result.message);
+        setFidoAmount(0);
+        router.push(paths.shop.list);
+    };
+
+    const withdrawFido = async () => {
+        const result = await changeFido({ balance: fidoAmount, type: 'withdraw', username: params.name });
+        enqueueSnackbar(result.message);
+        setFidoAmount(0);
+        router.push(paths.shop.list);
+    };
+
+    useEffect(() => {
+        setTotalBalance(params.balance || 0);
+    }, [params.balance]);
 
     return (
         <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -231,7 +243,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="User Credit"
                             percent={70}
-                            price={params.balance}
+                            price={totalBalance}
                             icon="solar:file-corrupted-bold-duotone"
                             color={theme.palette.error.main}
                         />
@@ -281,15 +293,21 @@ export default function AccountGeneral() {
                                     <Stack spacing={1}>
                                         <IncrementerButton
                                             name="addcredit"
-                                            quantity={values}
-                                            disabledDecrease={values <= 1}
-                                            disabledIncrease={user?.roleId === 'super_admin' ? false : values >= availableBalance + params.balance}
-                                            onIncrease={(e) => creditadd(e)}
-                                            onDecrease={() => setCreditAdd(values - 1)}
+                                            quantity={creditAmount}
+                                            disabledDecrease={creditAmount >= totalBalance}
+                                            disabledIncrease={
+                                                user?.roleId === 'super_admin'
+                                                    ? false
+                                                    : creditAmount >= availableBalance + params.balance
+                                            }
+                                            onChangeCredit={(e) => setCreditAmount(e)}
+                                            onIncrease={depositCredit}
+                                            onDecrease={withdrawCredit}
                                         />
 
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available: {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
+                                            Available:{' '}
+                                            {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
                                         </Typography>
                                     </Stack>
                                 </Stack>
@@ -302,15 +320,21 @@ export default function AccountGeneral() {
                                     <Stack spacing={1}>
                                         <IncrementerButton
                                             name="addfido"
-                                            quantity={fido}
-                                            disabledDecrease={fido <= 1}
-                                            disabledIncrease={user?.roleId === 'super_admin' ? false : fido >= availableFido + params.fidoAmount}
-                                            onIncrease={(e) => fidoAdd(e)}
-                                            onDecrease={() => setFido(fido - 1)}
+                                            quantity={fidoAmount}
+                                            disabledDecrease={fidoAmount >= params.fidoAmount}
+                                            disabledIncrease={
+                                                user?.roleId === 'super_admin'
+                                                    ? false
+                                                    : fidoAmount >= availableFido + params.fidoAmount
+                                            }
+                                            onChangeCredit={(e) => setFidoAmount(e)}
+                                            onIncrease={depositFido}
+                                            onDecrease={withdrawFido}
                                         />
 
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available: {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
+                                            Available:{' '}
+                                            {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
                                         </Typography>
                                     </Stack>
                                 </Stack>
@@ -345,7 +369,7 @@ export default function AccountGeneral() {
 
                                 <RHFTextField name="ip_address" disabled label="Ip address" />
                                 <RHFTextField name="last_login" disabled label="Last Login" />
-                                <RHFSelect
+                                {/* <RHFSelect
                                     fullWidth
                                     name="bonus"
                                     label="Bonus"
@@ -357,13 +381,14 @@ export default function AccountGeneral() {
                                             {option}
                                         </MenuItem>
                                     ))}
-                                </RHFSelect>
+                                </RHFSelect> */}
                                 <RHFSelect
                                     fullWidth
                                     name="casinortp"
                                     label="RTP % Slot"
                                     InputLabelProps={{ shrink: true }}
                                     PaperPropsSx={{ textTransform: 'capitalize' }}
+                                    disabled={user?.roleId !== 'super_admin'}
                                 >
                                     {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
                                         <MenuItem key={option} value={option}>
@@ -377,6 +402,7 @@ export default function AccountGeneral() {
                                     label="RTP % Virtuals"
                                     InputLabelProps={{ shrink: true }}
                                     PaperPropsSx={{ textTransform: 'capitalize' }}
+                                    disabled={user?.roleId !== 'super_admin'}
                                 >
                                     {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
                                         <MenuItem key={option} value={option}>
@@ -390,6 +416,7 @@ export default function AccountGeneral() {
                                     label="RTP % Mini Games"
                                     InputLabelProps={{ shrink: true }}
                                     PaperPropsSx={{ textTransform: 'capitalize' }}
+                                    disabled={user?.roleId !== 'super_admin'}
                                 >
                                     {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
                                         <MenuItem key={option} value={option}>

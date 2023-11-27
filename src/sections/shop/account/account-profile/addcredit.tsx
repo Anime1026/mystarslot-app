@@ -16,10 +16,11 @@ interface Props extends StackProps {
     disabledDecrease?: boolean;
     onIncrease: (addcredit: any) => void;
     onDecrease: VoidFunction;
+    onChangeCredit: (addcredit: any) => void;
 }
 
 const IncrementerButton = forwardRef<HTMLDivElement, Props>(
-    ({ quantity, onIncrease, onDecrease, disabledIncrease, disabledDecrease, sx, ...other }, ref) => (
+    ({ quantity, onIncrease, onDecrease, onChangeCredit, disabledIncrease, disabledDecrease, sx, ...other }, ref) => (
         <Stack
             ref={ref}
             flexShrink={0}
@@ -42,7 +43,7 @@ const IncrementerButton = forwardRef<HTMLDivElement, Props>(
                 placeholder="Search Google Maps"
                 inputProps={{ 'aria-label': 'search google maps' }}
                 value={quantity}
-                onChange={(e) => onIncrease(e.target.value)}
+                onChange={(e) => onChangeCredit(e.target.value)}
                 sx={{
                     '& input': {
                         textAlign: 'center'
