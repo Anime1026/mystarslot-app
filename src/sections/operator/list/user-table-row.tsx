@@ -31,7 +31,6 @@ import { useRouter } from 'src/routes/hooks';
 
 type Props = {
     selected: boolean;
-    onEditRow: VoidFunction;
     row: IUserItem;
     onSelectRow: VoidFunction;
     onDeleteRow: VoidFunction;
@@ -39,16 +38,8 @@ type Props = {
     onDisableRow: VoidFunction;
 };
 
-export default function UserTableRow({
-    row,
-    selected,
-    onEditRow,
-    onSelectRow,
-    onDeleteRow,
-    onEnableRow,
-    onDisableRow
-}: Props) {
-    const { name, avatar, status, email, balance, ipAddress } = row;
+export default function UserTableRow({ row, selected, onSelectRow, onDeleteRow, onEnableRow, onDisableRow }: Props) {
+    const { name, avatar, status, email, balance, ipAddress, fidoAmount } = row;
 
     const deleteUser = useBoolean();
 
@@ -95,6 +86,7 @@ export default function UserTableRow({
                     />
                 </TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fidoAmount}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
                 <TableCell>
                     <ListItemText

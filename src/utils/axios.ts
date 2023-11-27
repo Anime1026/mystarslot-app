@@ -60,7 +60,9 @@ export const endpoints = {
         create: 'api/user-create',
         update: '/api/user-update',
         remove: '/api/user-delete',
-        getCategories: '/api/get-categories'
+        getCategories: '/api/get-categories',
+        changeCredit: '/api/change-credit',
+        changeFido: '/api/change-fido'
     },
     transaction: {
         get: '/api/get-transactions',

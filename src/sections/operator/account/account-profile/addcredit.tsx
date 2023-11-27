@@ -14,12 +14,13 @@ interface Props extends StackProps {
     quantity: number;
     disabledIncrease?: boolean;
     disabledDecrease?: boolean;
-    onIncrease: (addcredit: any) => void;
+    onIncrease: VoidFunction;
     onDecrease: VoidFunction;
+    onChangeCredit: (addcredit: any) => void;
 }
 
 const IncrementerButton = forwardRef<HTMLDivElement, Props>(
-    ({ quantity, onIncrease, onDecrease, disabledIncrease, disabledDecrease, sx, ...other }, ref) => (
+    ({ quantity, onIncrease, onChangeCredit, onDecrease, disabledIncrease, disabledDecrease, sx, ...other }, ref) => (
         <Stack
             ref={ref}
             flexShrink={0}
@@ -39,10 +40,11 @@ const IncrementerButton = forwardRef<HTMLDivElement, Props>(
                 <Iconify icon="eva:minus-fill" width={16} />
             </IconButton>
             <InputBase
-                placeholder="Search Google Maps"
-                inputProps={{ 'aria-label': 'search google maps' }}
+                placeholder="Add credit"
+                inputProps={{ 'aria-label': 'Add Credit' }}
                 value={quantity}
-                onChange={(e) => onIncrease(e.target.value)}
+                onChange={(e) => onChangeCredit(e.target.value)}
+                type="number"
                 sx={{
                     '& input': {
                         textAlign: 'center'
@@ -51,12 +53,7 @@ const IncrementerButton = forwardRef<HTMLDivElement, Props>(
                 }}
             />
 
-            <IconButton
-                size="small"
-                onClick={() => onIncrease(parseFloat(quantity.toString()) + 1)}
-                disabled={disabledIncrease}
-                sx={{ borderRadius: 0.75 }}
-            >
+            <IconButton size="small" onClick={onIncrease} disabled={disabledIncrease} sx={{ borderRadius: 0.75 }}>
                 <Iconify icon="mingcute:add-line" width={16} />
             </IconButton>
         </Stack>

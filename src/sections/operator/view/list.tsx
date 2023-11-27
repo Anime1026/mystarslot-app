@@ -53,6 +53,7 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
     { id: 'name', label: 'Name' },
     { id: 'balance', label: 'balance', width: 180 },
+    { id: 'fido', label: 'Fido', width: 180 },
     { id: 'ip_address', label: 'Ip Address', width: 220 },
     { id: 'lastLogin', label: 'Last Login', width: 180 },
     { id: 'status', label: 'Status', width: 100 },
@@ -148,7 +149,7 @@ export default function UserListView() {
                 bonus: result[i].bonus ? result[i].bonus : '',
                 casinortp: result[i].casinortp ? result[i].casinortp : '',
                 virtualrtp: result[i].virtualrtp ? result[i].virtualrtp : '',
-                minigamesrtp: result[i].minigamesrtp ? result[i].minigamesrtp : '',
+                minigamesrtp: result[i].minigamesrtp ? result[i].minigamesrtp : ''
             });
         }
         setTableData(tableList);
@@ -213,13 +214,6 @@ export default function UserListView() {
             totalRowsFiltered: dataFiltered.length
         });
     }, [dataFiltered.length, dataInPage.length, table, tableData]);
-
-    const handleEditRow = useCallback(
-        (id: string) => {
-            router.push(paths.operator.edit(id));
-        },
-        [router]
-    );
 
     const handleFilterStatus = useCallback(
         (event: React.SyntheticEvent, newValue: string) => {
@@ -378,7 +372,6 @@ export default function UserListView() {
                                                 selected={table.selected.includes(row.id)}
                                                 onSelectRow={() => table.onSelectRow(row.id)}
                                                 onDeleteRow={() => handleDeleteRow(row.id)}
-                                                onEditRow={() => handleEditRow(row.id)}
                                                 onEnableRow={() => handleEnableRow(row.id, 'active')}
                                                 onDisableRow={() => handleDisableRow(row.id, 'disable')}
                                             />

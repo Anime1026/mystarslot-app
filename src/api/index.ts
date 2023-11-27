@@ -76,3 +76,13 @@ export async function addCategory(data: any) {
     const res = await axios.post(endpoints.games.addCategory, data);
     return res.data;
 }
+
+export async function changeCredit(data: any) {
+    const res = await axios.post(endpoints.operator.changeCredit, data);
+    return res.data;
+}
+
+export async function changeFido(data: any) {
+    const res = await axios.post(endpoints.operator.changeFido, data);
+    return res.data;
+}

@@ -19,7 +19,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import { useRouter } from 'src/routes/hooks';
 
 // apis
-import { update, getFamily, getInOutAmount } from 'src/api';
+import { update, getFamily, getInOutAmount, changeCredit, changeFido } from 'src/api';
 
 // utils
 import { fData } from 'src/utils/format-number';
@@ -48,8 +48,6 @@ export default function AccountGeneral() {
     const theme = useTheme();
 
     // add credit
-    const [values, setCreditAdd] = useState(params.balance);
-    const [fido, setFido] = useState(Number(params.fidoAmount));
     const [availableBalance, setAvailable] = useState(0);
     const [availableFido, setAvaliableFido] = useState(0);
     const [family, setFamily] = useState<string[]>([]);
@@ -73,11 +71,11 @@ export default function AccountGeneral() {
         } catch (error) {
             // enqueueSnackbar(error.message, { variant: 'error' });
         }
-    }, [params])
+    }, [params]);
 
     useEffect(() => {
         getAmounts();
-    }, [getAmounts])
+    }, [getAmounts]);
 
     const getUserFamily = useCallback(async () => {
         const result = await getFamily(params.userName);
@@ -88,6 +86,10 @@ export default function AccountGeneral() {
     useEffect(() => {
         getUserFamily();
     }, [getUserFamily]);
+
+    useEffect(() => {
+        setTotalBalance(params.balance || 0);
+    }, [params.balance]);
 
     const UpdateUserSchema = Yup.object().shape({
         displayName: Yup.string().required('Name is required'),
@@ -128,8 +130,6 @@ export default function AccountGeneral() {
             formData.append('id', params.id);
             formData.append('username', data.displayName);
             formData.append('email', data.email);
-            formData.append('balance', String(values));
-            formData.append('fido_amount', String(fido));
             formData.append('timezone', data.timezone);
             formData.append('currency', data.currency);
             const result = await update(formData);
@@ -158,25 +158,40 @@ export default function AccountGeneral() {
         [setValue]
     );
 
-    const creditadd = (data: number) => {
-        if (user?.roleId === 'super_admin') {
-            setCreditAdd(data);
-        } else if (availableBalance + params.balance >= parseFloat(data.toString())) {
-            setCreditAdd(data);
-        } else {
-            enqueueSnackbar('credit not enough!', { variant: 'warning' });
-        }
+    const [totalBalance, setTotalBalance] = useState(0);
+    const [creditAmount, setCreditAmount] = useState(0);
+    const depositCredit = async () => {
+        const result = await changeCredit({ balance: creditAmount, type: 'deposit', username: params.name });
+        await getMe();
+        setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
+        setCreditAmount(0);
+        enqueueSnackbar(result.message);
     };
 
-    const fidoAdd = (data: number) => {
-        console.log()
-        if (user?.roleId === 'super_admin') {
-            setFido(data);
-        } else if (availableFido + params.fidoAmount >= parseFloat(data.toString())) {
-            setFido(data);
-        } else {
-            enqueueSnackbar('credit not enough!', { variant: 'warning' });
-        }
+    const withdrawCredit = async () => {
+        const result = await changeCredit({ balance: creditAmount, type: 'withdraw', username: params.name });
+        await getMe();
+        setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
+        setCreditAmount(0);
+        enqueueSnackbar(result.message);
+    };
+
+    // add fido
+
+    const [fidoAmount, setFidoAmount] = useState(0);
+
+    const depositFido = async () => {
+        const result = await changeFido({ balance: fidoAmount, type: 'deposit', username: params.name });
+        enqueueSnackbar(result.message);
+        setFidoAmount(0);
+        router.push(paths.operator.list);
+    };
+
+    const withdrawFido = async () => {
+        const result = await changeFido({ balance: fidoAmount, type: 'withdraw', username: params.name });
+        enqueueSnackbar(result.message);
+        setFidoAmount(0);
+        router.push(paths.operator.list);
     };
 
     return (
@@ -219,7 +234,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="User Credit"
                             percent={70}
-                            price={params.balance}
+                            price={totalBalance}
                             icon="solar:file-corrupted-bold-duotone"
                             color={theme.palette.error.main}
                         />
@@ -269,15 +284,17 @@ export default function AccountGeneral() {
                                     <Stack spacing={1}>
                                         <IncrementerButton
                                             name="addcredit"
-                                            quantity={values}
-                                            disabledDecrease={values <= 1}
-                                            disabledIncrease={user?.roleId === 'super_admin' ? false : values >= availableBalance + params.balance}
-                                            onIncrease={(e) => creditadd(e)}
-                                            onDecrease={() => setCreditAdd(values - 1)}
+                                            quantity={creditAmount}
+                                            disabledDecrease={creditAmount < 1}
+                                            disabledIncrease={creditAmount < 1}
+                                            onChangeCredit={(e) => setCreditAmount(e)}
+                                            onIncrease={depositCredit}
+                                            onDecrease={withdrawCredit}
                                         />
 
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available: {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
+                                            Available:{' '}
+                                            {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
                                         </Typography>
                                     </Stack>
                                 </Stack>
@@ -290,15 +307,17 @@ export default function AccountGeneral() {
                                     <Stack spacing={1}>
                                         <IncrementerButton
                                             name="addfido"
-                                            quantity={fido}
-                                            disabledDecrease={fido <= 1}
-                                            disabledIncrease={user?.roleId === 'super_admin' ? false : fido >= availableFido + params.fidoAmount}
-                                            onIncrease={(e) => fidoAdd(e)}
-                                            onDecrease={() => setFido(fido - 1)}
+                                            quantity={fidoAmount}
+                                            disabledDecrease={fidoAmount < 1}
+                                            disabledIncrease={fidoAmount < 1}
+                                            onChangeCredit={(e) => setFidoAmount(e)}
+                                            onIncrease={depositFido}
+                                            onDecrease={withdrawFido}
                                         />
 
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available: {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
+                                            Available:{' '}
+                                            {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
                                         </Typography>
                                     </Stack>
                                 </Stack>
