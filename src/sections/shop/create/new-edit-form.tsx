@@ -88,8 +88,11 @@ export default function UserNewEditForm({ currentUser }: Props) {
             if (result.status) {
                 reset();
                 await new Promise((resolve) => setTimeout(resolve, 500));
+
                 enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
                 router.push(paths.shop.list);
+            } else {
+                enqueueSnackbar(result.message, { variant: 'error' });
             }
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' });

@@ -35,10 +35,12 @@ export default function AccountGeneral() {
         timezone: Yup.string().required('timezone is required'),
         ip_address: Yup.string().required('City is required'),
         last_login: Yup.string().required('Zip code is required'),
-        credit: Yup.number().required('Credit is required'),
+        credit: Yup.mixed().required('Credit is required'),
         // not required
         role: Yup.string().required('Role is required')
     });
+
+    console.log(user?.roleId);
 
     const defaultValues = {
         displayName: user?.username || '',
@@ -48,8 +50,8 @@ export default function AccountGeneral() {
         timezone: 'UTC',
         ip_address: '78.453.276.12',
         last_login: '16/09/2023 11:00pm',
-        credit: user?.balance,
-        role: 'admin'
+        credit: user?.roleId === 'super_admin' ? '∞' : user?.balance,
+        role: user?.roleId === 'super_admin' ? 'Super Admin' : user?.roleId || ''
     };
 
     const methods = useForm({

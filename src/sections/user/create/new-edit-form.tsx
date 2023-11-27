@@ -89,7 +89,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
                 enqueueSnackbar('Create success!');
                 router.push(paths.user.list);
             } else {
-                enqueueSnackbar(result.message);
+                enqueueSnackbar(result.message, { variant: 'error' });
             }
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' });
