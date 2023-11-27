@@ -13,7 +13,6 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
 import AccountProfile from '../account/profile';
 import AccountCategrories from '../account/categories';
-import AccountProvider from '../account/provider';
 // import AccountSocialLinks from '../account-social-links';
 // import AccountNotifications from '../account-notifications';
 // import AccountChangePassword from '../account-change-password';
@@ -31,16 +30,16 @@ const TABS = [
         label: 'Categories',
         icon: <Iconify icon="solar:bill-list-bold" width={24} />
     },
-    {
-        value: 'provider',
-        label: 'Providers',
-        icon: <Iconify icon="solar:bell-bing-bold" width={24} />
-    },
-    {
-        value: 'social',
-        label: 'Social links',
-        icon: <Iconify icon="solar:share-bold" width={24} />
-    },
+    // {
+    //     value: 'provider',
+    //     label: 'Providers',
+    //     icon: <Iconify icon="solar:bell-bing-bold" width={24} />
+    // },
+    // {
+    //     value: 'social',
+    //     label: 'Social links',
+    //     icon: <Iconify icon="solar:share-bold" width={24} />
+    // },
     {
         value: 'security',
         label: 'Security',
@@ -89,7 +88,7 @@ export default function AccountView() {
 
             {currentTab === 'categories' && <AccountCategrories />}
 
-            {currentTab === 'provider' && <AccountProvider />}
+            {/* {currentTab === 'provider' && <AccountProvider />} */}
 
             {/* {currentTab === 'social' && <AccountGeneral />}
 

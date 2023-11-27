@@ -31,11 +31,11 @@ const TABS = [
         label: 'Categories',
         icon: <Iconify icon="solar:bill-list-bold" width={24} />
     },
-    {
-        value: 'provider',
-        label: 'Providers',
-        icon: <Iconify icon="solar:bell-bing-bold" width={24} />
-    },
+    // {
+    //     value: 'provider',
+    //     label: 'Providers',
+    //     icon: <Iconify icon="solar:bell-bing-bold" width={24} />
+    // },
     {
         value: 'security',
         label: 'Security',
@@ -84,7 +84,7 @@ export default function AccountView() {
 
             {currentTab === 'categories' && <AccountCategrories />}
 
-            {currentTab === 'provider' && <AccountProvider />}
+            {/* {currentTab === 'provider' && <AccountProvider />} */}
 
             {currentTab === 'security' && <AccountSecurity />}
         </Container>
