@@ -53,7 +53,7 @@ export default function AccountChangePassword() {
 
     const onSubmit = handleSubmit(async (data) => {
         try {
-            // let userInfo = sessionStorage.getItem('accessToken');
+            // let userInfo = localStorage.getItem('accessToken');
             const result = await updateProfile({ password: data.newPassword, id: user?.id });
             if (result.status) {
                 setSession(result.accessToken);

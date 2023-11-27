@@ -26,269 +26,208 @@ import BestCharts from './account-profile/best-charts';
 // ----------------------------------------------------------------------
 
 export default function AccountGeneral() {
-	const { enqueueSnackbar } = useSnackbar();
-	const location = useLocation();
-	const params: IUserItem = location.state;
-	const [family, setFamily] = useState<string[]>([]);
+    const { enqueueSnackbar } = useSnackbar();
+    const location = useLocation();
+    const params: IUserItem = location.state;
+    const [family, setFamily] = useState<string[]>([]);
 
-	const UpdateUserSchema = Yup.object().shape({
-		displayName: Yup.string().required('Name is required'),
-		email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-		photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
-		currency: Yup.string().required('Currency is required'),
-		timezone: Yup.string().required('timezone is required'),
-		ip_address: Yup.string().required('City is required'),
-		last_login: Yup.string().required('Zip code is required'),
-		credit: Yup.number(),
-		bonus: Yup.string().required('Must select Bonus Percent'),
-		casinortp: Yup.string().required('Must select casinortp Percent'),
-		virtualrtp: Yup.string().required('Must select virtualrtp Percent'),
-		minigamesrtp: Yup.string().required('Must select minigamesrtp Percent'),
-	});
+    const UpdateUserSchema = Yup.object().shape({
+        displayName: Yup.string().required('Name is required'),
+        email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+        photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
+        currency: Yup.string().required('Currency is required'),
+        timezone: Yup.string().required('timezone is required'),
+        ip_address: Yup.string().required('City is required'),
+        last_login: Yup.string().required('Zip code is required'),
+        credit: Yup.number()
+    });
 
-	const defaultValues = {
-		displayName: params?.name || '',
-		email: params?.email || '',
-		photoURL: params?.avatar || null,
-		phoneNumber: params?.phoneNumber || '',
-		country: params?.country || '',
-		address: params?.address || '',
-		currency: 'TND',
-		timezone: 'UTC',
-		ip_address: '78.453.276.12',
-		last_login: '16/09/2023 11:00pm',
-		credit: params.balance,
-		bonus: params?.bonus || '5%',
-		casinortp: params?.casinortp || '70%',
-		virtualrtp: params?.virtualrtp || '70%',
-		minigamesrtp: params?.minigamesrtp || '70%'
-	};
+    const defaultValues = {
+        displayName: params?.name || '',
+        email: params?.email || '',
+        photoURL: params?.avatar || null,
+        phoneNumber: params?.phoneNumber || '',
+        country: params?.country || '',
+        address: params?.address || '',
+        currency: 'TND',
+        timezone: 'UTC',
+        ip_address: '78.453.276.12',
+        last_login: '16/09/2023 11:00pm',
+        credit: params.balance
+    };
 
-	const methods = useForm({
-		resolver: yupResolver(UpdateUserSchema),
-		defaultValues
-	});
+    const methods = useForm({
+        resolver: yupResolver(UpdateUserSchema),
+        defaultValues
+    });
 
-	const getUserFamily = useCallback(async () => {
-		const result = await getFamily(params.userName);
-		if (result.status) {
-			setFamily(result.data)
-		}
-	}, [params.userName])
-	useEffect(() => {
-		getUserFamily();
-	}, [getUserFamily])
+    const getUserFamily = useCallback(async () => {
+        const result = await getFamily(params.userName);
+        if (result.status) {
+            setFamily(result.data);
+        }
+    }, [params.userName]);
+    useEffect(() => {
+        getUserFamily();
+    }, [getUserFamily]);
 
-	const {
-		setValue,
-		handleSubmit,
-		formState: { isSubmitting }
-	} = methods;
+    const {
+        setValue,
+        handleSubmit,
+        formState: { isSubmitting }
+    } = methods;
 
-	const onSubmit = handleSubmit(async (data) => {
-		try {
-			const formData = new FormData();
-			formData.append('image', data.photoURL);
-			formData.append('id', params.id);
-			formData.append('username', data.displayName);
-			formData.append('email', data.email);
-			formData.append('timezone', data.timezone);
-			formData.append('currency', data.currency);
-			formData.append('bouns', data.bonus);
-			formData.append('casinortp', data.casinortp);
-			formData.append('virtualrtp', data.virtualrtp);
-			formData.append('minigamesrtp', data.minigamesrtp);
-			const result = await update(formData);
-			if (result.status) {
-				enqueueSnackbar('Update success!');
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	});
+    const onSubmit = handleSubmit(async (data) => {
+        try {
+            const formData = new FormData();
+            formData.append('image', data.photoURL);
+            formData.append('id', params.id);
+            formData.append('username', data.displayName);
+            formData.append('email', data.email);
+            formData.append('timezone', data.timezone);
+            formData.append('currency', data.currency);
 
-	const handleDrop = useCallback(
-		(acceptedFiles: File[]) => {
-			const file = acceptedFiles[0];
+            const result = await update(formData);
+            if (result.status) {
+                enqueueSnackbar('Update success!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
-			Object.assign(file, {
-				preview: URL.createObjectURL(file)
-			});
+    const handleDrop = useCallback(
+        (acceptedFiles: File[]) => {
+            const file = acceptedFiles[0];
 
-			if (file) {
-				setValue('photoURL', file, { shouldValidate: true });
-			}
-		},
-		[setValue]
-	);
+            Object.assign(file, {
+                preview: URL.createObjectURL(file)
+            });
 
-	// add credit
+            if (file) {
+                setValue('photoURL', file, { shouldValidate: true });
+            }
+        },
+        [setValue]
+    );
 
-	return (
-		<FormProvider methods={methods} onSubmit={onSubmit}>
+    // add credit
 
-			<Card sx={{ p: 3 }}>
-				<Grid container spacing={3}>
-					<Grid xs={12} md={6} lg={4}>
-						<Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
-							<RHFUploadAvatar
-								name="photoURL"
-								maxSize={3145728}
-								onDrop={handleDrop}
-								helperText={
-									<Typography
-										variant="caption"
-										sx={{
-											mt: 3,
-											mx: 'auto',
-											display: 'block',
-											textAlign: 'center',
-											color: 'text.disabled'
-										}}
-									>
-										Allowed *.jpeg, *.jpg, *.png, *.gif
-										<br /> max size of {fData(3145728)}
-									</Typography>
-								}
-							/>
+    return (
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+            <Card sx={{ p: 3 }}>
+                <Grid container spacing={3}>
+                    <Grid xs={12} md={6} lg={4}>
+                        <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
+                            <RHFUploadAvatar
+                                name="photoURL"
+                                maxSize={3145728}
+                                onDrop={handleDrop}
+                                helperText={
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            mt: 3,
+                                            mx: 'auto',
+                                            display: 'block',
+                                            textAlign: 'center',
+                                            color: 'text.disabled'
+                                        }}
+                                    >
+                                        Allowed *.jpeg, *.jpg, *.png, *.gif
+                                        <br /> max size of {fData(3145728)}
+                                    </Typography>
+                                }
+                            />
 
-							<Button variant="soft" color="error" sx={{ mt: 3 }}>
-								Delete User
-							</Button>
-						</Card>
-					</Grid>
+                            <Button variant="soft" color="error" sx={{ mt: 3 }}>
+                                Delete User
+                            </Button>
+                        </Card>
+                    </Grid>
 
-					<Grid xs={12} md={6} lg={4}>
-						<Card sx={{ p: 3 }}>
-							<Box rowGap={3} columnGap={2} display="grid">
+                    <Grid xs={12} md={6} lg={4}>
+                        <Card sx={{ p: 3 }}>
+                            <Box rowGap={3} columnGap={2} display="grid">
+                                <RHFTextField name="credit" label="Credit" disabled />
+                                <RHFTextField name="displayName" label="Name" />
+                                <RHFTextField name="email" label="Email Address" />
+                                <RHFSelect
+                                    fullWidth
+                                    name="timezone"
+                                    label="Time Zone"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['UTC', 'pending', 'overdue', 'draft'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
+                                <RHFSelect
+                                    fullWidth
+                                    name="currency"
+                                    label="Currency"
+                                    InputLabelProps={{ shrink: true }}
+                                    PaperPropsSx={{ textTransform: 'capitalize' }}
+                                >
+                                    {['EUR', 'USD', 'TND'].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </RHFSelect>
 
-								<RHFTextField name="credit" label="Credit" disabled />
-								<RHFTextField name="displayName" label="Name" />
-								<RHFTextField name="email" label="Email Address" />
-								<RHFSelect
-									fullWidth
-									name="timezone"
-									label="Time Zone"
-									InputLabelProps={{ shrink: true }}
-									PaperPropsSx={{ textTransform: 'capitalize' }}
-								>
-									{['UTC', 'pending', 'overdue', 'draft'].map((option) => (
-										<MenuItem key={option} value={option}>
-											{option}
-										</MenuItem>
-									))}
-								</RHFSelect>
-								<RHFSelect
-									fullWidth
-									name="currency"
-									label="Currency"
-									InputLabelProps={{ shrink: true }}
-									PaperPropsSx={{ textTransform: 'capitalize' }}
-								>
-									{['EUR', 'USD', 'TND'].map((option) => (
-										<MenuItem key={option} value={option}>
-											{option}
-										</MenuItem>
-									))}
-								</RHFSelect>
+                                <RHFTextField name="ip_address" disabled label="Ip address" />
+                                <RHFTextField name="last_login" disabled label="Last Login" />
+                            </Box>
 
-								<RHFTextField name="ip_address" disabled label="Ip address" />
-								<RHFTextField name="last_login" disabled label="Last Login" />
-								<RHFSelect
-									fullWidth
-									name="bonus"
-									label="Bonus"
-									InputLabelProps={{ shrink: true }}
-									PaperPropsSx={{ textTransform: 'capitalize' }}
-								>
-									{['5%', '10%', '15%', '20%'].map((option) => (
-										<MenuItem key={option} value={option}>
-											{option}
-										</MenuItem>
-									))}
-								</RHFSelect>
-								<RHFSelect
-									fullWidth
-									name="casinortp"
-									label="RTP % Slot"
-									InputLabelProps={{ shrink: true }}
-									PaperPropsSx={{ textTransform: 'capitalize' }}
-								>
-									{['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
-										<MenuItem key={option} value={option}>
-											{option}
-										</MenuItem>
-									))}
-								</RHFSelect>
-								<RHFSelect
-									fullWidth
-									name="virtualrtp"
-									label="RTP % Virtuals"
-									InputLabelProps={{ shrink: true }}
-									PaperPropsSx={{ textTransform: 'capitalize' }}
-								>
-									{['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
-										<MenuItem key={option} value={option}>
-											{option}
-										</MenuItem>
-									))}
-								</RHFSelect>
-								<RHFSelect
-									fullWidth
-									name="minigamesrtp"
-									label="RTP % Mini Games"
-									InputLabelProps={{ shrink: true }}
-									PaperPropsSx={{ textTransform: 'capitalize' }}
-								>
-									{['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
-										<MenuItem key={option} value={option}>
-											{option}
-										</MenuItem>
-									))}
-								</RHFSelect>
-								{/* <RHFTextField name="phoneNumber" label="Phone Number" />
-              <RHFTextField name="address" label="Address" /> */}
-							</Box>
-
-							<Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-								<LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-									Save Changes
-								</LoadingButton>
-							</Stack>
-						</Card>
-					</Grid>
-					<Grid container xs={12} md={12} lg={4}>
-						<Grid xs={12} md={6} lg={12}>
-							<BestCharts
-								title="Best 5 Shops"
-								chart={{
-									series: [
-										{ label: 'Pragmatic Play', value: 4344 },
-										{ label: 'Evolution', value: 5435 },
-										{ label: 'Amatic', value: 1443 },
-										{ label: 'NetEnt', value: 4443 },
-										{ label: 'Playtech', value: 4443 }
-									]
-								}}
-							/>
-						</Grid>
-					</Grid>
-				</Grid>
-				<Grid container xs={12} md={12} lg={12} pt={4}>
-					<Grid xs={2}>
-						Family
-					</Grid>
-					<Grid xs={10}>
-						<div style={{ display: 'flex', alignItems: 'center', backgroundColor: `#324457`, padding: '4px 10px', borderRadius: '8px' }}>
-							{family.map((item, index) => (
-								<div key={index}>
-									{index > 0 && '>'} {item}
-								</div>
-							))}
-						</div>
-					</Grid>
-				</Grid>
-			</Card>
-		</FormProvider>
-	);
+                            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+                                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                                    Save Changes
+                                </LoadingButton>
+                            </Stack>
+                        </Card>
+                    </Grid>
+                    <Grid container xs={12} md={12} lg={4}>
+                        <Grid xs={12} md={6} lg={12}>
+                            <BestCharts
+                                title="Best 5 Shops"
+                                chart={{
+                                    series: [
+                                        { label: 'Pragmatic Play', value: 4344 },
+                                        { label: 'Evolution', value: 5435 },
+                                        { label: 'Amatic', value: 1443 },
+                                        { label: 'NetEnt', value: 4443 },
+                                        { label: 'Playtech', value: 4443 }
+                                    ]
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid container xs={12} md={12} lg={12} pt={4}>
+                    <Grid xs={2}>Family</Grid>
+                    <Grid xs={10}>
+                        <Stack
+                            alignItems="center"
+                            flexDirection="row"
+                            sx={{
+                                bgcolor: 'background.neutral',
+                                padding: '4px 10px',
+                                borderRadius: '8px'
+                            }}
+                        >
+                            {family.map((item, index) => (
+                                <Typography key={index}>
+                                    {index > 0 && '>'} {item}
+                                </Typography>
+                            ))}
+                        </Stack>
+                    </Grid>
+                </Grid>
+            </Card>
+        </FormProvider>
+    );
 }

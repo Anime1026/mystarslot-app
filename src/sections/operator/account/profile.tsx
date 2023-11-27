@@ -64,12 +64,12 @@ export default function AccountGeneral() {
     const getUserFamily = useCallback(async () => {
         const result = await getFamily(params.userName);
         if (result.status) {
-            setFamily(result.data)
+            setFamily(result.data);
         }
-    }, [params.userName])
+    }, [params.userName]);
     useEffect(() => {
         getUserFamily();
-    }, [getUserFamily])
+    }, [getUserFamily]);
 
     const UpdateUserSchema = Yup.object().shape({
         displayName: Yup.string().required('Name is required'),
@@ -78,11 +78,7 @@ export default function AccountGeneral() {
         currency: Yup.string().required('Currency is required'),
         timezone: Yup.string().required('timezone is required'),
         ip_address: Yup.string().required('City is required'),
-        last_login: Yup.string().required('Zip code is required'),
-        bonus: Yup.string().required('Must select Bonus Percent'),
-        casinortp: Yup.string().required('Must select casinortp Percent'),
-        virtualrtp: Yup.string().required('Must select virtualrtp Percent'),
-        minigamesrtp: Yup.string().required('Must select minigamesrtp Percent'),
+        last_login: Yup.string().required('Zip code is required')
         // not required
     });
 
@@ -93,11 +89,7 @@ export default function AccountGeneral() {
         currency: 'TND',
         timezone: 'UTC',
         ip_address: params?.ipAddress || '78.453.276.12',
-        last_login: params?.lastLogin || '16/09/2023 11:00pm',
-        bonus: params?.bonus || '5%',
-        casinortp: params?.casinortp || '70%',
-        virtualrtp: params?.virtualrtp || '70%',
-        minigamesrtp: params?.minigamesrtp || '70%'
+        last_login: params?.lastLogin || '16/09/2023 11:00pm'
     };
 
     const methods = useForm({
@@ -122,10 +114,6 @@ export default function AccountGeneral() {
             formData.append('fido_amount', String(fido));
             formData.append('timezone', data.timezone);
             formData.append('currency', data.currency);
-            formData.append('bouns', data.bonus);
-            formData.append('casinortp', data.casinortp);
-            formData.append('virtualrtp', data.virtualrtp);
-            formData.append('minigamesrtp', data.minigamesrtp);
             const result = await update(formData);
             if (result.status) {
                 enqueueSnackbar('Update success!');
@@ -322,58 +310,6 @@ export default function AccountGeneral() {
 
                                 <RHFTextField name="ip_address" disabled label="Ip address" />
                                 <RHFTextField name="last_login" disabled label="Last Login" />
-                                <RHFSelect
-                                    fullWidth
-                                    name="bonus"
-                                    label="Bonus"
-                                    InputLabelProps={{ shrink: true }}
-                                    PaperPropsSx={{ textTransform: 'capitalize' }}
-                                >
-                                    {['5%', '10%', '15%', '20%'].map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </RHFSelect>
-                                <RHFSelect
-                                    fullWidth
-                                    name="casinortp"
-                                    label="RTP % Slot"
-                                    InputLabelProps={{ shrink: true }}
-                                    PaperPropsSx={{ textTransform: 'capitalize' }}
-                                >
-                                    {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </RHFSelect>
-                                <RHFSelect
-                                    fullWidth
-                                    name="virtualrtp"
-                                    label="RTP % Virtuals"
-                                    InputLabelProps={{ shrink: true }}
-                                    PaperPropsSx={{ textTransform: 'capitalize' }}
-                                >
-                                    {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </RHFSelect>
-                                <RHFSelect
-                                    fullWidth
-                                    name="minigamesrtp"
-                                    label="RTP % Mini Games"
-                                    InputLabelProps={{ shrink: true }}
-                                    PaperPropsSx={{ textTransform: 'capitalize' }}
-                                >
-                                    {['70%', '75%', '80%', '85%', '90%', '95%'].map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </RHFSelect>
                             </Box>
 
                             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
@@ -415,20 +351,26 @@ export default function AccountGeneral() {
                     </Grid>
                 </Grid>
                 <Grid container xs={12} md={12} lg={12} pt={4}>
-                    <Grid xs={2}>
-                        Family
-                    </Grid>
+                    <Grid xs={2}>Family</Grid>
                     <Grid xs={10}>
-                        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: `#324457`, padding: '4px 10px', borderRadius: '8px' }}>
+                        <Stack
+                            alignItems="center"
+                            flexDirection="row"
+                            sx={{
+                                bgcolor: 'background.neutral',
+                                padding: '4px 10px',
+                                borderRadius: '8px'
+                            }}
+                        >
                             {family.map((item, index) => (
-                                <div key={index}>
+                                <Typography key={index}>
                                     {index > 0 && '>'} {item}
-                                </div>
+                                </Typography>
                             ))}
-                        </div>
+                        </Stack>
                     </Grid>
                 </Grid>
             </Card>
-        </FormProvider >
+        </FormProvider>
     );
 }

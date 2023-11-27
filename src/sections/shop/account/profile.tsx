@@ -61,7 +61,7 @@ export default function AccountGeneral() {
         bonus: Yup.string().required('Must select Bonus Percent'),
         casinortp: Yup.string().required('Must select casinortp Percent'),
         virtualrtp: Yup.string().required('Must select virtualrtp Percent'),
-        minigamesrtp: Yup.string().required('Must select minigamesrtp Percent'),
+        minigamesrtp: Yup.string().required('Must select minigamesrtp Percent')
         // not required
     });
 
@@ -90,12 +90,12 @@ export default function AccountGeneral() {
     const getUserFamily = useCallback(async () => {
         const result = await getFamily(params.userName);
         if (result.status) {
-            setFamily(result.data)
+            setFamily(result.data);
         }
-    }, [params.userName])
+    }, [params.userName]);
     useEffect(() => {
         getUserFamily();
-    }, [getUserFamily])
+    }, [getUserFamily]);
 
     const {
         setValue,
@@ -114,7 +114,7 @@ export default function AccountGeneral() {
             formData.append('fido_amount', String(fido));
             formData.append('timezone', data.timezone);
             formData.append('currency', data.currency);
-            formData.append('bouns', data.bonus);
+            formData.append('bonus', data.bonus);
             formData.append('casinortp', data.casinortp);
             formData.append('virtualrtp', data.virtualrtp);
             formData.append('minigamesrtp', data.minigamesrtp);
@@ -401,17 +401,23 @@ export default function AccountGeneral() {
                     </Grid>
                 </Grid>
                 <Grid container xs={12} md={12} lg={12} pt={4}>
-                    <Grid xs={2}>
-                        Family
-                    </Grid>
+                    <Grid xs={2}>Family</Grid>
                     <Grid xs={10}>
-                        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: `#324457`, padding: '4px 10px', borderRadius: '8px' }}>
+                        <Stack
+                            alignItems="center"
+                            flexDirection="row"
+                            sx={{
+                                bgcolor: 'background.neutral',
+                                padding: '4px 10px',
+                                borderRadius: '8px'
+                            }}
+                        >
                             {family.map((item, index) => (
-                                <div key={index}>
-                                    {index > 0 && '>'} {item}
-                                </div>
+                                <Typography key={index}>
+                                    {index > 0 && ' >'} {item}
+                                </Typography>
                             ))}
-                        </div>
+                        </Stack>
                     </Grid>
                 </Grid>
             </Card>
