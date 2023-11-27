@@ -195,7 +195,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="Total"
                             percent={100}
-                            price={inAmount + outAmount + params.balance}
+                            price={inAmount + outAmount}
                             icon="solar:bill-list-bold-duotone"
                             color={theme.palette.info.main}
                         />

@@ -140,9 +140,9 @@ export default function AccountGeneral() {
     const [amountValue, setAmountValue] = useState(0);
     const [bonusCheck, setBonusCheck] = useState(true);
 
-    const deposithandle = () => {
-        console.log();
-    };
+    // const deposithandle = () => {
+    //     console.log();
+    // };
 
     return (
         <FormProvider methods={methods} onSubmit={onSubmit}>

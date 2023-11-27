@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { format } from 'date-fns';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -40,16 +41,16 @@ export default function AccountGeneral() {
         role: Yup.string().required('Role is required')
     });
 
-    console.log(user?.roleId);
+    console.log(user);
 
     const defaultValues = {
         displayName: user?.username || '',
         email: user?.email || '',
         photoURL: user?.avatar || null,
-        currency: 'TND',
-        timezone: 'UTC',
-        ip_address: '78.453.276.12',
-        last_login: '16/09/2023 11:00pm',
+        currency: user?.currency || 'TND',
+        timezone: user?.timezone || 'UTC',
+        ip_address: user?.ip || '78.453.276.12',
+        last_login: user ? format(new Date(user.updatedAt), 'dd MMM yyyy') : '16/09/2023 11:00pm',
         credit: user?.roleId === 'super_admin' ? '∞' : user?.balance,
         role: user?.roleId === 'super_admin' ? 'Super Admin' : user?.roleId || ''
     };
