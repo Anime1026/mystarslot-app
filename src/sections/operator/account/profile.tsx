@@ -19,7 +19,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import { useRouter } from 'src/routes/hooks';
 
 // apis
-import { update, getFamily } from 'src/api';
+import { update, getFamily, getInOutAmount } from 'src/api';
 
 // utils
 import { fData } from 'src/utils/format-number';
@@ -53,6 +53,8 @@ export default function AccountGeneral() {
     const [availableBalance, setAvailable] = useState(0);
     const [availableFido, setAvaliableFido] = useState(0);
     const [family, setFamily] = useState<string[]>([]);
+    const [inAmount, setInAmount] = useState(0);
+    const [outAmount, setOutAmount] = useState(0);
 
     useEffect(() => {
         if (user) {
@@ -60,6 +62,22 @@ export default function AccountGeneral() {
             setAvaliableFido(user.fido_amount);
         }
     }, [user]);
+
+    const getAmounts = useCallback(async () => {
+        try {
+            const result = await getInOutAmount({ userName: params.userName });
+            if (result.status) {
+                setInAmount(result.inAmount);
+                setOutAmount(result.outAmount);
+            }
+        } catch (error) {
+            // enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    }, [params])
+
+    useEffect(() => {
+        getAmounts();
+    }, [getAmounts])
 
     const getUserFamily = useCallback(async () => {
         const result = await getFamily(params.userName);
@@ -141,7 +159,9 @@ export default function AccountGeneral() {
     );
 
     const creditadd = (data: number) => {
-        if (availableBalance >= parseFloat(data.toString())) {
+        if (user?.roleId === 'super_admin') {
+            setCreditAdd(data);
+        } else if (availableBalance + params.balance >= parseFloat(data.toString())) {
             setCreditAdd(data);
         } else {
             enqueueSnackbar('credit not enough!', { variant: 'warning' });
@@ -149,7 +169,10 @@ export default function AccountGeneral() {
     };
 
     const fidoAdd = (data: number) => {
-        if (availableFido >= parseFloat(data.toString())) {
+        console.log()
+        if (user?.roleId === 'super_admin') {
+            setFido(data);
+        } else if (availableFido + params.fidoAmount >= parseFloat(data.toString())) {
             setFido(data);
         } else {
             enqueueSnackbar('credit not enough!', { variant: 'warning' });
@@ -172,7 +195,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="Total"
                             percent={100}
-                            price={123}
+                            price={inAmount + outAmount + params.balance}
                             icon="solar:bill-list-bold-duotone"
                             color={theme.palette.info.main}
                         />
@@ -180,7 +203,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="In"
                             percent={50}
-                            price={50}
+                            price={inAmount}
                             icon="solar:file-check-bold-duotone"
                             color={theme.palette.success.main}
                         />
@@ -188,7 +211,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="Out"
                             percent={60}
-                            price={60}
+                            price={outAmount}
                             icon="solar:sort-by-time-bold-duotone"
                             color={theme.palette.warning.main}
                         />
@@ -196,7 +219,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="User Credit"
                             percent={70}
-                            price={75}
+                            price={params.balance}
                             icon="solar:file-corrupted-bold-duotone"
                             color={theme.palette.error.main}
                         />
@@ -248,13 +271,13 @@ export default function AccountGeneral() {
                                             name="addcredit"
                                             quantity={values}
                                             disabledDecrease={values <= 1}
-                                            disabledIncrease={values >= availableBalance}
+                                            disabledIncrease={user?.roleId === 'super_admin' ? false : values >= availableBalance + params.balance}
                                             onIncrease={(e) => creditadd(e)}
                                             onDecrease={() => setCreditAdd(values - 1)}
                                         />
 
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available: {availableBalance}
+                                            Available: {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
                                         </Typography>
                                     </Stack>
                                 </Stack>
@@ -269,13 +292,13 @@ export default function AccountGeneral() {
                                             name="addfido"
                                             quantity={fido}
                                             disabledDecrease={fido <= 1}
-                                            disabledIncrease={fido >= availableFido}
+                                            disabledIncrease={user?.roleId === 'super_admin' ? false : fido >= availableFido + params.fidoAmount}
                                             onIncrease={(e) => fidoAdd(e)}
                                             onDecrease={() => setFido(fido - 1)}
                                         />
 
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available: {availableFido}
+                                            Available: {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
                                         </Typography>
                                     </Stack>
                                 </Stack>

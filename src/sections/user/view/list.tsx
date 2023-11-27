@@ -133,6 +133,7 @@ export default function UserListView() {
         const result = data.data.data;
         const tableList: tableType[] = [];
         for (let i = 0; i < result.length; i += 1) {
+            console.log(result[i]);
             tableList.push({
                 id: result[i].id,
                 userName: result[i].username,
@@ -144,7 +145,7 @@ export default function UserListView() {
                 email: result[i].email,
                 address: result[i].address,
                 balance: result[i].balance ? result[i].balance : 0,
-                fidoAmount: result[i].fidoAmount ? result[i].fidoAmount : 0,
+                fidoAmount: result[i].fido_amount ? result[i].fido_amount : 0,
                 name: result[i].username,
                 isVerified: result[i].isVerified ? result[i].isVerified : false,
                 company: result[i].company ? result[i].company : '',
