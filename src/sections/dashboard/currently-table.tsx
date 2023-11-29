@@ -62,19 +62,14 @@ function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
 
             <TableCell align="center">{row.to}</TableCell>
 
-            <TableCell align="right">{fCurrency(row.inAmount)}</TableCell>
+            <TableCell align="right">
+                <Label variant="soft" color="success">
+                    {fCurrency(row.inAmount)}
+                </Label>
+            </TableCell>
 
             <TableCell align="right">
-                <Label
-                    variant="soft"
-                    color={
-                        // (row.outAmount === 'Top 1' && 'primary') ||
-                        // (row.outAmount === 'Top 2' && 'info') ||
-                        // (row.outAmount === 'Top 3' && 'success') ||
-                        // (row.outAmount === 'Top 4' && 'warning') ||
-                        'error'
-                    }
-                >
+                <Label variant="soft" color="error">
                     {fCurrency(row.outAmount)}
                 </Label>
             </TableCell>

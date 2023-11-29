@@ -40,7 +40,6 @@ type Props = {
 
 export default function UserTableRow({ row, selected, onSelectRow, onDeleteRow, onEnableRow, onDisableRow }: Props) {
     const { name, avatar, status, email, balance, ipAddress, fidoAmount } = row;
-
     const deleteUser = useBoolean();
 
     const enableUser = useBoolean();
@@ -53,11 +52,12 @@ export default function UserTableRow({ row, selected, onSelectRow, onDeleteRow, 
 
     const router = useRouter();
 
-    const [updatedAt, setUpdatedAt] = useState('2023-11-08 01:44:21.503z');
+    const [updatedAt, setUpdatedAt] = useState<any>(new Date());
 
     useEffect(() => {
-        setUpdatedAt(row.lastLogin);
-    }, [row, updatedAt]);
+        const timeValue = new Date(row.lastLogin);
+        setUpdatedAt(timeValue);
+    }, [row]);
 
     const handleEditRow = useCallback(
         (id: string) => {
@@ -85,21 +85,10 @@ export default function UserTableRow({ row, selected, onSelectRow, onDeleteRow, 
                         }}
                     />
                 </TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance}</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fidoAmount}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance.toLocaleString('it-IT')}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fidoAmount.toLocaleString('it-IT')}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
-                <TableCell>
-                    <ListItemText
-                        primary={format(new Date(updatedAt), 'dd MMM yyyy')}
-                        secondary={format(new Date(updatedAt), 'p')}
-                        primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-                        secondaryTypographyProps={{
-                            mt: 0.5,
-                            component: 'span',
-                            typography: 'caption'
-                        }}
-                    />
-                </TableCell>
+                <TableCell>{format(updatedAt, 'yyyy-MM-dd h:mm:ss')}</TableCell>
                 <TableCell>
                     <Label
                         variant="soft"

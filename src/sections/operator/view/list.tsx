@@ -51,8 +51,8 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name' },
-    { id: 'balance', label: 'balance', width: 180 },
-    { id: 'fido', label: 'Fido', width: 180 },
+    { id: 'balance', label: 'BALANCE TND', width: 180 },
+    { id: 'fido', label: 'FIDO TND', width: 180 },
     { id: 'ip_address', label: 'Ip Address', width: 220 },
     { id: 'lastLogin', label: 'Last Login', width: 180 },
     { id: 'status', label: 'Status', width: 100 },

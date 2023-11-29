@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -102,6 +103,8 @@ export default function AccountGeneral() {
         // not required
     });
 
+    const updateDate = new Date(params?.lastLogin);
+
     const defaultValues = {
         displayName: params?.name || '',
         email: params?.email || '',
@@ -109,7 +112,7 @@ export default function AccountGeneral() {
         currency: 'TND',
         timezone: 'UTC',
         ip_address: params?.ipAddress || '78.453.276.12',
-        last_login: params?.lastLogin || '16/09/2023 11:00pm'
+        last_login: format(updateDate, 'yyyy-MM-dd h:mm:ss') || '16/09/2023 11:00pm'
     };
 
     const methods = useForm({
@@ -161,19 +164,38 @@ export default function AccountGeneral() {
     const [totalBalance, setTotalBalance] = useState(0);
     const [creditAmount, setCreditAmount] = useState(0);
     const depositCredit = async () => {
-        const result = await changeCredit({ balance: creditAmount, type: 'deposit', username: params.name });
-        await getMe();
-        setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
-        setCreditAmount(0);
-        enqueueSnackbar(result.message);
+        if (note === 0 || note === '') {
+            setNote('');
+        } else {
+            const result = await changeCredit({
+                balance: creditAmount,
+                type: 'deposit',
+                username: params.name,
+                note
+            });
+            await getMe();
+            setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
+            setCreditAmount(0);
+            enqueueSnackbar(result.message);
+        }
     };
 
     const withdrawCredit = async () => {
-        const result = await changeCredit({ balance: creditAmount, type: 'withdraw', username: params.name });
-        await getMe();
-        setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
-        setCreditAmount(0);
-        enqueueSnackbar(result.message);
+        if (note === 0 || note === '') {
+            setNote('');
+        } else {
+            const result = await changeCredit({
+                balance: creditAmount,
+                type: 'withdraw',
+                username: params.name,
+                note
+            });
+
+            await getMe();
+            setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
+            setCreditAmount(0);
+            enqueueSnackbar(result.message);
+        }
     };
 
     // add fido
@@ -181,18 +203,30 @@ export default function AccountGeneral() {
     const [fidoAmount, setFidoAmount] = useState(0);
 
     const depositFido = async () => {
-        const result = await changeFido({ balance: fidoAmount, type: 'deposit', username: params.name });
-        enqueueSnackbar(result.message);
-        setFidoAmount(0);
-        router.push(paths.operator.list);
+        if (note === 0 || note === '') {
+            setNote('');
+        } else {
+            const result = await changeFido({ balance: fidoAmount, type: 'deposit', username: params.name, note });
+            enqueueSnackbar(result.message);
+            setFidoAmount(0);
+            router.push(paths.operator.list);
+        }
     };
 
     const withdrawFido = async () => {
-        const result = await changeFido({ balance: fidoAmount, type: 'withdraw', username: params.name });
-        enqueueSnackbar(result.message);
-        setFidoAmount(0);
-        router.push(paths.operator.list);
+        if (note === 0 || note === '') {
+            setNote('');
+        } else {
+            const result = await changeFido({ balance: fidoAmount, type: 'withdraw', username: params.name, note });
+            enqueueSnackbar(result.message);
+            setFidoAmount(0);
+            router.push(paths.operator.list);
+        }
     };
+
+    // add note
+
+    const [note, setNote] = useState<0 | string>(0);
 
     return (
         <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -208,7 +242,7 @@ export default function AccountGeneral() {
                         sx={{ py: 2 }}
                     >
                         <TotalCredit
-                            title="Total"
+                            title="IN-OUT"
                             percent={100}
                             price={inAmount + outAmount}
                             icon="solar:bill-list-bold-duotone"
@@ -216,7 +250,7 @@ export default function AccountGeneral() {
                         />
 
                         <TotalCredit
-                            title="In"
+                            title="CREDITI RICEVUTI"
                             percent={50}
                             price={inAmount}
                             icon="solar:file-check-bold-duotone"
@@ -224,7 +258,7 @@ export default function AccountGeneral() {
                         />
 
                         <TotalCredit
-                            title="Out"
+                            title="CREDIT INVIATI"
                             percent={60}
                             price={outAmount}
                             icon="solar:sort-by-time-bold-duotone"
@@ -232,7 +266,7 @@ export default function AccountGeneral() {
                         />
 
                         <TotalCredit
-                            title="User Credit"
+                            title="USER CREDIT"
                             percent={70}
                             price={totalBalance}
                             icon="solar:file-corrupted-bold-duotone"
@@ -276,12 +310,16 @@ export default function AccountGeneral() {
                     <Grid xs={12} md={6} lg={4}>
                         <Card sx={{ p: 3 }}>
                             <Box rowGap={3} columnGap={2} display="grid">
-                                <Stack direction="row">
+                                <Stack direction="row" alignItems="center">
                                     <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
                                         Add Credits
                                     </Typography>
 
                                     <Stack spacing={1}>
+                                        <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
+                                            Credit Available:{' '}
+                                            {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
+                                        </Typography>
                                         <IncrementerButton
                                             name="addcredit"
                                             quantity={creditAmount}
@@ -295,20 +333,19 @@ export default function AccountGeneral() {
                                             onIncrease={depositCredit}
                                             onDecrease={withdrawCredit}
                                         />
-
-                                        <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available:{' '}
-                                            {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
-                                        </Typography>
                                     </Stack>
                                 </Stack>
 
-                                <Stack direction="row">
+                                <Stack direction="row" alignItems="center">
                                     <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
                                         Add Fido
                                     </Typography>
 
                                     <Stack spacing={1}>
+                                        <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
+                                            Fido Available:{' '}
+                                            {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
+                                        </Typography>
                                         <IncrementerButton
                                             name="addfido"
                                             quantity={fidoAmount}
@@ -322,13 +359,18 @@ export default function AccountGeneral() {
                                             onIncrease={depositFido}
                                             onDecrease={withdrawFido}
                                         />
-
-                                        <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available:{' '}
-                                            {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
-                                        </Typography>
                                     </Stack>
                                 </Stack>
+                                <RHFTextField
+                                    name="note"
+                                    label="Note"
+                                    error={note === ''}
+                                    helperText={note === '' ? 'Note required' : ''}
+                                    value={note === 0 ? '' : note}
+                                    onChange={(e) => {
+                                        setNote(e.target.value);
+                                    }}
+                                />
                                 <RHFTextField name="displayName" label="Name" />
                                 <RHFTextField name="email" label="Email Address" />
                                 <RHFSelect

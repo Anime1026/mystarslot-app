@@ -8,6 +8,7 @@ import { fCurrency } from 'src/utils/format-number';
 // types
 import { TransactionType } from 'src/types/invoice';
 // components
+import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ type Props = {
 };
 
 export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, onDeleteRow }: Props) {
-    const { id, from, to, type, inAmount, outAmount, date } = row;
+    const { id, from, to, type, inAmount, outAmount, date, note } = row;
 
     return (
         <TableRow hover selected={selected}>
@@ -33,22 +34,20 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
 
             <TableCell>{type}</TableCell>
 
-            <TableCell>{fCurrency(inAmount)}</TableCell>
-
-            <TableCell align="center">{fCurrency(outAmount)}</TableCell>
-
             <TableCell>
-                <ListItemText
-                    primary={format(new Date(date), 'dd MMM yyyy')}
-                    secondary={format(new Date(date), 'p')}
-                    primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-                    secondaryTypographyProps={{
-                        mt: 0.5,
-                        component: 'span',
-                        typography: 'caption'
-                    }}
-                />
+                <Label variant="soft" color="success">
+                    {inAmount.toLocaleString('it-IT')}
+                </Label>
             </TableCell>
+
+            <TableCell align="center">
+                <Label variant="soft" color="error">
+                    {outAmount.toLocaleString('it-IT')}
+                </Label>
+            </TableCell>
+
+            <TableCell>{format(new Date(date), 'yyyy-MM-dd h:mm:ss')}</TableCell>
+            <TableCell>{note}</TableCell>
         </TableRow>
     );
 }

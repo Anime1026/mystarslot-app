@@ -49,4 +49,5 @@ export type TransactionType = {
     inAmount: number;
     outAmount: number;
     date: Date;
+    note: string;
 };
