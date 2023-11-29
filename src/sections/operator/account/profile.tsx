@@ -20,7 +20,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import { useRouter } from 'src/routes/hooks';
 
 // apis
-import { update, getFamily, getInOutAmount, changeCredit, changeFido } from 'src/api';
+import { update, getFamily, getInOutAmount, changeCredit, changeFido, getUserTotalValue } from 'src/api';
 
 // utils
 import { fData } from 'src/utils/format-number';
@@ -78,7 +78,11 @@ export default function AccountGeneral() {
         getAmounts();
     }, [getAmounts]);
 
+    const [userTotal, setUserTotal] = useState(0);
     const getUserFamily = useCallback(async () => {
+        const data = await getUserTotalValue({ userid: params.userName, type: 'user' });
+        setUserTotal(data.totalvalue);
+
         const result = await getFamily(params.userName);
         if (result.status) {
             setFamily(result.data);
@@ -251,7 +255,7 @@ export default function AccountGeneral() {
 
                         <TotalCredit
                             title="CREDITI RICEVUTI"
-                            percent={50}
+                            percent={(inAmount / (inAmount + outAmount)) * 100}
                             price={inAmount}
                             icon="solar:file-check-bold-duotone"
                             color={theme.palette.success.main}
@@ -259,7 +263,7 @@ export default function AccountGeneral() {
 
                         <TotalCredit
                             title="CREDIT INVIATI"
-                            percent={60}
+                            percent={(outAmount / (inAmount + outAmount)) * 100}
                             price={outAmount}
                             icon="solar:sort-by-time-bold-duotone"
                             color={theme.palette.warning.main}
@@ -268,7 +272,7 @@ export default function AccountGeneral() {
                         <TotalCredit
                             title="USER CREDIT"
                             percent={70}
-                            price={totalBalance}
+                            price={userTotal}
                             icon="solar:file-corrupted-bold-duotone"
                             color={theme.palette.error.main}
                         />

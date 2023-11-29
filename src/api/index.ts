@@ -10,6 +10,11 @@ export async function getList(data: any) {
     return res;
 }
 
+export async function getUserTotalValue(data: any) {
+    const res = await axios.post(endpoints.operator.totalValue, data);
+    return res.data;
+}
+
 export async function create(data: any) {
     const res = await axios.post(endpoints.operator.create, data);
     return res.data;

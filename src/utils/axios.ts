@@ -57,6 +57,7 @@ export const endpoints = {
     },
     operator: {
         list: '/api/get-user',
+        totalValue: '/api/total-value',
         create: 'api/user-create',
         update: '/api/user-update',
         remove: '/api/user-delete',

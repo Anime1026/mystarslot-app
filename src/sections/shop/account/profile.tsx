@@ -20,7 +20,7 @@ import Divider from '@mui/material/Divider';
 import { useAuthContext } from 'src/auth/hooks';
 import { useRouter } from 'src/routes/hooks';
 // apis
-import { update, getFamily, getInOutAmount, changeCredit, changeFido } from 'src/api';
+import { update, getFamily, getInOutAmount, changeCredit, changeFido, getUserTotalValue } from 'src/api';
 // utils
 import { fData } from 'src/utils/format-number';
 import { paths } from 'src/routes/paths';
@@ -89,6 +89,8 @@ export default function AccountGeneral() {
         // not required
     });
 
+    const updateDate = new Date(params?.lastLogin);
+
     const defaultValues = {
         displayName: params?.name || '',
         email: params?.email || '',
@@ -99,7 +101,7 @@ export default function AccountGeneral() {
         currency: 'TND',
         timezone: 'UTC',
         ip_address: params?.ipAddress || '78.453.276.12',
-        last_login: params?.lastLogin || '16/09/2023 11:00pm',
+        last_login: format(updateDate, 'yyyy-MM-dd h:mm:ss') || '16/09/2023 11:00pm',
         casinortp: params?.casinortp || '70%',
         virtualrtp: params?.virtualrtp || '70%',
         minigamesrtp: params?.minigamesrtp || '70%'
@@ -110,7 +112,12 @@ export default function AccountGeneral() {
         defaultValues
     });
 
+    const [userTotal, setUserTotal] = useState(0);
+
     const getUserFamily = useCallback(async () => {
+        const data = await getUserTotalValue({ userid: params.userName, type: 'user' });
+        setUserTotal(data.totalvalue);
+
         const result = await getFamily(params.userName);
         if (result.status) {
             setFamily(result.data);
@@ -236,7 +243,7 @@ export default function AccountGeneral() {
                         sx={{ py: 2 }}
                     >
                         <TotalCredit
-                            title="Total"
+                            title="IN-OUT"
                             percent={100}
                             price={inAmount + outAmount}
                             icon="solar:bill-list-bold-duotone"
@@ -244,25 +251,25 @@ export default function AccountGeneral() {
                         />
 
                         <TotalCredit
-                            title="In"
-                            percent={50}
+                            title="CREDITI RICEVUTI"
+                            percent={(inAmount / (inAmount + outAmount)) * 100}
                             price={inAmount}
                             icon="solar:file-check-bold-duotone"
                             color={theme.palette.success.main}
                         />
 
                         <TotalCredit
-                            title="Out"
-                            percent={60}
+                            title="CREDIT INVIATI"
+                            percent={(outAmount / (inAmount + outAmount)) * 100}
                             price={outAmount}
                             icon="solar:sort-by-time-bold-duotone"
                             color={theme.palette.warning.main}
                         />
 
                         <TotalCredit
-                            title="User Credit"
+                            title="USER CREDIT"
                             percent={70}
-                            price={totalBalance}
+                            price={userTotal}
                             icon="solar:file-corrupted-bold-duotone"
                             color={theme.palette.error.main}
                         />
@@ -311,7 +318,7 @@ export default function AccountGeneral() {
 
                                     <Stack spacing={1}>
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available:{' '}
+                                            Credit Available:{' '}
                                             {user?.roleId === 'super_admin' ? '∞' : availableBalance + params.balance}
                                         </Typography>
                                         <IncrementerButton
@@ -337,7 +344,7 @@ export default function AccountGeneral() {
 
                                     <Stack spacing={1}>
                                         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-                                            Available:{' '}
+                                            Fido Available:{' '}
                                             {user?.roleId === 'super_admin' ? '∞' : availableFido + params.fidoAmount}
                                         </Typography>
                                         <IncrementerButton

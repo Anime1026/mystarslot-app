@@ -1,4 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
+import { format } from 'date-fns';
+
 // @mui
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -47,7 +49,8 @@ export default function UserTableRow({
     onEnableRow,
     onDisableRow
 }: Props) {
-    const { name, avatar, company, role, status, email, phoneNumber } = row;
+    console.log(row, 'user.row');
+    const { name, avatar, balance, ipAddress, email, status } = row;
 
     const deleteUser = useBoolean();
 
@@ -68,6 +71,13 @@ export default function UserTableRow({
         [router, row]
     );
 
+    const [updatedAt, setUpdatedAt] = useState<any>(new Date());
+
+    useEffect(() => {
+        const timeValue = new Date(row.lastLogin);
+        setUpdatedAt(timeValue);
+    }, [row]);
+
     return (
         <>
             <TableRow hover selected={selected}>
@@ -87,9 +97,9 @@ export default function UserTableRow({
                         }}
                     />
                 </TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance.toLocaleString('it-IT')}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{format(updatedAt, 'yyyy-MM-dd h:mm:ss')}</TableCell>
                 <TableCell>
                     <Label
                         variant="soft"
