@@ -14,6 +14,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { useBoolean } from 'src/hooks/use-boolean';
 // types
 import { IUserItem } from 'src/types/user';
+// utils
+import { fcustomCurrency } from 'src/utils/format-number';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -61,9 +63,9 @@ export default function UserTableRow({ row, selected, onSelectRow, onDeleteRow, 
 
     const handleEditRow = useCallback(
         (id: string) => {
-            router.push(paths.operator.edit(id), row);
+            router.push(paths.operator.edit(id));
         },
-        [row, router]
+        [router]
     );
 
     return (
@@ -85,8 +87,8 @@ export default function UserTableRow({ row, selected, onSelectRow, onDeleteRow, 
                         }}
                     />
                 </TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance.toLocaleString('it-IT')}</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fidoAmount.toLocaleString('it-IT')}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fcustomCurrency(balance)}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fcustomCurrency(fidoAmount)}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
                 <TableCell>{format(updatedAt, 'yyyy-MM-dd h:mm:ss')}</TableCell>
                 <TableCell>

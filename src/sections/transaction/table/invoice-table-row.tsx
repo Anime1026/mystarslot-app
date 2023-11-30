@@ -2,9 +2,9 @@ import { format } from 'date-fns';
 // @mui
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-import ListItemText from '@mui/material/ListItemText';
 // utils
-import { fCurrency } from 'src/utils/format-number';
+import { fcustomCurrency } from 'src/utils/format-number';
+
 // types
 import { TransactionType } from 'src/types/invoice';
 // components
@@ -36,13 +36,13 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
 
             <TableCell>
                 <Label variant="soft" color="success">
-                    {inAmount.toLocaleString('it-IT')}
+                    {fcustomCurrency(inAmount)}
                 </Label>
             </TableCell>
 
             <TableCell align="center">
                 <Label variant="soft" color="error">
-                    {outAmount.toLocaleString('it-IT')}
+                    {fcustomCurrency(outAmount)}
                 </Label>
             </TableCell>
 

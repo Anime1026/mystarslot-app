@@ -110,7 +110,7 @@ export type IUserItem = {
     avatar: string;
     phoneNumber: string;
     isVerified: boolean;
-    userName: string;
+    username: string;
     password: string;
     lastLogin: string;
     ipAddress: string;
@@ -118,6 +118,7 @@ export type IUserItem = {
     casinortp: string;
     virtualrtp: string;
     minigamesrtp: string;
+    updatedAt: string;
 };
 
 export type IUserAccount = {

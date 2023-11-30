@@ -107,7 +107,7 @@ export default function UserListView() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState<tableType[]>([]);
+    const [tableData, setTableData] = useState<any>([]);
 
     const [filters, setFilters] = useState(defaultFilters);
 
@@ -159,7 +159,7 @@ export default function UserListView() {
                 bonus: result[i].bonus ? result[i].bonus : '',
                 casinortp: result[i].casinortp ? result[i].casinortp : '',
                 virtualrtp: result[i].virtualrtp ? result[i].virtualrtp : '',
-                minigamesrtp: result[i].minigamesrtp ? result[i].minigamesrtp : '',
+                minigamesrtp: result[i].minigamesrtp ? result[i].minigamesrtp : ''
             });
         }
         setTableData(tableList);
@@ -182,7 +182,7 @@ export default function UserListView() {
 
     const handleDeleteRow = useCallback(
         (id: string) => {
-            const deleteRow = tableData.filter((row) => row.id !== id);
+            const deleteRow = tableData.filter((row: any) => row.id !== id);
             setTableData(deleteRow);
 
             table.onUpdatePageDeleteRow(dataInPage.length);
@@ -201,7 +201,7 @@ export default function UserListView() {
     }, []);
 
     const handleDeleteRows = useCallback(() => {
-        const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
         setTableData(deleteRows);
 
         table.onUpdatePageDeleteRows({
@@ -242,15 +242,17 @@ export default function UserListView() {
                     sx={{
                         mb: { xs: 3, md: 5 }
                     }}
-                    action={user?.roleId !== "admin" && (
-                        <Button
-                            component={RouterLink}
-                            href={paths.user.create}
-                            variant="contained"
-                            startIcon={<Iconify icon="mingcute:add-line" />}
-                        >
-                            New User
-                        </Button>)
+                    action={
+                        user?.roleId !== 'admin' && (
+                            <Button
+                                component={RouterLink}
+                                href={paths.user.create}
+                                variant="contained"
+                                startIcon={<Iconify icon="mingcute:add-line" />}
+                            >
+                                New User
+                            </Button>
+                        )
                     }
                 />
 
@@ -284,10 +286,10 @@ export default function UserListView() {
                                     >
                                         {tab.value === 'all' && tableData.length}
                                         {tab.value === 'active' &&
-                                            tableData.filter((users) => users.status === 'active').length}
+                                            tableData.filter((users: any) => users.status === 'active').length}
 
                                         {tab.value === 'disable' &&
-                                            tableData.filter((users) => users.status === 'disable').length}
+                                            tableData.filter((users: any) => users.status === 'disable').length}
                                     </Label>
                                 }
                             />
@@ -321,7 +323,7 @@ export default function UserListView() {
                             onSelectAllRows={(checked) =>
                                 table.onSelectAllRows(
                                     checked,
-                                    tableData.map((row) => row.id)
+                                    tableData.map((row: any) => row.id)
                                 )
                             }
                             action={
@@ -357,7 +359,7 @@ export default function UserListView() {
                                     onSelectAllRows={(checked) =>
                                         table.onSelectAllRows(
                                             checked,
-                                            tableData.map((row) => row.id)
+                                            tableData.map((row: any) => row.id)
                                         )
                                     }
                                 />

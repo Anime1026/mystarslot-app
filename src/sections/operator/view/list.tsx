@@ -68,7 +68,7 @@ const defaultFilters: IUserTableFilters = {
 type tableType = {
     id: string;
     zipCode: string;
-    userName: string;
+    username: string;
     state: string;
     city: string;
     role: string;
@@ -106,7 +106,7 @@ export default function UserListView() {
 
     const disable = useBoolean();
 
-    const [tableData, setTableData] = useState<tableType[]>([]);
+    const [tableData, setTableData] = useState<any>([]);
 
     const [filters, setFilters] = useState(defaultFilters);
 
@@ -123,7 +123,7 @@ export default function UserListView() {
         for (let i = 0; i < result.length; i += 1) {
             tableList.push({
                 id: result[i].id,
-                userName: result[i].username,
+                username: result[i].username,
                 password: '',
                 zipCode: result[i].zipCode ? result[i].zipCode : '',
                 state: result[i].state,
@@ -182,7 +182,7 @@ export default function UserListView() {
         async (id: string) => {
             const result = await remove({ id });
             if (result.status) {
-                const deleteRow = tableData.filter((row) => row.id !== id);
+                const deleteRow = tableData.filter((row: any) => row.id !== id);
                 setTableData(deleteRow);
 
                 table.onUpdatePageDeleteRow(dataInPage.length);
@@ -202,7 +202,7 @@ export default function UserListView() {
     }, []);
 
     const handleDeleteRows = useCallback(() => {
-        const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
         setTableData(deleteRows);
 
         table.onUpdatePageDeleteRows({
@@ -278,10 +278,10 @@ export default function UserListView() {
                                     >
                                         {tab.value === 'all' && tableData.length}
                                         {tab.value === 'active' &&
-                                            tableData.filter((user) => user.status === 'active').length}
+                                            tableData.filter((user: any) => user.status === 'active').length}
 
                                         {tab.value === 'disable' &&
-                                            tableData.filter((user) => user.status === 'disable').length}
+                                            tableData.filter((user: any) => user.status === 'disable').length}
                                     </Label>
                                 }
                             />
@@ -315,7 +315,7 @@ export default function UserListView() {
                             onSelectAllRows={(checked) =>
                                 table.onSelectAllRows(
                                     checked,
-                                    tableData.map((row) => row.id)
+                                    tableData.map((row: any) => row.id)
                                 )
                             }
                             action={
@@ -351,7 +351,7 @@ export default function UserListView() {
                                     onSelectAllRows={(checked) =>
                                         table.onSelectAllRows(
                                             checked,
-                                            tableData.map((row) => row.id)
+                                            tableData.map((row: any) => row.id)
                                         )
                                     }
                                 />

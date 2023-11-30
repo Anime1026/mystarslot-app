@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { format } from 'date-fns';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -29,8 +30,7 @@ import FormControl from '@mui/material/FormControl';
 
 // utils
 import { fData } from 'src/utils/format-number';
-import { IUserItem } from 'src/types/user';
-import { update, getFamily } from 'src/api';
+import { update, getFamily, getSelectUser } from 'src/api';
 // components
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFUploadAvatar, RHFSelect } from 'src/components/hook-form';
@@ -41,33 +41,39 @@ import BestCharts from './account-profile/best-charts';
 
 export default function AccountGeneral() {
     const { enqueueSnackbar } = useSnackbar();
-    const location = useLocation();
-    const params: IUserItem = location.state;
+    const params_: any = useParams();
+
     const [family, setFamily] = useState<string[]>([]);
+
+    const [open, setOpen] = useState(false);
+    const [amountValue, setAmountValue] = useState(0);
+    const [bonusCheck, setBonusCheck] = useState(true);
+
+    const [updateUser, setUpdateUser] = useState<any>();
 
     const UpdateUserSchema = Yup.object().shape({
         displayName: Yup.string().required('Name is required'),
         email: Yup.string().required('Email is required').email('Email must be a valid email address'),
         photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
-        currency: Yup.string().required('Currency is required'),
-        timezone: Yup.string().required('timezone is required'),
-        ip_address: Yup.string().required('City is required'),
+        currency: Yup.string().required(),
+        timezone: Yup.string().optional(),
+        ip_address: Yup.string().required(),
         last_login: Yup.string().required('Zip code is required'),
         credit: Yup.number()
     });
 
     const defaultValues = {
-        displayName: params?.name || '',
-        email: params?.email || '',
-        photoURL: params?.avatar || null,
-        phoneNumber: params?.phoneNumber || '',
-        country: params?.country || '',
-        address: params?.address || '',
+        displayName: '',
+        email: '',
+        photoURL: null,
+        phoneNumber: '',
+        country: '',
+        address: '',
         currency: 'TND',
         timezone: 'UTC',
         ip_address: '78.453.276.12',
         last_login: '16/09/2023 11:00pm',
-        credit: params.balance
+        credit: 0
     };
 
     const methods = useForm({
@@ -75,30 +81,51 @@ export default function AccountGeneral() {
         defaultValues
     });
 
-    const getUserFamily = useCallback(async () => {
-        const result = await getFamily(params.userName);
-        if (result.status) {
-            setFamily(result.data);
-        }
-    }, [params.userName]);
-    useEffect(() => {
-        getUserFamily();
-    }, [getUserFamily]);
-
     const {
         setValue,
         handleSubmit,
         formState: { isSubmitting }
     } = methods;
 
+    const init = useCallback(async () => {
+        const initSelectUser = await getSelectUser({ id: params_.id });
+        setUpdateUser(initSelectUser.data);
+    }, [params_]);
+
+    const getUserFamily = useCallback(async () => {
+        if (updateUser) {
+            const updateDate = new Date(updateUser.updatedAt);
+
+            setValue('displayName', updateUser.username);
+            setValue('credit', updateUser.balance);
+            setValue('email', updateUser.email);
+            setValue('photoURL', updateUser.avatar);
+            setValue('ip_address', updateUser.ip_address);
+            setValue('last_login', format(updateDate, 'yyyy-MM-dd h:mm:ss'));
+
+            const result = await getFamily(updateUser.username);
+            if (result.status) {
+                setFamily(result.data);
+            }
+        }
+    }, [updateUser, setValue]);
+
+    useEffect(() => {
+        getUserFamily();
+    }, [getUserFamily]);
+
+    useEffect(() => {
+        init();
+    }, [init]);
+
     const onSubmit = handleSubmit(async (data) => {
         try {
             const formData = new FormData();
             formData.append('image', data.photoURL);
-            formData.append('id', params.id);
+            formData.append('id', updateUser.id);
             formData.append('username', data.displayName);
             formData.append('email', data.email);
-            formData.append('timezone', data.timezone);
+            // formData.append('timezone', data.timezone);
             formData.append('currency', data.currency);
 
             const result = await update(formData);
@@ -127,8 +154,6 @@ export default function AccountGeneral() {
 
     // add credit
 
-    const [open, setOpen] = useState(false);
-
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -136,9 +161,6 @@ export default function AccountGeneral() {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const [amountValue, setAmountValue] = useState(0);
-    const [bonusCheck, setBonusCheck] = useState(true);
 
     // const deposithandle = () => {
     //     console.log();
@@ -198,6 +220,7 @@ export default function AccountGeneral() {
                                     label="Time Zone"
                                     InputLabelProps={{ shrink: true }}
                                     PaperPropsSx={{ textTransform: 'capitalize' }}
+                                    disabled
                                 >
                                     {['UTC', 'pending', 'overdue', 'draft'].map((option) => (
                                         <MenuItem key={option} value={option}>
@@ -211,6 +234,7 @@ export default function AccountGeneral() {
                                     label="Currency"
                                     InputLabelProps={{ shrink: true }}
                                     PaperPropsSx={{ textTransform: 'capitalize' }}
+                                    disabled
                                 >
                                     {['EUR', 'USD', 'TND'].map((option) => (
                                         <MenuItem key={option} value={option}>

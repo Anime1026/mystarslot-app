@@ -91,3 +91,10 @@ export async function changeFido(data: any) {
     const res = await axios.post(endpoints.operator.changeFido, data);
     return res.data;
 }
+
+// get select user
+
+export async function getSelectUser(params: any) {
+    const res = await axios.post(endpoints.operator.getSelectUser, params);
+    return res.data;
+}

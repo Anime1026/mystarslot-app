@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 // utils
-import { fCurrency } from 'src/utils/format-number';
+import { fcustomCurrency } from 'src/utils/format-number';
 // components
 import Iconify from 'src/components/iconify';
 
@@ -56,7 +56,7 @@ export default function InvoiceAnalytic({ title, icon, color, percent, price }: 
             <Stack spacing={0.5}>
                 <Typography variant="subtitle1">{title}</Typography>
 
-                <Typography variant="subtitle2">{fCurrency(price)}</Typography>
+                <Typography variant="subtitle2">{fcustomCurrency(price)}</Typography>
             </Stack>
         </Stack>
     );

@@ -15,6 +15,10 @@ import ListItemText from '@mui/material/ListItemText';
 import { useBoolean } from 'src/hooks/use-boolean';
 // types
 import { IUserItem } from 'src/types/user';
+// untils
+
+import { fcustomCurrency } from 'src/utils/format-number';
+
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -97,7 +101,7 @@ export default function UserTableRow({
                         }}
                     />
                 </TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance.toLocaleString('it-IT')}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fcustomCurrency(balance)}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{format(updatedAt, 'yyyy-MM-dd h:mm:ss')}</TableCell>
                 <TableCell>

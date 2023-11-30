@@ -55,7 +55,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
             name: currentUser?.name || '',
             email: currentUser?.email || '',
             avatar: currentUser?.avatar || null,
-            userName: currentUser?.userName || '',
+            userName: currentUser?.username || '',
             password: '',
             isVerified: currentUser?.isVerified || true
         }),

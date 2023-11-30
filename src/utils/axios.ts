@@ -63,7 +63,8 @@ export const endpoints = {
         remove: '/api/user-delete',
         getCategories: '/api/get-categories',
         changeCredit: '/api/change-credit',
-        changeFido: '/api/change-fido'
+        changeFido: '/api/change-fido',
+        getSelectUser: '/api/get-select-user'
     },
     transaction: {
         get: '/api/get-transactions',

@@ -44,7 +44,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
     const NewUserSchema = Yup.object().shape({
         name: Yup.string().required('Name is required'),
         email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-        userName: Yup.string().required('UserName is required'),
+        username: Yup.string().required('UserName is required'),
         avatar: Yup.mixed<any>().nullable().required('Avatar is required'),
         password: Yup.mixed<any>().nullable().required('password is required'),
         // not required
@@ -55,7 +55,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
         () => ({
             name: currentUser?.name || '',
             email: currentUser?.email || '',
-            userName: currentUser?.userName || '',
+            username: currentUser?.username || '',
             avatar: currentUser?.avatar || null,
             isVerified: currentUser?.isVerified || true,
             password: currentUser?.password || ''
@@ -82,7 +82,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
             formData.append('email', data.email);
             formData.append('name', data.name);
             formData.append('password', data.password);
-            formData.append('userName', data.userName);
+            formData.append('username', data.username);
             formData.append('roleId', 'admin');
 
             const result = await create(formData);
@@ -171,7 +171,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
                     <Card sx={{ p: 3 }}>
                         <Box rowGap={3} columnGap={2} display="grid">
                             <RHFTextField name="name" label="Full Name" />
-                            <RHFTextField name="userName" label="User Name" />
+                            <RHFTextField name="username" label="User Name" />
                             <RHFTextField name="email" label="Email Address" autoComplete="offs" />
                             <RHFTextField
                                 autoComplete="new-password"
