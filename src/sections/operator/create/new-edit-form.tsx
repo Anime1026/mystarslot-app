@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
@@ -42,30 +42,33 @@ export default function UserNewEditForm({ currentUser }: Props) {
     const { enqueueSnackbar } = useSnackbar();
 
     const NewUserSchema = Yup.object().shape({
-        name: Yup.string().required('Name is required'),
-        email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+        name: Yup.string().optional(),
+        email: Yup.string().optional().email('Email must be a valid email address'),
         username: Yup.string().required('UserName is required'),
-        avatar: Yup.mixed<any>().nullable().required('Avatar is required'),
-        password: Yup.mixed<any>().nullable().required('password is required'),
+        telephone: Yup.string().optional(),
+        city: Yup.string().optional(),
+        state: Yup.string().optional(),
+        avatar: Yup.mixed<any>().nullable().optional(),
+        password: Yup.string().min(6).required('password is required'),
+        confirmPassword: Yup.string().min(6).required('Confrim Password is required'),
         // not required
         isVerified: Yup.boolean()
     });
 
-    const defaultValues = useMemo(
-        () => ({
-            name: currentUser?.name || '',
-            email: currentUser?.email || '',
-            username: currentUser?.username || '',
-            avatar: currentUser?.avatar || null,
-            isVerified: currentUser?.isVerified || true,
-            password: currentUser?.password || ''
-        }),
-        [currentUser]
-    );
-
     const methods = useForm({
         resolver: yupResolver(NewUserSchema),
-        defaultValues
+        defaultValues: {
+            name: '',
+            email: '',
+            username: '',
+            avatar: null,
+            isVerified: true,
+            password: '',
+            confirmPassword: '',
+            telephone: '',
+            city: '',
+            state: ''
+        }
     });
 
     const {
@@ -77,22 +80,30 @@ export default function UserNewEditForm({ currentUser }: Props) {
 
     const onSubmit = handleSubmit(async (data) => {
         try {
-            const formData = new FormData();
-            formData.append('image', data.avatar);
-            formData.append('email', data.email);
-            formData.append('name', data.name);
-            formData.append('password', data.password);
-            formData.append('username', data.username);
-            formData.append('roleId', 'admin');
+            if (data.confirmPassword === data.password) {
+                const formData = new FormData();
+                formData.append('image', data.avatar);
+                formData.append('password', data.password);
+                formData.append('userName', data.username);
+                formData.append('roleId', 'admin');
 
-            const result = await create(formData);
-            if (result.status) {
-                reset();
-                await new Promise((resolve) => setTimeout(resolve, 500));
-                enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-                router.push(paths.operator.list);
+                formData.append('email', data.email || '');
+                formData.append('name', data.name || '');
+                formData.append('phoneNumber', data.telephone || '');
+                formData.append('city', data.city || '');
+                formData.append('state', data.state || '');
+
+                const result = await create(formData);
+                if (result.status) {
+                    reset();
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+                    enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
+                    router.push(paths.operator.list);
+                } else {
+                    enqueueSnackbar(result.message, { variant: 'error' });
+                }
             } else {
-                enqueueSnackbar(result.message, { variant: 'error' });
+                enqueueSnackbar('Please check password', { variant: 'error' });
             }
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' });
@@ -166,45 +177,84 @@ export default function UserNewEditForm({ currentUser }: Props) {
                         )}
                     </Card>
                 </Grid>
-
                 <Grid xs={12} md={8}>
                     <Card sx={{ p: 3 }}>
-                        <Box rowGap={3} columnGap={2} display="grid">
-                            <RHFTextField name="name" label="Full Name" />
-                            <RHFTextField name="username" label="User Name" />
-                            <RHFTextField name="email" label="Email Address" autoComplete="offs" />
-                            <RHFTextField
-                                autoComplete="new-password"
-                                name="password"
-                                label="New Password"
-                                type={password.value ? 'text' : 'password'}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton onClick={password.onToggle} edge="end">
-                                                <Iconify
-                                                    icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
-                                                />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
-                                helperText={
-                                    <Stack component="span" direction="row" alignItems="center">
-                                        <Iconify icon="eva:info-fill" width={16} sx={{ mr: 0.5 }} /> Password must be
-                                        minimum 6+
-                                    </Stack>
-                                }
-                            />
+                        <Grid container spacing={2}>
+                            <Grid md={6}>
+                                <Box rowGap={3} columnGap={2} display="grid">
+                                    <RHFTextField name="username" label="User Name" />
+                                    <RHFTextField name="email" label="Email Address" autoComplete="offs" />
 
-                            {/* <RHFTextField name="company" label="Assign to " /> */}
-                        </Box>
+                                    <RHFTextField
+                                        autoComplete="new-password"
+                                        name="password"
+                                        label="New Password"
+                                        type={password.value ? 'text' : 'password'}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton onClick={password.onToggle} edge="end">
+                                                        <Iconify
+                                                            icon={
+                                                                password.value
+                                                                    ? 'solar:eye-bold'
+                                                                    : 'solar:eye-closed-bold'
+                                                            }
+                                                        />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        helperText={
+                                            <Stack component="span" direction="row" alignItems="center">
+                                                <Iconify icon="eva:info-fill" width={16} sx={{ mr: 0.5 }} /> Password
+                                                must be minimum 6+
+                                            </Stack>
+                                        }
+                                    />
 
-                        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                            <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                                {!currentUser ? 'Create User' : 'Save Changes'}
-                            </LoadingButton>
-                        </Stack>
+                                    <RHFTextField
+                                        autoComplete="new-password"
+                                        name="confirmPassword"
+                                        label="Confirm Password"
+                                        type={password.value ? 'text' : 'password'}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton onClick={password.onToggle} edge="end">
+                                                        <Iconify
+                                                            icon={
+                                                                password.value
+                                                                    ? 'solar:eye-bold'
+                                                                    : 'solar:eye-closed-bold'
+                                                            }
+                                                        />
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                    />
+
+                                    {/* <RHFTextField name="company" label="Assign to " /> */}
+                                </Box>
+                            </Grid>
+                            <Grid md={6}>
+                                <Box rowGap={3} columnGap={2} display="grid">
+                                    <RHFTextField name="name" label="Full Name" />
+                                    <RHFTextField name="telephone" label="TelePhone" autoComplete="offs" />
+                                    <RHFTextField name="city" label="City" autoComplete="offs" />
+                                    <RHFTextField name="state" label="State" autoComplete="offs" />
+
+                                    {/* <RHFTextField name="company" label="Assign to " /> */}
+                                </Box>
+
+                                <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+                                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                                        {!currentUser ? 'Create User' : 'Save Changes'}
+                                    </LoadingButton>
+                                </Stack>
+                            </Grid>
+                        </Grid>
                     </Card>
                 </Grid>
             </Grid>

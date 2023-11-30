@@ -55,7 +55,6 @@ export default function AccountGeneral() {
         displayName: Yup.string().required('Name is required'),
         email: Yup.string().required('Email is required').email('Email must be a valid email address'),
         photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
-        currency: Yup.string().required(),
         timezone: Yup.string().optional(),
         ip_address: Yup.string().required(),
         last_login: Yup.string().required('Zip code is required'),
@@ -69,7 +68,6 @@ export default function AccountGeneral() {
         phoneNumber: '',
         country: '',
         address: '',
-        currency: 'TND',
         timezone: 'UTC',
         ip_address: '78.453.276.12',
         last_login: '16/09/2023 11:00pm',
@@ -126,7 +124,6 @@ export default function AccountGeneral() {
             formData.append('username', data.displayName);
             formData.append('email', data.email);
             // formData.append('timezone', data.timezone);
-            formData.append('currency', data.currency);
 
             const result = await update(formData);
             if (result.status) {
@@ -223,20 +220,6 @@ export default function AccountGeneral() {
                                     disabled
                                 >
                                     {['UTC', 'pending', 'overdue', 'draft'].map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </RHFSelect>
-                                <RHFSelect
-                                    fullWidth
-                                    name="currency"
-                                    label="Currency"
-                                    InputLabelProps={{ shrink: true }}
-                                    PaperPropsSx={{ textTransform: 'capitalize' }}
-                                    disabled
-                                >
-                                    {['EUR', 'USD', 'TND'].map((option) => (
                                         <MenuItem key={option} value={option}>
                                             {option}
                                         </MenuItem>

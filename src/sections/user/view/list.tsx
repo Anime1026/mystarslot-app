@@ -53,8 +53,11 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
     { id: 'name', label: 'Name' },
-    { id: 'balance', label: 'balance', width: 180 },
+    { id: 'balance', label: 'Balance', width: 180 },
+    { id: 'bonus', label: 'Bonus', width: 180 },
     { id: 'ip_address', label: 'Ip Address', width: 220 },
+    { id: 'state', label: 'State', width: 180 },
+    { id: 'logout', label: 'Logout Player', width: 100 },
     { id: 'lastLogin', label: 'Last Login', width: 180 },
     { id: 'status', label: 'Status', width: 100 },
     { id: '', width: 88 }
@@ -79,6 +82,7 @@ type tableType = {
     status: string;
     password: string;
     balance: number;
+    bonusbalnace: number;
     fidoAmount: number;
     lastLogin: string;
     ipAddress: string;
@@ -133,7 +137,6 @@ export default function UserListView() {
         const result = data.data.data;
         const tableList: tableType[] = [];
         for (let i = 0; i < result.length; i += 1) {
-            console.log(result[i]);
             tableList.push({
                 id: result[i].id,
                 userName: result[i].username,
@@ -145,6 +148,7 @@ export default function UserListView() {
                 email: result[i].email,
                 address: result[i].address,
                 balance: result[i].balance ? result[i].balance : 0,
+                bonusbalnace: result[i].bonusbalnace ? result[i].bonusbalnace : 0,
                 fidoAmount: result[i].fido_amount ? result[i].fido_amount : 0,
                 name: result[i].username,
                 isVerified: result[i].isVerified ? result[i].isVerified : false,

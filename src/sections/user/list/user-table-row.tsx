@@ -53,8 +53,8 @@ export default function UserTableRow({
     onEnableRow,
     onDisableRow
 }: Props) {
-    console.log(row, 'user.row');
-    const { name, avatar, balance, ipAddress, email, status } = row;
+    const { name, avatar, balance, ipAddress, email, status, bonusbalnace } = row;
+    console.log(bonusbalnace, 'row.row');
 
     const deleteUser = useBoolean();
 
@@ -102,15 +102,40 @@ export default function UserTableRow({
                     />
                 </TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{fcustomCurrency(balance)}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>{fcustomCurrency(bonusbalnace)}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                    {/* <Tooltip title="Logout" placement="top" arrow> */}
+                    {/* <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => handleEditRow(name)}> */}
+                    <Label variant="soft" color="error" sx={{ cursor: 'pointer' }}>
+                        <Iconify icon="line-md:home-twotone-alt" />
+                    </Label>
+                    {/* </IconButton> */}
+                    {/* </Tooltip> */}
+                </TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                    <Label
+                        variant="soft"
+                        color={
+                            (status === 'active' && 'success') ||
+                            (status === 'pending' && 'error') ||
+                            (status === 'disable' && 'error') ||
+                            'default'
+                        }
+                    >
+                        {status === 'active' ? 'Online' : 'offline'}
+
+                        {/* {status} */}
+                    </Label>
+                </TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{format(updatedAt, 'yyyy-MM-dd h:mm:ss')}</TableCell>
                 <TableCell>
                     <Label
                         variant="soft"
                         color={
-                            (status === 'active' && 'success') ||
+                            (status === 'active' && 'info') ||
                             (status === 'pending' && 'warning') ||
-                            (status === 'banned' && 'error') ||
+                            (status === 'disable' && 'default') ||
                             'default'
                         }
                     >

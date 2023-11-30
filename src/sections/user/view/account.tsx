@@ -13,7 +13,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
 import AccountProfile from '../account/profile';
 import AccountCategrories from '../account/categories';
-import AccountProvider from '../account/provider';
+// import AccountProvider from '../account/provider';
 // import AccountSocialLinks from '../account-social-links';
 // import AccountNotifications from '../account-notifications';
 import AccountSecurity from '../account/change-password';

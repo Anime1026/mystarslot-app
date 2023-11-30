@@ -12,7 +12,7 @@ import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
 import AccountProfile from '../account/profile';
-import AccountCategrories from '../account/categories';
+// import AccountCategrories from '../account/categories';
 // import AccountProvider from '../account/provider';
 // import AccountSocialLinks from '../account-social-links';
 // import AccountNotifications from '../account-notifications';
@@ -26,11 +26,11 @@ const TABS = [
         label: 'Profile',
         icon: <Iconify icon="solar:user-id-bold" width={24} />
     },
-    {
-        value: 'categories',
-        label: 'Categories',
-        icon: <Iconify icon="solar:bill-list-bold" width={24} />
-    },
+    // {
+    //     value: 'categories',
+    //     label: 'Categories',
+    //     icon: <Iconify icon="solar:bill-list-bold" width={24} />
+    // },
     // {
     //     value: 'provider',
     //     label: 'Providers',
@@ -87,7 +87,7 @@ export default function AccountView() {
 
             {currentTab === 'profile' && <AccountProfile />}
 
-            {currentTab === 'categories' && <AccountCategrories />}
+            {/* {currentTab === 'categories' && <AccountCategrories />} */}
 
             {/* {currentTab === 'social' && <AccountGeneral />}
 

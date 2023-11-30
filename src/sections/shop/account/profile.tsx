@@ -40,7 +40,6 @@ const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
-    currency: Yup.string().required('Currency is required'),
     timezones: Yup.string().optional(),
     ip_address: Yup.string().optional(),
     last_login: Yup.string().required('Zip code is required'),
@@ -88,7 +87,6 @@ export default function AccountGeneral() {
         phoneNumber: '',
         country: '',
         address: '',
-        currency: 'TND',
         timezones: 'UTC',
         ip_address: '78.453.276.12',
         last_login: '16/09/2023 11:00pm',
@@ -115,7 +113,6 @@ export default function AccountGeneral() {
             setValue('displayName', updateUser.username);
             setValue('email', updateUser.email);
             setValue('photoURL', updateUser.avatar);
-            setValue('currency', updateUser.currency);
             setValue('timezones', updateUser.timezone);
             setValue('last_login', format(updateDate, 'yyyy-MM-dd h:mm:ss'));
             setValue('ip_address', updateUser.ip_address);
@@ -277,14 +274,6 @@ export default function AccountGeneral() {
                                 sx={{ py: 2 }}
                             >
                                 <TotalCredit
-                                    title="SUM"
-                                    percent={100}
-                                    price={inAmount - outAmount}
-                                    icon="solar:bill-list-bold-duotone"
-                                    color={theme.palette.info.main}
-                                />
-
-                                <TotalCredit
                                     title="IN"
                                     percent={(inAmount / (inAmount + outAmount)) * 100}
                                     price={inAmount}
@@ -301,7 +290,15 @@ export default function AccountGeneral() {
                                 />
 
                                 <TotalCredit
-                                    title="USER CREDIT"
+                                    title="SUM"
+                                    percent={100}
+                                    price={inAmount - outAmount}
+                                    icon="solar:bill-list-bold-duotone"
+                                    color={theme.palette.info.main}
+                                />
+
+                                <TotalCredit
+                                    title="PLAYER CREDIT"
                                     percent={70}
                                     price={userTotal}
                                     icon="solar:file-corrupted-bold-duotone"
@@ -416,21 +413,6 @@ export default function AccountGeneral() {
                                         <RHFTextField name="email" label="Email Address" />
 
                                         <RHFTextField disabled name="timezones" label="Time Zone" />
-
-                                        <RHFSelect
-                                            fullWidth
-                                            name="currency"
-                                            label="Currency"
-                                            InputLabelProps={{ shrink: true }}
-                                            PaperPropsSx={{ textTransform: 'capitalize' }}
-                                            disabled={user?.roleId !== 'super_admin'}
-                                        >
-                                            {['EUR', 'USD', 'TND'].map((option) => (
-                                                <MenuItem key={option} value={option}>
-                                                    {option}
-                                                </MenuItem>
-                                            ))}
-                                        </RHFSelect>
 
                                         <RHFTextField name="ip_address" disabled label="Ip address" />
                                         <RHFTextField name="last_login" disabled label="Last Login" />

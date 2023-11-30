@@ -119,6 +119,7 @@ export type IUserItem = {
     virtualrtp: string;
     minigamesrtp: string;
     updatedAt: string;
+    bonusbalnace: number;
 };
 
 export type IUserAccount = {

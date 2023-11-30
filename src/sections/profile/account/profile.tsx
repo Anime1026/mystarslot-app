@@ -42,8 +42,6 @@ export default function AccountGeneral() {
         role: Yup.string().required('Role is required')
     });
 
-    console.log(user);
-
     const defaultValues = {
         displayName: user?.username || '',
         email: user?.email || '',

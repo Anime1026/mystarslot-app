@@ -42,7 +42,6 @@ const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
-    currency: Yup.string().required('Currency is required'),
     timezone: Yup.string().required('timezone is required'),
     ip_address: Yup.string().optional(),
     last_login: Yup.string().required('Zip code is required')
@@ -81,7 +80,6 @@ export default function AccountGeneral() {
             displayName: '',
             email: '',
             photoURL: null,
-            currency: 'TND',
             timezone: 'UTC',
             ip_address: '',
             last_login: ''
@@ -134,7 +132,6 @@ export default function AccountGeneral() {
             formData.append('username', data.displayName);
             formData.append('email', data.email);
             formData.append('timezone', data.timezone);
-            formData.append('currency', data.currency);
             const result = await update(formData);
             if (result.status) {
                 enqueueSnackbar('Update success!');
@@ -261,14 +258,6 @@ export default function AccountGeneral() {
                                 sx={{ py: 2 }}
                             >
                                 <TotalCredit
-                                    title="SUM"
-                                    percent={100}
-                                    price={inAmount - outAmount}
-                                    icon="solar:bill-list-bold-duotone"
-                                    color={theme.palette.info.main}
-                                />
-
-                                <TotalCredit
                                     title="IN"
                                     percent={(inAmount / (inAmount + outAmount)) * 100}
                                     price={inAmount}
@@ -283,9 +272,15 @@ export default function AccountGeneral() {
                                     icon="solar:sort-by-time-bold-duotone"
                                     color={theme.palette.warning.main}
                                 />
-
                                 <TotalCredit
-                                    title="USER CREDIT"
+                                    title="SUM"
+                                    percent={100}
+                                    price={inAmount - outAmount}
+                                    icon="solar:bill-list-bold-duotone"
+                                    color={theme.palette.info.main}
+                                />
+                                <TotalCredit
+                                    title="PLAYER CREDIT"
                                     percent={70}
                                     price={userTotal}
                                     icon="solar:file-corrupted-bold-duotone"
@@ -407,19 +402,6 @@ export default function AccountGeneral() {
                                             disabled={user?.roleId !== 'super_admin'}
                                         >
                                             {['UTC', 'pending', 'overdue', 'draft'].map((option) => (
-                                                <MenuItem key={option} value={option}>
-                                                    {option}
-                                                </MenuItem>
-                                            ))}
-                                        </RHFSelect>
-                                        <RHFSelect
-                                            fullWidth
-                                            name="currency"
-                                            label="Currency"
-                                            InputLabelProps={{ shrink: true }}
-                                            PaperPropsSx={{ textTransform: 'capitalize' }}
-                                        >
-                                            {['EUR', 'USD', 'TND'].map((option) => (
                                                 <MenuItem key={option} value={option}>
                                                     {option}
                                                 </MenuItem>
