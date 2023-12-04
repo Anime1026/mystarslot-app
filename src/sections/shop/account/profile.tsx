@@ -179,16 +179,18 @@ export default function AccountGeneral() {
         if (note === 0 || note === '') {
             setNote('');
         } else {
-            const result = await changeCredit({
-                balance: creditAmount,
-                type: 'deposit',
-                username: updateUser.username,
-                note
-            });
-            await getMe();
-            setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
-            setCreditAmount(0);
-            enqueueSnackbar(result.message);
+            if (creditAmount > 0) {
+                const result = await changeCredit({
+                    balance: creditAmount,
+                    type: 'deposit',
+                    username: updateUser.username,
+                    note
+                });
+                await getMe();
+                setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
+                setCreditAmount(0);
+                enqueueSnackbar(result.message);
+            }
             init();
         }
     };
@@ -197,16 +199,18 @@ export default function AccountGeneral() {
         if (note === 0 || note === '') {
             setNote('');
         } else {
-            const result = await changeCredit({
-                balance: creditAmount,
-                type: 'withdraw',
-                username: updateUser.username,
-                note
-            });
-            await getMe();
-            setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
-            setCreditAmount(0);
-            enqueueSnackbar(result.message);
+            if (creditAmount > 0) {
+                const result = await changeCredit({
+                    balance: creditAmount,
+                    type: 'withdraw',
+                    username: updateUser.username,
+                    note
+                });
+                await getMe();
+                setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
+                setCreditAmount(0);
+                enqueueSnackbar(result.message);
+            }
             init();
         }
     };
@@ -215,14 +219,16 @@ export default function AccountGeneral() {
         if (note === 0 || note === '') {
             setNote('');
         } else {
-            const result = await changeFido({
-                balance: fidoAmount,
-                type: 'deposit',
-                username: updateUser.username,
-                note
-            });
-            enqueueSnackbar(result.message);
-            setFidoAmount(0);
+            if (fidoAmount > 0) {
+                const result = await changeFido({
+                    balance: fidoAmount,
+                    type: 'deposit',
+                    username: updateUser.username,
+                    note
+                });
+                enqueueSnackbar(result.message);
+                setFidoAmount(0);
+            }
             init();
         }
     };
@@ -231,14 +237,16 @@ export default function AccountGeneral() {
         if (note === 0 || note === '') {
             setNote('');
         } else {
-            const result = await changeFido({
-                balance: fidoAmount,
-                type: 'withdraw',
-                username: updateUser.username,
-                note
-            });
-            enqueueSnackbar(result.message);
-            setFidoAmount(0);
+            if (fidoAmount > 0) {
+                const result = await changeFido({
+                    balance: fidoAmount,
+                    type: 'withdraw',
+                    username: updateUser.username,
+                    note
+                });
+                enqueueSnackbar(result.message);
+                setFidoAmount(0);
+            }
             init();
         }
     };
@@ -275,16 +283,16 @@ export default function AccountGeneral() {
                             >
                                 <TotalCredit
                                     title="IN"
-                                    percent={(inAmount / (inAmount + outAmount)) * 100}
-                                    price={inAmount}
+                                    percent={(outAmount / (inAmount + outAmount)) * 100}
+                                    price={outAmount}
                                     icon="solar:file-check-bold-duotone"
                                     color={theme.palette.success.main}
                                 />
 
                                 <TotalCredit
                                     title="OUT"
-                                    percent={(outAmount / (inAmount + outAmount)) * 100}
-                                    price={outAmount}
+                                    percent={(inAmount / (inAmount + outAmount)) * 100}
+                                    price={inAmount}
                                     icon="solar:sort-by-time-bold-duotone"
                                     color={theme.palette.warning.main}
                                 />
@@ -292,7 +300,7 @@ export default function AccountGeneral() {
                                 <TotalCredit
                                     title="SUM"
                                     percent={100}
-                                    price={inAmount - outAmount}
+                                    price={outAmount - inAmount}
                                     icon="solar:bill-list-bold-duotone"
                                     color={theme.palette.info.main}
                                 />

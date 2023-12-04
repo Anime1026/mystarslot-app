@@ -182,7 +182,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
                         <Grid container spacing={2}>
                             <Grid md={6}>
                                 <Box rowGap={3} columnGap={2} display="grid">
-                                    <RHFTextField name="username" label="Full Name" />
+                                    <RHFTextField name="username" label="username" />
                                     <RHFTextField name="email" label="Email Address" autoComplete="offs" />
                                     <RHFTextField
                                         autoComplete="new-password"

@@ -105,15 +105,6 @@ export default function UserTableRow({
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{fcustomCurrency(bonusbalnace)}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{ipAddress}</TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                    {/* <Tooltip title="Logout" placement="top" arrow> */}
-                    {/* <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => handleEditRow(name)}> */}
-                    <Label variant="soft" color="error" sx={{ cursor: 'pointer' }}>
-                        <Iconify icon="line-md:home-twotone-alt" />
-                    </Label>
-                    {/* </IconButton> */}
-                    {/* </Tooltip> */}
-                </TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap' }}>
                     <Label
                         variant="soft"
                         color={
@@ -128,6 +119,16 @@ export default function UserTableRow({
                         {/* {status} */}
                     </Label>
                 </TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                    {/* <Tooltip title="Logout" placement="top" arrow> */}
+                    {/* <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => handleEditRow(name)}> */}
+                    <Label variant="soft" color="error" sx={{ cursor: 'pointer' }}>
+                        <Iconify icon="line-md:home-twotone-alt" />
+                    </Label>
+                    {/* </IconButton> */}
+                    {/* </Tooltip> */}
+                </TableCell>
+
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{format(updatedAt, 'yyyy-MM-dd h:mm:ss')}</TableCell>
                 <TableCell>
                     <Label

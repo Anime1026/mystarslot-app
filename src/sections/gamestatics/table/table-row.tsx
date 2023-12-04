@@ -102,46 +102,65 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
     );
 
     const renderSecondary = (
-        <TableRow>
-            <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
-                <Collapse in={collapse.value} timeout="auto" unmountOnExit sx={{ bgcolor: 'background.neutral' }}>
-                    <Stack component={Paper} sx={{ m: 1.5 }}>
-                        {items.map((item) => (
-                            <Stack
-                                key={item.id}
-                                direction="row"
-                                alignItems="center"
-                                sx={{
-                                    p: (theme) => theme.spacing(1.5, 2, 1.5, 1.5),
-                                    '&:not(:last-of-type)': {
-                                        borderBottom: (theme) => `solid 2px ${theme.palette.background.neutral}`
-                                    }
-                                }}
-                            >
-                                <Avatar src={item.coverUrl} variant="rounded" sx={{ width: 48, height: 48, mr: 2 }} />
+        <Collapse in={collapse.value} timeout="auto" unmountOnExit sx={{ bgcolor: 'background.neutral' }}>
+            <TableRow>
+                <TableCell padding="checkbox">
+                    <Checkbox checked={selected} onClick={onSelectRow} />
+                </TableCell>
 
-                                <ListItemText
-                                    primary={item.name}
-                                    secondary={item.sku}
-                                    primaryTypographyProps={{
-                                        typography: 'body2'
-                                    }}
-                                    secondaryTypographyProps={{
-                                        component: 'span',
-                                        color: 'text.disabled',
-                                        mt: 0.5
-                                    }}
-                                />
+                <TableCell>
+                    <Box
+                        onClick={onViewRow}
+                        sx={{
+                            cursor: 'pointer',
+                            '&:hover': {
+                                textDecoration: 'underline'
+                            }
+                        }}
+                    >
+                        {orderNumber}
+                    </Box>
+                </TableCell>
 
-                                <Box>x{item.quantity}</Box>
+                <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Avatar alt={customer.name} src={customer.avatar} sx={{ mr: 2 }} />
 
-                                <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.price)}</Box>
-                            </Stack>
-                        ))}
-                    </Stack>
-                </Collapse>
-            </TableCell>
-        </TableRow>
+                    <ListItemText
+                        primary={customer.name}
+                        secondary={customer.email}
+                        primaryTypographyProps={{ typography: 'body2' }}
+                        secondaryTypographyProps={{
+                            component: 'span',
+                            color: 'text.disabled'
+                        }}
+                    />
+                </TableCell>
+
+                <TableCell>{totalQuantity}</TableCell>
+
+                <TableCell align="center"> {totalQuantity} </TableCell>
+
+                <TableCell> {fCurrency(subTotal)} </TableCell>
+
+                <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+                    <IconButton
+                        color={collapse.value ? 'inherit' : 'default'}
+                        onClick={collapse.onToggle}
+                        sx={{
+                            ...(collapse.value && {
+                                bgcolor: 'action.hover'
+                            })
+                        }}
+                    >
+                        <Iconify icon="eva:arrow-ios-downward-fill" />
+                    </IconButton>
+
+                    <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+                        <Iconify icon="eva:more-vertical-fill" />
+                    </IconButton>
+                </TableCell>
+            </TableRow>
+        </Collapse>
     );
 
     return (

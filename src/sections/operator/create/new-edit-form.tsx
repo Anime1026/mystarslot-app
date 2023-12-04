@@ -240,7 +240,7 @@ export default function UserNewEditForm({ currentUser }: Props) {
                             </Grid>
                             <Grid md={6}>
                                 <Box rowGap={3} columnGap={2} display="grid">
-                                    <RHFTextField name="name" label="Full Name" />
+                                    <RHFTextField name="name" label="username" />
                                     <RHFTextField name="telephone" label="TelePhone" autoComplete="offs" />
                                     <RHFTextField name="city" label="City" autoComplete="offs" />
                                     <RHFTextField name="state" label="State" autoComplete="offs" />

@@ -14,7 +14,8 @@ import Divider from '@mui/material/Divider';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
+// _mock
+import { _orders } from 'src/_mock';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // hooks
@@ -75,7 +76,7 @@ export default function OrderListView() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState<any>([]);
+    const [tableData, setTableData] = useState<any>(_orders);
 
     const [filters, setFilters] = useState(defaultFilters);
 
