@@ -12,6 +12,7 @@ import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
 import AccountProfile from '../account/profile';
+import AccountSecurity from '../account/security';
 // import AccountCategrories from '../account/categories';
 // import AccountProvider from '../account/provider';
 // import AccountSocialLinks from '../account-social-links';
@@ -86,6 +87,8 @@ export default function AccountView() {
             </Tabs>
 
             {currentTab === 'profile' && <AccountProfile />}
+
+            {currentTab === 'security' && <AccountSecurity />}
 
             {/* {currentTab === 'categories' && <AccountCategrories />} */}
 

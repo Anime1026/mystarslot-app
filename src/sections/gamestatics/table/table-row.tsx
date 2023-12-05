@@ -1,7 +1,7 @@
 // @mui
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
+// import Paper from '@mui/material/Paper';
+// import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
@@ -33,7 +33,7 @@ type Props = {
 };
 
 export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, onDeleteRow }: Props) {
-    const { items, orderNumber, customer, totalQuantity, subTotal } = row;
+    const { orderNumber, customer, totalQuantity, subTotal } = row;
 
     const confirm = useBoolean();
 

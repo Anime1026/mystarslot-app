@@ -21,7 +21,7 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export default function AccountChangePassword() {
+export default function AccountSecurity() {
     const { enqueueSnackbar } = useSnackbar();
     const { user } = useAuthContext();
     const password = useBoolean();
