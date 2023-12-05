@@ -41,7 +41,8 @@ import {
 } from 'src/components/table';
 // types
 import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
-import { getList, update } from 'src/api';
+import { useSnackbar } from 'src/components/snackbar';
+import { getList, update, deleteMany, updateMany } from 'src/api';
 //
 import UserTableRow from '../list/user-table-row';
 import UserTableToolbar from '../list/user-table-toolbar';
@@ -103,13 +104,17 @@ const defaultFilters: IUserTableFilters = {
 export default function UserListView() {
     const table = useTable();
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const { user } = useAuthContext();
 
     const settings = useSettingsContext();
 
     const router = useRouter();
 
-    const confirm = useBoolean();
+    const enable = useBoolean();
+    const disable = useBoolean();
+    const deleteUser = useBoolean();
 
     const [tableData, setTableData] = useState<any>([]);
 
@@ -204,16 +209,48 @@ export default function UserListView() {
         if (result.status) userList();
     }, []);
 
-    const handleDeleteRows = useCallback(() => {
-        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
-        setTableData(deleteRows);
+    const handleDeleteRows = useCallback(async () => {
+        try {
+            const deleteRows = tableData.filter((row: any) => table.selected.includes(row.id));
 
-        table.onUpdatePageDeleteRows({
-            totalRows: tableData.length,
-            totalRowsInPage: dataInPage.length,
-            totalRowsFiltered: dataFiltered.length
-        });
-    }, [dataFiltered.length, dataInPage.length, table, tableData]);
+            const ids = [];
+            for (let i = 0; i < deleteRows.length; i = 1 + i) {
+                ids.push(deleteRows[i].id);
+            }
+            const result = await deleteMany({ ids });
+            if (result.status) {
+                userList();
+                enqueueSnackbar(result.message);
+                setTableData(deleteRows);
+
+                table.onUpdatePageDeleteRows({
+                    totalRows: tableData.length,
+                    totalRowsInPage: dataInPage.length,
+                    totalRowsFiltered: dataFiltered.length
+                });
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    }, [dataFiltered.length, dataInPage.length, table, tableData, enqueueSnackbar])
+
+    const handleUpdateRows = useCallback(async (status: string) => {
+        try {
+            const updateRows = tableData.filter((row: any) => table.selected.includes(row.id));
+            const ids = [];
+            for (let i = 0; i < updateRows.length; i = 1 + i) {
+                ids.push(updateRows[i].id);
+            }
+            const result = await updateMany({ ids, status });
+            if (result.status) {
+                userList();
+                enqueueSnackbar(result.message);
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    }, [tableData, enqueueSnackbar, table])
+    // }, [dataFiltered.length, dataInPage.length, table, tableData]);
 
     const handleEditRow = useCallback(
         (id: string) => {
@@ -333,17 +370,17 @@ export default function UserListView() {
                             action={
                                 <>
                                     <Tooltip title="Disable">
-                                        <IconButton color="primary" onClick={confirm.onTrue}>
+                                        <IconButton color="primary" onClick={disable.onTrue}>
                                             <Typography>Disable</Typography>
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="Enable">
-                                        <IconButton color="primary" onClick={confirm.onTrue}>
+                                        <IconButton color="primary" onClick={enable.onTrue}>
                                             <Typography>Enable</Typography>
                                         </IconButton>
                                     </Tooltip>
                                     <Tooltip title="Delete">
-                                        <IconButton color="primary" onClick={confirm.onTrue}>
+                                        <IconButton color="primary" onClick={deleteUser.onTrue}>
                                             <Iconify icon="solar:trash-bin-trash-bold" />
                                         </IconButton>
                                     </Tooltip>
@@ -412,8 +449,8 @@ export default function UserListView() {
             </Container>
 
             <ConfirmDialog
-                open={confirm.value}
-                onClose={confirm.onFalse}
+                open={deleteUser.value}
+                onClose={deleteUser.onFalse}
                 title="Delete"
                 content={
                     <>
@@ -426,10 +463,54 @@ export default function UserListView() {
                         color="error"
                         onClick={() => {
                             handleDeleteRows();
-                            confirm.onFalse();
+                            deleteUser.onFalse();
                         }}
                     >
                         Delete
+                    </Button>
+                }
+            />
+            <ConfirmDialog
+                open={enable.value}
+                onClose={enable.onFalse}
+                title="Delete"
+                content={
+                    <>
+                        Are you sure want to enable <strong> {table.selected.length} </strong> items?
+                    </>
+                }
+                action={
+                    <Button
+                        variant="contained"
+                        color="info"
+                        onClick={() => {
+                            handleUpdateRows('active');
+                            enable.onFalse();
+                        }}
+                    >
+                        Enable
+                    </Button>
+                }
+            />
+            <ConfirmDialog
+                open={disable.value}
+                onClose={disable.onFalse}
+                title="Delete"
+                content={
+                    <>
+                        Are you sure want to disable <strong> {table.selected.length} </strong> items?
+                    </>
+                }
+                action={
+                    <Button
+                        variant="contained"
+                        color="warning"
+                        onClick={() => {
+                            handleUpdateRows('disable');
+                            disable.onFalse();
+                        }}
+                    >
+                        Disable
                     </Button>
                 }
             />

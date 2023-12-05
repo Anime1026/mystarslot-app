@@ -26,6 +26,7 @@ import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
+import { useSnackbar } from 'src/components/snackbar';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
     useTable,
@@ -40,7 +41,7 @@ import {
 // types
 import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
 // apis
-import { getList, remove, update } from 'src/api';
+import { getList, remove, update, updateMany, deleteMany } from 'src/api';
 //
 import UserTableRow from '../list/user-table-row';
 import UserTableToolbar from '../list/user-table-toolbar';
@@ -97,6 +98,8 @@ type tableType = {
 
 export default function UserListView() {
     const table = useTable();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const settings = useSettingsContext();
 
@@ -201,16 +204,47 @@ export default function UserListView() {
         if (result.status) operator();
     }, []);
 
-    const handleDeleteRows = useCallback(() => {
-        const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
-        setTableData(deleteRows);
+    const handleDeleteRows = useCallback(async () => {
+        try {
+            const deleteRows = tableData.filter((row: any) => table.selected.includes(row.id));
 
-        table.onUpdatePageDeleteRows({
-            totalRows: tableData.length,
-            totalRowsInPage: dataInPage.length,
-            totalRowsFiltered: dataFiltered.length
-        });
-    }, [dataFiltered.length, dataInPage.length, table, tableData]);
+            const ids = [];
+            for (let i = 0; i < deleteRows.length; i = 1 + i) {
+                ids.push(deleteRows[i].id);
+            }
+            const result = await deleteMany({ ids });
+            if (result.status) {
+                operator();
+                enqueueSnackbar(result.message);
+                setTableData(deleteRows);
+
+                table.onUpdatePageDeleteRows({
+                    totalRows: tableData.length,
+                    totalRowsInPage: dataInPage.length,
+                    totalRowsFiltered: dataFiltered.length
+                });
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    }, [dataFiltered.length, dataInPage.length, table, tableData, enqueueSnackbar])
+
+    const handleUpdateRows = useCallback(async (status: string) => {
+        try {
+            const updateRows = tableData.filter((row: any) => table.selected.includes(row.id));
+            const ids = [];
+            for (let i = 0; i < updateRows.length; i = 1 + i) {
+                ids.push(updateRows[i].id);
+            }
+            const result = await updateMany({ ids, status });
+            if (result.status) {
+                operator();
+                enqueueSnackbar(result.message);
+            }
+        } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
+        }
+    }, [tableData, enqueueSnackbar, table])
 
     const handleFilterStatus = useCallback(
         (event: React.SyntheticEvent, newValue: string) => {
@@ -412,7 +446,7 @@ export default function UserListView() {
                         variant="contained"
                         color="info"
                         onClick={() => {
-                            handleDeleteRows();
+                            handleUpdateRows('active');
                             enable.onFalse();
                         }}
                     >
@@ -434,7 +468,7 @@ export default function UserListView() {
                         variant="contained"
                         color="warning"
                         onClick={() => {
-                            handleDeleteRows();
+                            handleUpdateRows('disable');
                             disable.onFalse();
                         }}
                     >

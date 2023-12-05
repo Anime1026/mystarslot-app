@@ -77,5 +77,10 @@ export const endpoints = {
     },
     get: {
         getFamily: '/api/get-family'
+    },
+    users: {
+        updatePassword: '/api/update-password',
+        updateMany: '/api/update-many-users',
+        deleteMany: '/api/delete-many-users'
     }
 };

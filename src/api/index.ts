@@ -25,6 +25,11 @@ export async function update(data: any) {
     return res.data;
 }
 
+export async function updateMany(data: any) {
+    const res = await axios.post(endpoints.users.updateMany, data);
+    return res.data;
+}
+
 export async function updateProfile(data: any) {
     const res = await axios.post(endpoints.auth.password, data);
     return res.data;
@@ -32,6 +37,11 @@ export async function updateProfile(data: any) {
 
 export async function remove(data: any) {
     const res = await axios.post(endpoints.operator.remove, data);
+    return res.data;
+}
+
+export async function deleteMany(data: any) {
+    const res = await axios.post(endpoints.users.deleteMany, data);
     return res.data;
 }
 
@@ -96,5 +106,10 @@ export async function changeFido(data: any) {
 
 export async function getSelectUser(params: any) {
     const res = await axios.post(endpoints.operator.getSelectUser, params);
+    return res.data;
+}
+
+export async function updatePassword(data: any) {
+    const res = await axios.post(endpoints.users.updatePassword, data)
     return res.data;
 }

@@ -1,28 +1,34 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useParams } from 'react-router-dom';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import { useSnackbar } from 'src/components/snackbar';
+
+// import { jwtDecode } from 'jwt-decode';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
+import { updatePassword } from 'src/api';
 // components
 import Iconify from 'src/components/iconify';
-import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export default function AccountChangePassword() {
+export default function AccountSecurity() {
+    const params_: any = useParams();
     const { enqueueSnackbar } = useSnackbar();
-
     const password = useBoolean();
+    const confirmPassword = useBoolean();
+    const oldPassword = useBoolean();
 
     const ChangePassWordSchema = Yup.object().shape({
-        oldPassword: Yup.string().required('Old Password is required'),
+        oldPassword: Yup.string().required('Old password is required'),
         newPassword: Yup.string()
             .required('New Password is required')
             .min(6, 'Password must be at least 6 characters')
@@ -46,18 +52,19 @@ export default function AccountChangePassword() {
     });
 
     const {
-        reset,
         handleSubmit,
         formState: { isSubmitting }
     } = methods;
 
     const onSubmit = handleSubmit(async (data) => {
         try {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            reset();
-            enqueueSnackbar('Update success!');
-            console.info('DATA', data);
+            // let userInfo = localStorage.getItem('accessToken');
+            const result = await updatePassword({ oldPassword: data.oldPassword, password: data.newPassword, username: params_.id });
+            if (result.status) {
+                enqueueSnackbar(result.message);
+            }
         } catch (error) {
+            enqueueSnackbar(error.message, { variant: 'error' });
             console.error(error);
         }
     });
@@ -65,6 +72,25 @@ export default function AccountChangePassword() {
     return (
         <FormProvider methods={methods} onSubmit={onSubmit}>
             <Stack component={Card} spacing={3} sx={{ p: 3 }}>
+                <RHFTextField
+                    name="oldPassword"
+                    label="Old Password"
+                    type={oldPassword.value ? 'text' : 'password'}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton onClick={oldPassword.onToggle} edge="end">
+                                    <Iconify icon={oldPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                    helperText={
+                        <Stack component="span" direction="row" alignItems="center">
+                            <Iconify icon="eva:info-fill" width={16} sx={{ mr: 0.5 }} /> Password must be minimum 6+
+                        </Stack>
+                    }
+                />
                 <RHFTextField
                     name="newPassword"
                     label="New Password"
@@ -87,13 +113,13 @@ export default function AccountChangePassword() {
 
                 <RHFTextField
                     name="confirmNewPassword"
-                    type={password.value ? 'text' : 'password'}
+                    type={confirmPassword.value ? 'text' : 'password'}
                     label="Confirm New Password"
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton onClick={password.onToggle} edge="end">
-                                    <Iconify icon={password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                                <IconButton onClick={confirmPassword.onToggle} edge="end">
+                                    <Iconify icon={confirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
                                 </IconButton>
                             </InputAdornment>
                         )

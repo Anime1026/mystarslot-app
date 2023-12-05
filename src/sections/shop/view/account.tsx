@@ -13,6 +13,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
 import AccountProfile from '../account/profile';
 import AccountCategrories from '../account/categories';
+import AccountSecurity from '../account/security';
 // import AccountSocialLinks from '../account-social-links';
 // import AccountNotifications from '../account-notifications';
 // import AccountChangePassword from '../account-change-password';
@@ -90,9 +91,9 @@ export default function AccountView() {
 
             {/* {currentTab === 'provider' && <AccountProvider />} */}
 
-            {/* {currentTab === 'social' && <AccountGeneral />}
+            {/* {currentTab === 'social' && <AccountGeneral />} */}
 
-      {currentTab === 'security' && <AccountGeneral />} */}
+            {currentTab === 'security' && <AccountSecurity />}
         </Container>
     );
 }
