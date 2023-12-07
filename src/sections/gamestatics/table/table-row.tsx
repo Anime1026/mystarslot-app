@@ -21,6 +21,7 @@ import { IOrderItem } from 'src/types/order';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { Paper, Stack, Table, TableBody } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -102,65 +103,78 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
     );
 
     const renderSecondary = (
-        <Collapse in={collapse.value} timeout="auto" unmountOnExit sx={{ bgcolor: 'background.neutral' }}>
-            <TableRow>
-                <TableCell padding="checkbox">
-                    <Checkbox checked={selected} onClick={onSelectRow} />
-                </TableCell>
+        <TableRow>
+            <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
+                <Collapse in={collapse.value} timeout="auto" unmountOnExit sx={{ bgcolor: 'background.neutral' }}>
+                    <Stack component={Paper} sx={{ m: 1.5 }}>
+                        <Table>
+                            <TableBody>
+                                <TableRow hover selected={selected}>
+                                    <TableCell padding="checkbox">
+                                        <Checkbox checked={selected} onClick={onSelectRow} />
+                                    </TableCell>
 
-                <TableCell>
-                    <Box
-                        onClick={onViewRow}
-                        sx={{
-                            cursor: 'pointer',
-                            '&:hover': {
-                                textDecoration: 'underline'
-                            }
-                        }}
-                    >
-                        {orderNumber}
-                    </Box>
-                </TableCell>
+                                    <TableCell>
+                                        <Box
+                                            onClick={onViewRow}
+                                            sx={{
+                                                cursor: 'pointer',
+                                                '&:hover': {
+                                                    textDecoration: 'underline'
+                                                }
+                                            }}
+                                        >
+                                            {orderNumber}
+                                        </Box>
+                                    </TableCell>
 
-                <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Avatar alt={customer.name} src={customer.avatar} sx={{ mr: 2 }} />
+                                    <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Avatar alt={customer.name} src={customer.avatar} sx={{ mr: 2 }} />
 
-                    <ListItemText
-                        primary={customer.name}
-                        secondary={customer.email}
-                        primaryTypographyProps={{ typography: 'body2' }}
-                        secondaryTypographyProps={{
-                            component: 'span',
-                            color: 'text.disabled'
-                        }}
-                    />
-                </TableCell>
+                                        <ListItemText
+                                            primary={customer.name}
+                                            secondary={customer.email}
+                                            primaryTypographyProps={{ typography: 'body2' }}
+                                            secondaryTypographyProps={{
+                                                component: 'span',
+                                                color: 'text.disabled'
+                                            }}
+                                        />
+                                    </TableCell>
 
-                <TableCell>{totalQuantity}</TableCell>
+                                    <TableCell>{totalQuantity}</TableCell>
 
-                <TableCell align="center"> {totalQuantity} </TableCell>
+                                    <TableCell align="center"> {totalQuantity} </TableCell>
 
-                <TableCell> {fCurrency(subTotal)} </TableCell>
+                                    <TableCell> {fCurrency(subTotal)} </TableCell>
 
-                <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-                    <IconButton
-                        color={collapse.value ? 'inherit' : 'default'}
-                        onClick={collapse.onToggle}
-                        sx={{
-                            ...(collapse.value && {
-                                bgcolor: 'action.hover'
-                            })
-                        }}
-                    >
-                        <Iconify icon="eva:arrow-ios-downward-fill" />
-                    </IconButton>
+                                    <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+                                        <IconButton
+                                            color={collapse.value ? 'inherit' : 'default'}
+                                            onClick={collapse.onToggle}
+                                            sx={{
+                                                ...(collapse.value && {
+                                                    bgcolor: 'action.hover'
+                                                })
+                                            }}
+                                        >
+                                            <Iconify icon="eva:arrow-ios-downward-fill" />
+                                        </IconButton>
 
-                    <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-                        <Iconify icon="eva:more-vertical-fill" />
-                    </IconButton>
-                </TableCell>
-            </TableRow>
-        </Collapse>
+                                        <IconButton
+                                            color={popover.open ? 'inherit' : 'default'}
+                                            onClick={popover.onOpen}
+                                        >
+                                            <Iconify icon="eva:more-vertical-fill" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </Stack>
+                </Collapse>
+            </TableCell>
+        </TableRow>
     );
 
     return (
