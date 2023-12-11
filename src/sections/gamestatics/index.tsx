@@ -92,6 +92,7 @@ export default function OrderListView() {
     const getGameTransactions = async () => {
         const result = await getGameStatics();
         if (result.status) {
+            console.log(result.users);
             let data = result.users ? result.users[0].children : [];
             data = data.filter((item: any) => item.inamount + item.outamount > 0);
             setTableData(data);
@@ -209,7 +210,7 @@ export default function OrderListView() {
                             <TotalPrice
                                 title="SUM"
                                 percent={100}
-                                price={totalInAmount + totalOutAmount}
+                                price={Math.abs(totalInAmount - totalOutAmount)}
                                 icon="solar:sort-by-time-bold-duotone"
                                 color={theme.palette.warning.main}
                             />

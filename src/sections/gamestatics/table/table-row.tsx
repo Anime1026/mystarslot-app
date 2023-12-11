@@ -93,13 +93,11 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                                         <TableCell>{fcustomCurrency(item.inamount)}</TableCell>
 
                                                         <TableCell align="center">
-                                                            {' '}
-                                                            {fcustomCurrency(item.outamount)}{' '}
+                                                            {fcustomCurrency(item.outamount)}
                                                         </TableCell>
 
                                                         <TableCell>
-                                                            {' '}
-                                                            {fcustomCurrency(item.outamount - item.inamount)}{' '}
+                                                            {fcustomCurrency(Math.abs(item.outamount - item.inamount))}
                                                         </TableCell>
                                                         {item.children.length > 0 ? (
                                                             <TableCell
@@ -183,7 +181,7 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
 
                 <TableCell align="center"> {fcustomCurrency(outamount)} </TableCell>
 
-                <TableCell> {fcustomCurrency(inamount + outamount)} </TableCell>
+                <TableCell> {fcustomCurrency(Math.abs(inamount - outamount))} </TableCell>
                 {row.children.length > 0 ? (
                     <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
                         <IconButton
