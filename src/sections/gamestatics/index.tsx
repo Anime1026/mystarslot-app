@@ -93,8 +93,8 @@ export default function OrderListView() {
         const result = await getGameStatics();
         if (result.status) {
             console.log(result.users);
-            let data = result.users ? result.users[0].children : [];
-            data = data.filter((item: any) => item.inamount + item.outamount > 0);
+            const data = result.users ? result.users[0].children : [];
+            // data = data.filter((item: any) => item.inamount + item.outamount > 0);
             setTableData(data);
             setTotalInAmount(result.totalInAmount);
             setTotalOutAmount(result.totalOutAmount);

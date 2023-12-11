@@ -34,10 +34,12 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
 
     const collapse = useBoolean();
 
-    const [toggleValue, setToggleValue] = useState('1');
-    const ontoggle = (id: string) => {
-        setToggleValue(id.toString());
-    };
+    const [toggleValue, setToggleValue] = useState<any>({});
+    const ontoggle = (id: string) =>
+        setToggleValue((prev: any) => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
 
     const renderSecondary = (childrenItem: any) => (
         <>
@@ -48,7 +50,7 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                             <TableRow>
                                 <TableCell sx={{ p: 0, border: 'none' }} colSpan={8}>
                                     <Collapse
-                                        in={toggleValue === item.parent_id}
+                                        in={toggleValue[item.parent_id]}
                                         timeout="auto"
                                         unmountOnExit
                                         sx={{ bgcolor: 'background.neutral' }}
@@ -106,13 +108,7 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                                             >
                                                                 <IconButton
                                                                     color={collapse.value ? 'inherit' : 'default'}
-                                                                    onClick={() =>
-                                                                        ontoggle(
-                                                                            toggleValue === item.id.toString()
-                                                                                ? '1'
-                                                                                : item.id
-                                                                        )
-                                                                    }
+                                                                    onClick={() => ontoggle(item.id)}
                                                                     sx={{
                                                                         ...(collapse.value && {
                                                                             bgcolor: 'action.hover'
@@ -186,7 +182,7 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                     <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
                         <IconButton
                             color={collapse.value ? 'inherit' : 'default'}
-                            onClick={() => ontoggle(toggleValue === row.id.toString() ? '1' : row.id)}
+                            onClick={() => ontoggle(row.id)}
                             sx={{
                                 ...(collapse.value && {
                                     bgcolor: 'action.hover'
