@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
@@ -24,6 +24,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { getGameStatics } from 'src/api';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
@@ -37,7 +38,7 @@ import {
     TablePaginationCustom
 } from 'src/components/table';
 // types
-import { IOrderItem, IOrderTableFilters, IOrderTableFilterValue } from 'src/types/order';
+import { ITableType, IOrderTableFilters, IOrderTableFilterValue } from 'src/types/order';
 //
 import TotalPrice from './table/total-price';
 import GameStaticsTableRow from './table/table-row';
@@ -52,7 +53,7 @@ const TABLE_HEAD = [
     { id: 'createdAt', label: 'In', width: 140 },
     { id: 'totalQuantity', label: 'Out', width: 120, align: 'center' },
     { id: 'totalAmount', label: 'Sum', width: 140 },
-    { id: '', width: 88 }
+    // { id: '', width: 88 }
 ];
 
 const defaultFilters: IOrderTableFilters = {
@@ -76,8 +77,9 @@ export default function OrderListView() {
 
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState<any>(_orders);
-
+    const [tableData, setTableData] = useState<ITableType[]>([]);
+    const [totalInAmount, setTotalInAmount] = useState(0);
+    const [totalOutAmount, setTotalOutAmount] = useState(0);
     const [filters, setFilters] = useState(defaultFilters);
 
     const dateError =
@@ -89,6 +91,22 @@ export default function OrderListView() {
         filters,
         dateError
     });
+
+    const getGameTransactions = async () => {
+        const result = await getGameStatics();
+        if (result.status) {
+            let data = result.users ? result.users[0].children : [];
+            data = data.filter((item: any) => item.inamount + item.outamount > 0);
+            setTableData(data);
+            setTotalInAmount(result.totalInAmount);
+            setTotalOutAmount(result.totalOutAmount);
+        }
+        // console.log(result.users.children);
+    }
+
+    useEffect(() => {
+        getGameTransactions();
+    }, [])
 
     const dataInPage = dataFiltered.slice(
         table.page * table.rowsPerPage,
@@ -178,16 +196,16 @@ export default function OrderListView() {
                         >
                             <TotalPrice
                                 title="Total In"
-                                percent={100}
-                                price={0}
+                                percent={totalInAmount}
+                                price={totalInAmount}
                                 icon="solar:bill-list-bold-duotone"
                                 color={theme.palette.info.main}
                             />
 
                             <TotalPrice
                                 title="Total Out"
-                                percent={100}
-                                price={0}
+                                percent={totalOutAmount}
+                                price={totalOutAmount}
                                 icon="solar:file-check-bold-duotone"
                                 color={theme.palette.success.main}
                             />
@@ -195,7 +213,7 @@ export default function OrderListView() {
                             <TotalPrice
                                 title="SUM"
                                 percent={100}
-                                price={0}
+                                price={totalInAmount + totalOutAmount}
                                 icon="solar:sort-by-time-bold-duotone"
                                 color={theme.palette.warning.main}
                             />
@@ -204,13 +222,13 @@ export default function OrderListView() {
                 </Card>
 
                 <Card>
-                    <GameStaticsTableToolbar
+                    {/* <GameStaticsTableToolbar
                         filters={filters}
                         onFilters={handleFilters}
                         //
                         canReset={canReset}
                         onResetFilters={handleResetFilters}
-                    />
+                    /> */}
 
                     {canReset && (
                         <GameStaticsTableSearch
@@ -336,7 +354,7 @@ function applyFilter({
     filters,
     dateError
 }: {
-    inputData: IOrderItem[];
+    inputData: ITableType[];
     comparator: (a: any, b: any) => number;
     filters: IOrderTableFilters;
     dateError: boolean;
@@ -344,6 +362,7 @@ function applyFilter({
     const { status, name, startDate, endDate } = filters;
 
     const stabilizedThis = inputData.map((el, index) => [el, index] as const);
+    // console.log(stabilizedThis);
 
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
@@ -351,20 +370,20 @@ function applyFilter({
         return a[1] - b[1];
     });
 
+
     inputData = stabilizedThis.map((el) => el[0]);
 
     if (name) {
         inputData = inputData.filter(
             (order) =>
-                order.orderNumber.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-                order.customer.name.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-                order.customer.email.toLowerCase().indexOf(name.toLowerCase()) !== -1
+                order.id.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+                order.username.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+                order.email.toLowerCase().indexOf(name.toLowerCase()) !== -1
         );
     }
-
-    if (status !== 'all') {
-        inputData = inputData.filter((order) => order.status === status);
-    }
+    // if (status !== 'all') {
+    //     inputData = inputData.filter((order) => order.status === status);
+    // }
 
     if (!dateError) {
         if (startDate && endDate) {

@@ -56,6 +56,19 @@ export type IOrderProductItem = {
     quantity: number;
 };
 
+export type ITableType = {
+    id: string;
+    username: string;
+    email: string;
+    inamount: number;
+    outamount: number;
+    parent_id: number;
+    avatar: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export type IOrderItem = {
     id: string;
     taxes: number;

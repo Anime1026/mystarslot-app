@@ -31,7 +31,8 @@ export const endpoints = {
     calendar: '/api/calendar',
     dashboard: {
         getUserTree: '/api/get-user-tree',
-        getUserCounts: '/api/get-userCounts'
+        getUserCounts: '/api/get-userCounts',
+        getGameStatics: '/api/game-statics'
     },
     auth: {
         me: '/api/auth/me',

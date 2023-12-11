@@ -102,6 +102,13 @@ export async function changeFido(data: any) {
     return res.data;
 }
 
+// dashboard
+
+export async function getGameStatics() {
+    const res = await axios.post(endpoints.dashboard.getGameStatics);
+    return res.data;
+}
+
 // get select user
 
 export async function getSelectUser(params: any) {
@@ -110,6 +117,6 @@ export async function getSelectUser(params: any) {
 }
 
 export async function updatePassword(data: any) {
-    const res = await axios.post(endpoints.users.updatePassword, data)
+    const res = await axios.post(endpoints.users.updatePassword, data);
     return res.data;
 }
