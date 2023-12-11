@@ -14,8 +14,6 @@ import Divider from '@mui/material/Divider';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-// _mock
-import { _orders } from 'src/_mock';
 // utils
 import { fTimestamp } from 'src/utils/format-time';
 // hooks
@@ -42,7 +40,6 @@ import { ITableType, IOrderTableFilters, IOrderTableFilterValue } from 'src/type
 //
 import TotalPrice from './table/total-price';
 import GameStaticsTableRow from './table/table-row';
-import GameStaticsTableToolbar from './table/table-toolbar';
 import GameStaticsTableSearch from './table/order-table-filters-result';
 
 // ----------------------------------------------------------------------
@@ -53,7 +50,7 @@ const TABLE_HEAD = [
     { id: 'createdAt', label: 'In', width: 140 },
     { id: 'totalQuantity', label: 'Out', width: 120, align: 'center' },
     { id: 'totalAmount', label: 'Sum', width: 140 },
-    // { id: '', width: 88 }
+    { id: '', width: 88 }
 ];
 
 const defaultFilters: IOrderTableFilters = {
@@ -101,12 +98,11 @@ export default function OrderListView() {
             setTotalInAmount(result.totalInAmount);
             setTotalOutAmount(result.totalOutAmount);
         }
-        // console.log(result.users.children);
-    }
+    };
 
     useEffect(() => {
         getGameTransactions();
-    }, [])
+    }, []);
 
     const dataInPage = dataFiltered.slice(
         table.page * table.rowsPerPage,
@@ -285,7 +281,7 @@ export default function OrderListView() {
                                             table.page * table.rowsPerPage,
                                             table.page * table.rowsPerPage + table.rowsPerPage
                                         )
-                                        .map((row) => (
+                                        .map((row, key) => (
                                             <GameStaticsTableRow
                                                 key={row.id}
                                                 row={row}
@@ -359,17 +355,15 @@ function applyFilter({
     filters: IOrderTableFilters;
     dateError: boolean;
 }) {
-    const { status, name, startDate, endDate } = filters;
+    const { name, startDate, endDate } = filters;
 
     const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-    // console.log(stabilizedThis);
 
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
     });
-
 
     inputData = stabilizedThis.map((el) => el[0]);
 
