@@ -51,7 +51,12 @@ export async function getUserTree() {
 }
 
 export async function getCategories() {
-    const res = await axios.get(endpoints.operator.getCategories);
+    const res = await axios.get(endpoints.dashboard.getCategories);
+    return res.data;
+}
+
+export async function getProviders(data: any) {
+    const res = await axios.post(endpoints.dashboard.getProviders, data);
     return res.data;
 }
 

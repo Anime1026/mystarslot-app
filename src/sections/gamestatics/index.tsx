@@ -41,6 +41,7 @@ import { ITableType, IOrderTableFilters, IOrderTableFilterValue } from 'src/type
 import TotalPrice from './table/total-price';
 import GameStaticsTableRow from './table/table-row';
 import GameStaticsTableSearch from './table/order-table-filters-result';
+import GameStaticsTableToolbar from './table/table-toolbar';
 
 // ----------------------------------------------------------------------
 
@@ -219,13 +220,13 @@ export default function OrderListView() {
                 </Card>
 
                 <Card>
-                    {/* <GameStaticsTableToolbar
+                    <GameStaticsTableToolbar
                         filters={filters}
                         onFilters={handleFilters}
                         //
                         canReset={canReset}
                         onResetFilters={handleResetFilters}
-                    /> */}
+                    />
 
                     {canReset && (
                         <GameStaticsTableSearch

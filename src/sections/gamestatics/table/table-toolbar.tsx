@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // @mui
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Stack from '@mui/material/Stack';
@@ -14,6 +14,10 @@ import Checkbox from '@mui/material/Checkbox';
 
 // types
 import { IOrderTableFilters, IOrderTableFilterValue } from 'src/types/order';
+
+// apis
+import { getCategories, getProviders } from 'src/api';
+
 // components
 import Iconify from 'src/components/iconify';
 
@@ -27,8 +31,8 @@ type Props = {
     onResetFilters: VoidFunction;
 };
 
-const categories = ['Casino', 'Live Casino', 'Sports', 'Live Sports', 'Virtual', 'Racing', 'E-Sports'];
-const providers = ['netent', 'novomatic', 'amatic', 'Igt', 'habanero', 'bomba', 'aviatar'];
+// const categories = ['Casino', 'Live Casino', 'Sports', 'Live Sports', 'Virtual', 'Racing', 'E-Sports'];
+// const providers = ['netent', 'novomatic', 'amatic', 'Igt', 'habanero', 'bomba', 'aviatar'];
 
 export default function OrderTableToolbar({
     filters,
@@ -37,26 +41,52 @@ export default function OrderTableToolbar({
     canReset,
     onResetFilters
 }: Props) {
+
+    const [categories, setCategories] = useState<any>([]);
+    const [providers, setProviders] = useState<string[]>([]);
+    const [userName, setUserName] = useState<string>('');
+    const [startDate, setStartDate] = useState<any>();
+    const [endDate, setEndDate] = useState<any>();
+
     const handleFilterName = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
-            onFilters('name', event.target.value);
+            setUserName(event.target.value);
         },
-        [onFilters]
+        []
     );
 
     const handleFilterStartDate = useCallback(
         (newValue: Date | null) => {
-            onFilters('startDate', newValue);
+            setStartDate(newValue);
         },
-        [onFilters]
+        []
     );
 
     const handleFilterEndDate = useCallback(
         (newValue: Date | null) => {
-            onFilters('endDate', newValue);
+            setEndDate(newValue);
         },
-        [onFilters]
+        []
     );
+
+    const getSelectedProviders = async (selectedCategories: any) => {
+        console.log(selectedCategories, '----selectedCategories----');
+        const result = await getProviders(selectedCategories);
+        console.log(result);
+    }
+
+    const getUserCategories = async () => {
+        const result = await getCategories();
+        if (result.status)
+            setCategories(result.data);
+    }
+
+    useEffect(() => {
+        getUserCategories();
+    }, [])
+
+    useEffect(() => {
+    }, [endDate, startDate])
 
     const [personName, setPersonName] = useState<string[]>([]);
 
@@ -69,6 +99,10 @@ export default function OrderTableToolbar({
             typeof value === 'string' ? value.split(',') : value
         );
     };
+
+    useEffect(() => {
+        getSelectedProviders(personName);
+    }, [personName])
 
     return (
         <Stack
@@ -85,8 +119,8 @@ export default function OrderTableToolbar({
         >
             <DatePicker
                 label="Start date"
-                value={filters.startDate}
-                onChange={handleFilterStartDate}
+                value={startDate}
+                onChange={(e) => handleFilterStartDate(e)}
                 slotProps={{
                     textField: {
                         fullWidth: true
@@ -99,8 +133,8 @@ export default function OrderTableToolbar({
 
             <DatePicker
                 label="End date"
-                value={filters.endDate}
-                onChange={handleFilterEndDate}
+                value={endDate}
+                onChange={(e) => handleFilterEndDate(e)}
                 slotProps={{ textField: { fullWidth: true } }}
                 sx={{
                     maxWidth: { md: 200 }
@@ -113,10 +147,10 @@ export default function OrderTableToolbar({
                     width: { xs: 1, md: 180 }
                 }}
             >
-                <InputLabel id="demo-multiple-checkbox-label">Categories</InputLabel>
+                <InputLabel id="category-multiple-checkbox-label">Categories</InputLabel>
                 <Select
-                    labelId="demo-multiple-checkbox-label"
-                    id="demo-multiple-checkbox"
+                    labelId="category-multiple-checkbox-label"
+                    id="category-multiple-checkbox"
                     multiple
                     value={personName}
                     onChange={handleChange}
@@ -124,10 +158,10 @@ export default function OrderTableToolbar({
                     renderValue={(selected) => selected.join(', ')}
                     sx={{ textTransform: 'capitalize' }}
                 >
-                    {categories.map((name) => (
-                        <MenuItem key={name} value={name}>
-                            <Checkbox checked={personName.indexOf(name) > -1} />
-                            {name}
+                    {categories.map((name: any) => (
+                        <MenuItem key={name.id} value={name.name}>
+                            <Checkbox checked={personName.indexOf(name.name) > -1} />
+                            {name.name}
                         </MenuItem>
                     ))}
                 </Select>

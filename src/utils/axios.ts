@@ -32,7 +32,9 @@ export const endpoints = {
     dashboard: {
         getUserTree: '/api/get-user-tree',
         getUserCounts: '/api/get-userCounts',
-        getGameStatics: '/api/game-statics'
+        getCategories: '/api/get-categories',
+        getGameStatics: '/api/game-statics',
+        getProviders: '/api/get-providers'
     },
     auth: {
         me: '/api/auth/me',
@@ -62,7 +64,6 @@ export const endpoints = {
         create: 'api/user-create',
         update: '/api/user-update',
         remove: '/api/user-delete',
-        getCategories: '/api/get-categories',
         changeCredit: '/api/change-credit',
         changeFido: '/api/change-fido',
         getSelectUser: '/api/get-select-user'
