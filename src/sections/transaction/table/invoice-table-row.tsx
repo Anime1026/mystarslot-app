@@ -22,8 +22,7 @@ type Props = {
 };
 
 export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, onDeleteRow }: Props) {
-    const { id, from, to, type, inAmount, outAmount, date, note } = row;
-
+    const { id, from, to, type, inAmount, outAmount, date, note, bonus } = row;
     return (
         <TableRow hover selected={selected}>
             <TableCell sx={{ alignItems: 'center' }}>{id}</TableCell>
@@ -43,6 +42,11 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
             <TableCell align="center">
                 <Label variant="soft" color="error">
                     {fcustomCurrency(outAmount)}
+                </Label>
+            </TableCell>
+            <TableCell align="center">
+                <Label variant="soft" color="info">
+                    {fcustomCurrency(bonus)}
                 </Label>
             </TableCell>
 

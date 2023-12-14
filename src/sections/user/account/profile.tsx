@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
+import RemoveIcon from '@mui/icons-material/Remove';
 // add model
 
 import Dialog from '@mui/material/Dialog';
@@ -28,9 +28,11 @@ import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 
+// hooks
+import { useAuthContext } from 'src/auth/hooks';
 // utils
-import { fData } from 'src/utils/format-number';
-import { update, getFamily, getSelectUser } from 'src/api';
+import { fData, fcustomCurrency } from 'src/utils/format-number';
+import { update, getFamily, getSelectUser, changeCredit } from 'src/api';
 // components
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFUploadAvatar, RHFSelect } from 'src/components/hook-form';
@@ -42,10 +44,12 @@ import BestCharts from './account-profile/best-charts';
 export default function AccountGeneral() {
     const { enqueueSnackbar } = useSnackbar();
     const params_: any = useParams();
+    const { user, getMe } = useAuthContext();
 
     const [family, setFamily] = useState<string[]>([]);
 
     const [open, setOpen] = useState(false);
+    const [withdrawopen, setWithdrawOpen] = useState(false);
     const [amountValue, setAmountValue] = useState(0);
     const [bonusCheck, setBonusCheck] = useState(true);
 
@@ -58,7 +62,7 @@ export default function AccountGeneral() {
         timezone: Yup.string().optional(),
         ip_address: Yup.string().required(),
         last_login: Yup.string().required('Zip code is required'),
-        credit: Yup.number()
+        credit: Yup.string().optional()
     });
 
     const defaultValues = {
@@ -71,7 +75,7 @@ export default function AccountGeneral() {
         timezone: 'UTC',
         ip_address: '78.453.276.12',
         last_login: '16/09/2023 11:00pm',
-        credit: 0
+        credit: '0'
     };
 
     const methods = useForm({
@@ -95,7 +99,7 @@ export default function AccountGeneral() {
             const updateDate = new Date(updateUser.updatedAt);
 
             setValue('displayName', updateUser.username);
-            setValue('credit', updateUser.balance);
+            setValue('credit', fcustomCurrency(updateUser.balance));
             setValue('email', updateUser.email);
             setValue('photoURL', updateUser.avatar);
             setValue('ip_address', updateUser.ip_address);
@@ -156,12 +160,48 @@ export default function AccountGeneral() {
     };
 
     const handleClose = () => {
+        setWithdrawOpen(false);
         setOpen(false);
+    };
+
+    const handleWithdrawCredit = async () => {
+        setWithdrawOpen(true);
     };
 
     // const deposithandle = () => {
     //     console.log();
     // };
+
+    const depositCredit = async () => {
+        if (amountValue > 0) {
+            const result = await changeCredit({
+                balance: amountValue,
+                type: 'deposit',
+                bonus: amountValue * 0.2,
+                username: updateUser.username,
+                note: ''
+            });
+            await getMe();
+            setAmountValue(0);
+            enqueueSnackbar(result.message);
+        }
+        init();
+    };
+
+    const withdrawCredit = async () => {
+        if (amountValue > 0) {
+            const result = await changeCredit({
+                balance: amountValue,
+                type: 'withdraw',
+                username: updateUser.username,
+                note: ''
+            });
+            await getMe();
+            setAmountValue(0);
+            enqueueSnackbar(result.message);
+        }
+        init();
+    };
 
     return (
         <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -203,10 +243,17 @@ export default function AccountGeneral() {
                                     name="credit"
                                     label="credit"
                                     disabled
+                                    sx={{
+                                        '& input': {
+                                            textAlign: 'center'
+                                        }
+                                    }}
                                     InputProps={{
+                                        startAdornment: (
+                                            <RemoveIcon onClick={handleWithdrawCredit} sx={{ cursor: 'pointer' }} />
+                                        ),
                                         endAdornment: <AddIcon onClick={handleClickOpen} sx={{ cursor: 'pointer' }} />
                                     }}
-                                    sx={{ textAlign: 'center' }}
                                 />
 
                                 <RHFTextField name="displayName" label="Name" />
@@ -302,18 +349,37 @@ export default function AccountGeneral() {
                         label="BonusBack"
                     />
                     <Box component="span" paddingLeft={2}>
-                        {bonusCheck ? amountValue * 0.2 : 0}
+                        {bonusCheck ? fcustomCurrency(amountValue * 0.2) : 0}
                     </Box>
                     <Stack component="span" direction="row" alignItems="center" sx={{ fontSize: 12, p: 2 }}>
                         Bonuses are paid once every 24 hours upon deposit.
                     </Stack>
                 </DialogContent>
                 <DialogActions>
-                    <Button color="error" variant="outlined" onClick={handleClose}>
-                        Withdraw
-                    </Button>
-                    <Button color="success" variant="outlined" onClick={handleClose}>
+                    <Button color="success" variant="outlined" onClick={depositCredit}>
                         Deposit
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={withdrawopen} onClose={handleClose} maxWidth="xs" fullWidth>
+                <DialogTitle>Withdraw Credit</DialogTitle>
+                <DialogContent>
+                    <FormControl fullWidth variant="filled">
+                        <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
+                        <FilledInput
+                            id="filled-adornment-amount"
+                            type="number"
+                            onChange={(e) => {
+                                setAmountValue(Number(e.target.value));
+                            }}
+                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                        />
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button color="error" variant="outlined" onClick={withdrawCredit}>
+                        Withdraw
                     </Button>
                 </DialogActions>
             </Dialog>

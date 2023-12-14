@@ -52,6 +52,7 @@ const TABLE_HEAD = [
     { id: 'type', label: 'Type' },
     { id: 'price', label: 'In' },
     { id: 'sent', label: 'Out', align: 'center' },
+    { id: 'bonus', label: 'Bonus', align: 'center' },
     { id: 'status', label: 'Date' },
     { id: 'note', label: 'Note' }
 ];

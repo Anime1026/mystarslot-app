@@ -46,20 +46,33 @@ const ICONS = {
 
 export function useNavData() {
     const { user } = useAuthContext();
-    const ShoperList = useMemo(() => [
-        {
-            title: 'Users',
-            path: paths.user.index,
-            icon: ICONS.user
-        },
-        {
-            title: 'Profile',
-            path: paths.profile.index,
-            icon: ICONS.job
-        }
-    ], []);
+    const ShoperList = useMemo(
+        () => [
+            {
+                title: 'Users',
+                path: paths.user.index,
+                icon: ICONS.user
+            },
+            {
+                title: 'Profile',
+                path: paths.profile.index,
+                icon: ICONS.job
+            }
+        ],
+        []
+    );
 
     const defaultList = [
+        {
+            title: 'Game Management',
+            path: paths.games.index,
+            icon: ICONS.invoice,
+            children: [
+                // { title: 'Categories', path: paths.games.category },
+                { title: 'Providers', path: paths.games.provider },
+                { title: 'Games', path: paths.games.game }
+            ]
+        },
         {
             title: 'Operators',
             path: paths.operator.index,
@@ -88,16 +101,15 @@ export function useNavData() {
             path: paths.profile.index,
             icon: ICONS.job
         }
-    ]
+    ];
 
     const [realNavBar, setRealNavBar] = useState(defaultList);
     // let realNavBar = defaultList;
 
     useEffect(() => {
-        if (user?.roleId === "shop")
-            setRealNavBar(ShoperList);
+        if (user?.roleId === 'shop') setRealNavBar(ShoperList);
         // realNavBar = ShoperList;
-    }, [user, ShoperList])
+    }, [user, ShoperList]);
 
     const data = useMemo(
         () => [

@@ -50,4 +50,5 @@ export type TransactionType = {
     outAmount: number;
     date: Date;
     note: string;
+    bonus: number;
 };

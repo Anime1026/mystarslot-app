@@ -183,6 +183,7 @@ export default function AccountGeneral() {
                 const result = await changeCredit({
                     balance: creditAmount,
                     type: 'deposit',
+                    bonus: 0,
                     username: updateUser.username,
                     note
                 });

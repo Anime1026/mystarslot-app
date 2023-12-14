@@ -30,7 +30,7 @@ export const gameRoutes = [
         ),
         children: [
             { element: <Cateigory />, index: true },
-            { path: 'category', element: <Cateigory /> },
+            // { path: 'category', element: <Cateigory /> },
             { path: 'provider', element: <Provider /> },
             { path: 'game', element: <Games /> }
         ]

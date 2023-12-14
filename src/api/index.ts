@@ -55,8 +55,8 @@ export async function getCategories() {
     return res.data;
 }
 
-export async function getProviders(data: any) {
-    const res = await axios.post(endpoints.dashboard.getProviders, data);
+export async function getProviders() {
+    const res = await axios.post(endpoints.dashboard.getProviders);
     return res.data;
 }
 
@@ -123,5 +123,12 @@ export async function getSelectUser(params: any) {
 
 export async function updatePassword(data: any) {
     const res = await axios.post(endpoints.users.updatePassword, data);
+    return res.data;
+}
+
+// change category
+
+export async function changeCategories(data: any) {
+    const res = await axios.post(endpoints.games.changeCategory, data);
     return res.data;
 }

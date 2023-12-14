@@ -41,52 +41,40 @@ export default function OrderTableToolbar({
     canReset,
     onResetFilters
 }: Props) {
-
     const [categories, setCategories] = useState<any>([]);
     const [providers, setProviders] = useState<string[]>([]);
     const [userName, setUserName] = useState<string>('');
     const [startDate, setStartDate] = useState<any>();
     const [endDate, setEndDate] = useState<any>();
 
-    const handleFilterName = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement>) => {
-            setUserName(event.target.value);
-        },
-        []
-    );
+    const handleFilterName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setUserName(event.target.value);
+    }, []);
 
-    const handleFilterStartDate = useCallback(
-        (newValue: Date | null) => {
-            setStartDate(newValue);
-        },
-        []
-    );
+    const handleFilterStartDate = useCallback((newValue: Date | null) => {
+        setStartDate(newValue);
+    }, []);
 
-    const handleFilterEndDate = useCallback(
-        (newValue: Date | null) => {
-            setEndDate(newValue);
-        },
-        []
-    );
+    const handleFilterEndDate = useCallback((newValue: Date | null) => {
+        setEndDate(newValue);
+    }, []);
 
     const getSelectedProviders = async (selectedCategories: any) => {
         console.log(selectedCategories, '----selectedCategories----');
-        const result = await getProviders(selectedCategories);
+        const result = await getProviders();
         console.log(result);
-    }
+    };
 
     const getUserCategories = async () => {
         const result = await getCategories();
-        if (result.status)
-            setCategories(result.data);
-    }
+        if (result.status) setCategories(result.data);
+    };
 
     useEffect(() => {
         getUserCategories();
-    }, [])
+    }, []);
 
-    useEffect(() => {
-    }, [endDate, startDate])
+    useEffect(() => {}, [endDate, startDate]);
 
     const [personName, setPersonName] = useState<string[]>([]);
 
@@ -102,7 +90,7 @@ export default function OrderTableToolbar({
 
     useEffect(() => {
         getSelectedProviders(personName);
-    }, [personName])
+    }, [personName]);
 
     return (
         <Stack

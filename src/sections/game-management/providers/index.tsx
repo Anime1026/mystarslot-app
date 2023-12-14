@@ -1,9 +1,7 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
-import { alpha } from '@mui/material/styles';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
@@ -18,10 +16,11 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 // _mock
 import { _userList, USER_STATUS_OPTIONS } from 'src/_mock';
+// apis
+import { getProviders } from 'src/api';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
-import Label from 'src/components/label';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
@@ -48,8 +47,9 @@ import UserTableFiltersResult from './table-filters-result';
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-    { id: 'categories', label: 'Categories' },
-    { id: 'provider', label: 'Providers' },
+    { id: 'categories', label: 'Category' },
+    { id: 'provider', label: 'Provider' },
+    { id: 'service', label: 'Service' },
     { id: 'createAt', label: 'Create Time' },
     { id: 'status', label: 'Status' },
     { id: '' }
@@ -134,6 +134,16 @@ export default function Categoreis() {
         setFilters(defaultFilters);
     }, []);
 
+    const init = useCallback(async () => {
+        console.log('123');
+        const res = await getProviders();
+        setTableData(res.data);
+    }, []);
+
+    useEffect(() => {
+        init();
+    }, [init]);
+
     return (
         <>
             <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -150,49 +160,10 @@ export default function Categoreis() {
                 />
 
                 <Card>
-                    <Tabs
-                        value={filters.status}
-                        onChange={handleFilterStatus}
-                        sx={{
-                            px: 2.5,
-                            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`
-                        }}
-                    >
-                        {STATUS_OPTIONS.map((tab) => (
-                            <Tab
-                                key={tab.value}
-                                iconPosition="end"
-                                value={tab.value}
-                                label={tab.label}
-                                icon={
-                                    <Label
-                                        variant={
-                                            ((tab.value === 'all' || tab.value === filters.status) && 'filled') ||
-                                            'soft'
-                                        }
-                                        color={
-                                            (tab.value === 'active' && 'success') ||
-                                            (tab.value === 'pending' && 'warning') ||
-                                            (tab.value === 'banned' && 'error') ||
-                                            'default'
-                                        }
-                                    >
-                                        {tab.value === 'all' && _userList.length}
-                                        {tab.value === 'active' &&
-                                            _userList.filter((user) => user.status === 'active').length}
-
-                                        {tab.value === 'banned' &&
-                                            _userList.filter((user) => user.status === 'banned').length}
-                                    </Label>
-                                }
-                            />
-                        ))}
-                    </Tabs>
-
                     <UserTableToolbar
                         filters={filters}
                         onFilters={handleFilters}
-                    //
+                        //
                     />
 
                     {canReset && (
@@ -255,11 +226,12 @@ export default function Categoreis() {
                                             table.page * table.rowsPerPage,
                                             table.page * table.rowsPerPage + table.rowsPerPage
                                         )
-                                        .map((row) => (
+                                        .map((row, key) => (
                                             <UserTableRow
-                                                key={row.id}
+                                                key={key}
                                                 row={row}
-                                                selected={table.selected.includes(row.id)}
+                                                onUpdateData={() => init()}
+                                                rowselected={table.selected.includes(row.id)}
                                                 onSelectRow={() => table.onSelectRow(row.id)}
                                                 onDeleteRow={() => handleDeleteRow(row.id)}
                                             />

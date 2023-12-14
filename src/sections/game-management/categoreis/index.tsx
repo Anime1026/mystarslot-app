@@ -39,7 +39,7 @@ import {
 // types
 import { IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
 // api
-import { allProviders, addCategory } from 'src/api';
+import { addCategory } from 'src/api';
 //
 import UserTableRow from './table-row';
 import UserTableFiltersResult from './table-filters-result';
@@ -149,14 +149,14 @@ export default function Categoreis() {
 
     const [displayProviders, setDisplayProviders] = useState<any>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const allProvider = await allProviders();
-            setDisplayProviders(allProvider.data.provider);
-            setTableData(allProvider.data.category);
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const allProvider = await allProviders();
+    //         setDisplayProviders(allProvider.data.provider);
+    //         setTableData(allProvider.data.category);
+    //     };
+    //     fetchData();
+    // }, []);
 
     return (
         <>
@@ -246,7 +246,7 @@ export default function Categoreis() {
                                             <UserTableRow
                                                 key={row._id}
                                                 row={row}
-                                                selected={table.selected.includes(row.id)}
+                                                rowselected={table.selected.includes(row.id)}
                                                 onSelectRow={() => table.onSelectRow(row.id)}
                                                 onDeleteRow={() => handleDeleteRow(row.id)}
                                             />
