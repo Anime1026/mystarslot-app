@@ -109,8 +109,8 @@ export async function changeFido(data: any) {
 
 // dashboard
 
-export async function getGameStatics() {
-    const res = await axios.post(endpoints.dashboard.getGameStatics);
+export async function getGameStatics(data: any) {
+    const res = await axios.post(endpoints.dashboard.getGameStatics, data);
     return res.data;
 }
 

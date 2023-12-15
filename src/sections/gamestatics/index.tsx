@@ -15,7 +15,7 @@ import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 // utils
-import { fTimestamp } from 'src/utils/format-time';
+import { useAuthContext } from 'src/auth/hooks';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -59,13 +59,16 @@ const defaultFilters: IOrderTableFilters = {
     status: 'all',
     startDate: null,
     endDate: null,
-    service: []
+    service: [],
+    categories: []
 };
 
 // ----------------------------------------------------------------------
 
 export default function OrderListView() {
     const theme = useTheme();
+
+    const { user } = useAuthContext();
 
     const table = useTable({ defaultOrderBy: 'orderNumber' });
 
@@ -90,21 +93,21 @@ export default function OrderListView() {
         dateError
     });
 
-    const getGameTransactions = async () => {
-        const result = await getGameStatics();
+    const getGameTransactions = useCallback(async () => {
+        const result = await getGameStatics(filters);
         if (result.status) {
-            console.log(result.users);
-            const data = result.users ? result.users[0].children : [];
+            const data =
+                result.users.length > 0 && result.users[0]._id === user?._id ? result.users[0].children : result.users;
             // data = data.filter((item: any) => item.inamount + item.outamount > 0);
             setTableData(data);
             setTotalInAmount(result.totalInAmount);
             setTotalOutAmount(result.totalOutAmount);
         }
-    };
+    }, [filters, user]);
 
     useEffect(() => {
         getGameTransactions();
-    }, []);
+    }, [getGameTransactions]);
 
     const dataInPage = dataFiltered.slice(
         table.page * table.rowsPerPage,
@@ -124,8 +127,9 @@ export default function OrderListView() {
                 ...prevState,
                 [name]: value
             }));
+            getGameTransactions();
         },
-        [table]
+        [table, getGameTransactions]
     );
 
     const handleDeleteRow = useCallback(
@@ -357,39 +361,37 @@ function applyFilter({
     filters: IOrderTableFilters;
     dateError: boolean;
 }) {
-    const { name, startDate, endDate } = filters;
+    // const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
-    const stabilizedThis = inputData.map((el, index) => [el, index] as const);
+    // stabilizedThis.sort((a, b) => {
+    //     const order = comparator(a[0], b[0]);
+    //     if (order !== 0) return order;
+    //     return a[1] - b[1];
+    // });
 
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
+    // inputData = stabilizedThis.map((el) => el[0]);
 
-    inputData = stabilizedThis.map((el) => el[0]);
-
-    if (name) {
-        inputData = inputData.filter(
-            (order) =>
-                order.id.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-                order.username.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-                order.email.toLowerCase().indexOf(name.toLowerCase()) !== -1
-        );
-    }
+    // if (name) {
+    //     inputData = inputData.filter(
+    //         (order) =>
+    //             order.id.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+    //             order.username.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+    //             order.email.toLowerCase().indexOf(name.toLowerCase()) !== -1
+    //     );
+    // }
     // if (status !== 'all') {
     //     inputData = inputData.filter((order) => order.status === status);
     // }
 
-    if (!dateError) {
-        if (startDate && endDate) {
-            inputData = inputData.filter(
-                (order) =>
-                    fTimestamp(order.createdAt) >= fTimestamp(startDate) &&
-                    fTimestamp(order.createdAt) <= fTimestamp(endDate)
-            );
-        }
-    }
+    // if (!dateError) {
+    //     if (startDate && endDate) {
+    //         inputData = inputData.filter(
+    //             (order) =>
+    //                 fTimestamp(order.createdAt) >= fTimestamp(startDate) &&
+    //                 fTimestamp(order.createdAt) <= fTimestamp(endDate)
+    //         );
+    //     }
+    // }
 
     return inputData;
 }

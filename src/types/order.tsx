@@ -8,6 +8,7 @@ export type IOrderTableFilters = {
     startDate: Date | null;
     endDate: Date | null;
     service: string[];
+    categories: string[];
 };
 
 // ----------------------------------------------------------------------
@@ -67,7 +68,7 @@ export type ITableType = {
     status: string;
     createdAt: string;
     updatedAt: string;
-}
+};
 
 export type IOrderItem = {
     id: string;

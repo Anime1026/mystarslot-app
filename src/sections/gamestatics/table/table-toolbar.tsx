@@ -42,55 +42,83 @@ export default function OrderTableToolbar({
     onResetFilters
 }: Props) {
     const [categories, setCategories] = useState<any>([]);
-    const [providers, setProviders] = useState<string[]>([]);
-    const [userName, setUserName] = useState<string>('');
-    const [startDate, setStartDate] = useState<any>();
-    const [endDate, setEndDate] = useState<any>();
+    const [providers, setProviders] = useState<any>([]);
+    const [startDate] = useState<any>();
+    const [endDate] = useState<any>();
 
-    const handleFilterName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserName(event.target.value);
-    }, []);
+    const handleFilterName = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            onFilters('name', event.target.value);
+        },
+        [onFilters]
+    );
 
-    const handleFilterStartDate = useCallback((newValue: Date | null) => {
-        setStartDate(newValue);
-    }, []);
+    const handleFilterStartDate = useCallback(
+        (newValue: Date | null) => {
+            onFilters('startDate', newValue);
+        },
+        [onFilters]
+    );
 
-    const handleFilterEndDate = useCallback((newValue: Date | null) => {
-        setEndDate(newValue);
-    }, []);
+    const handleFilterEndDate = useCallback(
+        (newValue: Date | null) => {
+            onFilters('endDate', newValue);
+        },
+        [onFilters]
+    );
 
-    const getSelectedProviders = async (selectedCategories: any) => {
-        console.log(selectedCategories, '----selectedCategories----');
-        const result = await getProviders();
-        console.log(result);
-    };
+    const getSelectedProviders = useCallback(
+        async (selectedCategories: any) => {
+            setProviderName([]);
+            const newData = categories
+                .filter((item: any) => selectedCategories.includes(item.name))
+                .map((item_: any) => item_._id);
+
+            setPersonName(
+                // On autofill we get a stringified value.
+                typeof selectedCategories === 'string' ? selectedCategories.split(',') : selectedCategories
+            );
+            const providerResult = await getProviders();
+            const newProvdiers = providerResult.data.filter((item: any) => newData.includes(item.categoryId._id));
+            // .map((item_: any) => item_._id);
+            onFilters(
+                'categories',
+                newProvdiers.map((item_: any) => item_._id)
+            );
+            setProviders(newProvdiers);
+        },
+        [onFilters, categories]
+    );
 
     const getUserCategories = async () => {
         const result = await getCategories();
         if (result.status) setCategories(result.data);
+        const providerResult = await getProviders();
+        if (providerResult) setProviders(providerResult.data);
     };
 
     useEffect(() => {
         getUserCategories();
     }, []);
 
-    useEffect(() => {}, [endDate, startDate]);
-
     const [personName, setPersonName] = useState<string[]>([]);
 
-    const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+    const [providerName, setProviderName] = useState<string[]>([]);
+
+    const handleProviderChange = (event: SelectChangeEvent<typeof providerName>) => {
         const {
             target: { value }
         } = event;
-        setPersonName(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value
+        console.log(value, 'value.value');
+        if (value.length === 0) {
+            setPersonName([]);
+        }
+        onFilters(
+            'categories',
+            providers.filter((item: any) => value.includes(item.name)).map((item_: any) => item_._id)
         );
+        setProviderName(typeof value === 'string' ? value.split(',') : value);
     };
-
-    useEffect(() => {
-        getSelectedProviders(personName);
-    }, [personName]);
 
     return (
         <Stack
@@ -141,13 +169,15 @@ export default function OrderTableToolbar({
                     id="category-multiple-checkbox"
                     multiple
                     value={personName}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                        getSelectedProviders(e.target.value);
+                    }}
                     input={<OutlinedInput label="Categories" />}
                     renderValue={(selected) => selected.join(', ')}
                     sx={{ textTransform: 'capitalize' }}
                 >
                     {categories.map((name: any) => (
-                        <MenuItem key={name.id} value={name.name}>
+                        <MenuItem key={name._id} value={name.name}>
                             <Checkbox checked={personName.indexOf(name.name) > -1} />
                             {name.name}
                         </MenuItem>
@@ -166,16 +196,16 @@ export default function OrderTableToolbar({
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
-                    value={personName}
-                    onChange={handleChange}
+                    value={providerName}
+                    onChange={handleProviderChange}
                     input={<OutlinedInput label="Game Provider" />}
                     renderValue={(selected) => selected.join(', ')}
                     sx={{ textTransform: 'capitalize' }}
                 >
-                    {providers.map((name) => (
-                        <MenuItem key={name} value={name}>
-                            <Checkbox checked={personName.indexOf(name) > -1} />
-                            {name}
+                    {providers.map((item: any) => (
+                        <MenuItem key={item.name} value={item.name}>
+                            <Checkbox checked={providerName.indexOf(item.name) > -1} />
+                            {item.name}
                         </MenuItem>
                     ))}
                 </Select>
@@ -186,7 +216,7 @@ export default function OrderTableToolbar({
                     fullWidth
                     value={filters.name}
                     onChange={handleFilterName}
-                    placeholder="Search Id or Username..."
+                    placeholder="Search Username..."
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
