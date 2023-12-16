@@ -81,9 +81,13 @@ export default function OrderTableToolbar({
             const providerResult = await getProviders();
             const newProvdiers = providerResult.data.filter((item: any) => newData.includes(item.categoryId._id));
             // .map((item_: any) => item_._id);
+
+            console.log(newProvdiers, '--newProvdiers--');
             onFilters(
                 'categories',
-                newProvdiers.map((item_: any) => item_._id)
+                selectedCategories.length > 0 && newProvdiers.length < 1
+                    ? ['657be873345c1b1234567890']
+                    : newProvdiers.map((item_: any) => item_._id)
             );
             setProviders(newProvdiers);
         },
@@ -110,13 +114,14 @@ export default function OrderTableToolbar({
             target: { value }
         } = event;
         console.log(value, 'value.value');
-        if (value.length === 0) {
-            setPersonName([]);
+        if (value.length === 0 && personName.length > 0) {
+            getSelectedProviders(personName);
+        } else {
+            onFilters(
+                'categories',
+                providers.filter((item: any) => value.includes(item.name)).map((item_: any) => item_._id)
+            );
         }
-        onFilters(
-            'categories',
-            providers.filter((item: any) => value.includes(item.name)).map((item_: any) => item_._id)
-        );
         setProviderName(typeof value === 'string' ? value.split(',') : value);
     };
 

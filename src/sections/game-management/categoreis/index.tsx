@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 // @mui
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -147,7 +147,7 @@ export default function Categoreis() {
         setTableData(res.data);
     };
 
-    const [displayProviders, setDisplayProviders] = useState<any>([]);
+    const [displayProviders] = useState<any>([]);
 
     // useEffect(() => {
     //     const fetchData = async () => {

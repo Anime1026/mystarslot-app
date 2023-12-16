@@ -124,14 +124,13 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                                             />
                                                         </TableCell>
 
-                                                        <TableCell>{fcustomCurrency(item.inamount)}</TableCell>
-
                                                         <TableCell align="center">
                                                             {fcustomCurrency(item.outamount)}
                                                         </TableCell>
+                                                        <TableCell>{fcustomCurrency(item.inamount)}</TableCell>
 
                                                         <TableCell>
-                                                            {fcustomCurrency(Math.abs(item.outamount - item.inamount))}
+                                                            {fcustomCurrency(item.outamount - item.inamount)}
                                                         </TableCell>
                                                         {item.children.length > 0 ? (
                                                             <TableCell
@@ -205,11 +204,11 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                     />
                 </TableCell>
 
-                <TableCell>{fcustomCurrency(inamount)}</TableCell>
+                <TableCell> {fcustomCurrency(outamount)} </TableCell>
 
-                <TableCell align="center"> {fcustomCurrency(outamount)} </TableCell>
+                <TableCell align="center">{fcustomCurrency(inamount)}</TableCell>
 
-                <TableCell> {fcustomCurrency(Math.abs(inamount - outamount))} </TableCell>
+                <TableCell> {fcustomCurrency(outamount - inamount)} </TableCell>
                 {row.children.length > 0 ? (
                     <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
                         <IconButton

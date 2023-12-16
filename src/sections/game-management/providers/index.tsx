@@ -14,8 +14,6 @@ import TableContainer from '@mui/material/TableContainer';
 
 // routes
 import { paths } from 'src/routes/paths';
-// _mock
-import { _userList, USER_STATUS_OPTIONS } from 'src/_mock';
 // apis
 import { getProviders } from 'src/api';
 // hooks
@@ -43,8 +41,6 @@ import UserTableToolbar from './table-toolbar';
 import UserTableFiltersResult from './table-filters-result';
 
 // ----------------------------------------------------------------------
-
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
     { id: 'categories', label: 'Category' },
@@ -122,13 +118,6 @@ export default function Categoreis() {
             totalRowsFiltered: dataFiltered.length
         });
     }, [dataFiltered.length, dataInPage.length, table, tableData]);
-
-    const handleFilterStatus = useCallback(
-        (event: React.SyntheticEvent, newValue: string) => {
-            handleFilters('status', newValue);
-        },
-        [handleFilters]
-    );
 
     const handleResetFilters = useCallback(() => {
         setFilters(defaultFilters);

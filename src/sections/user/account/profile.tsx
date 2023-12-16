@@ -44,7 +44,7 @@ import BestCharts from './account-profile/best-charts';
 export default function AccountGeneral() {
     const { enqueueSnackbar } = useSnackbar();
     const params_: any = useParams();
-    const { user, getMe } = useAuthContext();
+    const { getMe } = useAuthContext();
 
     const [family, setFamily] = useState<string[]>([]);
 

@@ -50,11 +50,6 @@ export default function UserTableRow({ row, rowselected, onSelectRow, onDeleteRo
 
     const [displayProviders, setDisplayProviders] = useState<any>([]);
 
-    const [addArray, setAddArray] = useState<any>({
-        category: '',
-        providers: []
-    });
-
     const [value, setValue] = useState<any>([]);
 
     const [providerId, setProviderId] = useState<any>();

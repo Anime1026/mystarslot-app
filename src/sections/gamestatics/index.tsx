@@ -48,9 +48,9 @@ import GameStaticsTableToolbar from './table/table-toolbar';
 const TABLE_HEAD = [
     { id: 'orderNumber', label: 'Id', width: 116 },
     { id: 'name', label: 'Username' },
-    { id: 'createdAt', label: 'In', width: 140 },
-    { id: 'totalQuantity', label: 'Out', width: 120, align: 'center' },
-    { id: 'totalAmount', label: 'Sum', width: 140 },
+    { id: 'totalQuantity', label: 'BET', width: 140 },
+    { id: 'createdAt', label: 'WIN', width: 120, align: 'center' },
+    { id: 'totalAmount', label: 'GGR', width: 140 },
     { id: '', width: 88 }
 ];
 
@@ -114,7 +114,7 @@ export default function OrderListView() {
         table.page * table.rowsPerPage + table.rowsPerPage
     );
 
-    const denseHeight = table.dense ? 52 : 72;
+    const denseHeight = !table.dense ? 52 : 72;
 
     const canReset = !!filters.name || filters.status !== 'all' || (!!filters.startDate && !!filters.endDate);
 
@@ -197,7 +197,14 @@ export default function OrderListView() {
                             sx={{ py: 2 }}
                         >
                             <TotalPrice
-                                title="Total In"
+                                title="Total BET"
+                                percent={totalOutAmount}
+                                price={totalOutAmount}
+                                icon="solar:file-check-bold-duotone"
+                                color={theme.palette.success.main}
+                            />
+                            <TotalPrice
+                                title="Total WIN"
                                 percent={totalInAmount}
                                 price={totalInAmount}
                                 icon="solar:bill-list-bold-duotone"
@@ -205,17 +212,9 @@ export default function OrderListView() {
                             />
 
                             <TotalPrice
-                                title="Total Out"
-                                percent={totalOutAmount}
-                                price={totalOutAmount}
-                                icon="solar:file-check-bold-duotone"
-                                color={theme.palette.success.main}
-                            />
-
-                            <TotalPrice
-                                title="SUM"
+                                title="Total GGR"
                                 percent={100}
-                                price={Math.abs(totalInAmount - totalOutAmount)}
+                                price={totalOutAmount - totalInAmount}
                                 icon="solar:sort-by-time-bold-duotone"
                                 color={theme.palette.warning.main}
                             />
@@ -246,7 +245,7 @@ export default function OrderListView() {
 
                     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
                         <TableSelectedAction
-                            dense={table.dense}
+                            dense={!table.dense}
                             numSelected={table.selected.length}
                             rowCount={tableData.length}
                             onSelectAllRows={(checked) =>
@@ -265,7 +264,7 @@ export default function OrderListView() {
                         />
 
                         <Scrollbar>
-                            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                            <Table size={!table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                                 <TableHeadCustom
                                     order={table.order}
                                     orderBy={table.orderBy}
@@ -312,11 +311,11 @@ export default function OrderListView() {
                     <TablePaginationCustom
                         count={dataFiltered.length}
                         page={table.page}
-                        rowsPerPage={table.rowsPerPage}
+                        rowsPerPage={table.rowsPerPage * 5}
                         onPageChange={table.onChangePage}
                         onRowsPerPageChange={table.onChangeRowsPerPage}
                         //
-                        dense={table.dense}
+                        dense={!table.dense}
                         onChangeDense={table.onChangeDense}
                     />
                 </Card>

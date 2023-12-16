@@ -46,10 +46,6 @@ export default function UserTableRow({ row, rowselected, onSelectRow, onDeleteRo
         providers: []
     });
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
     const handleClose = () => {
         setOpen(false);
     };
@@ -63,7 +59,7 @@ export default function UserTableRow({ row, rowselected, onSelectRow, onDeleteRo
         // setTableData(res.data);
     };
 
-    const [displayProviders, setDisplayProviders] = useState<any>([]);
+    const [displayProviders] = useState<any>([]);
 
     return (
         <>
