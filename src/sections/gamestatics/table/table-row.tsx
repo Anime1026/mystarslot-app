@@ -11,6 +11,7 @@ import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 // hooks
+import { useResponsive } from 'src/hooks/use-responsive';
 import { useBoolean } from 'src/hooks/use-boolean';
 // utils
 import { fcustomCurrency } from 'src/utils/format-number';
@@ -31,6 +32,8 @@ type Props = {
 
 export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, onDeleteRow }: Props) {
     const { username, avatar, email, inamount, outamount } = row;
+
+    const mdUp = useResponsive('up', 'md');
 
     const collapse = useBoolean();
 
@@ -88,14 +91,14 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                         sx={{ bgcolor: 'background.neutral' }}
                                     >
                                         <Stack component={Paper} sx={{ m: 1.5 }}>
-                                            <Table>
+                                            <Table size="small" sx={{ minWidth: 960 }}>
                                                 <TableBody>
                                                     <TableRow hover selected={selected}>
                                                         <TableCell padding="checkbox">
                                                             <Checkbox checked={selected} onClick={onSelectRow} />
                                                         </TableCell>
 
-                                                        <TableCell>
+                                                        <TableCell sx={{ width: 352 }}>
                                                             <Box
                                                                 onClick={onViewRow}
                                                                 sx={{
@@ -110,7 +113,12 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                                             </Box>
                                                         </TableCell>
 
-                                                        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <TableCell
+                                                            sx={{
+                                                                display: 'flex',
+                                                                minWidth: 270
+                                                            }}
+                                                        >
                                                             <Avatar alt={username} src={avatar} sx={{ mr: 2 }} />
 
                                                             <ListItemText
@@ -124,18 +132,21 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                                             />
                                                         </TableCell>
 
-                                                        <TableCell align="center">
+                                                        <TableCell sx={{ width: mdUp ? 120 : 140 }}>
                                                             {fcustomCurrency(item.outamount)}
                                                         </TableCell>
-                                                        <TableCell>{fcustomCurrency(item.inamount)}</TableCell>
 
-                                                        <TableCell>
+                                                        <TableCell sx={{ width: mdUp ? 120 : 140 }}>
+                                                            {fcustomCurrency(item.inamount)}
+                                                        </TableCell>
+
+                                                        <TableCell sx={{ width: mdUp ? 120 : 140 }}>
                                                             {fcustomCurrency(item.outamount - item.inamount)}
                                                         </TableCell>
                                                         {item.children.length > 0 ? (
                                                             <TableCell
                                                                 align="right"
-                                                                sx={{ px: 1, whiteSpace: 'nowrap' }}
+                                                                sx={{ px: 1, whiteSpace: 'nowrap', width: 70 }}
                                                             >
                                                                 <IconButton
                                                                     color={collapse.value ? 'inherit' : 'default'}
@@ -150,7 +161,7 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                                                 </IconButton>
                                                             </TableCell>
                                                         ) : (
-                                                            <TableCell />
+                                                            <TableCell sx={{ width: 70 }} />
                                                         )}
                                                     </TableRow>
                                                 </TableBody>
@@ -206,7 +217,7 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
 
                 <TableCell> {fcustomCurrency(outamount)} </TableCell>
 
-                <TableCell align="center">{fcustomCurrency(inamount)}</TableCell>
+                <TableCell>{fcustomCurrency(inamount)}</TableCell>
 
                 <TableCell> {fcustomCurrency(outamount - inamount)} </TableCell>
                 {row.children.length > 0 ? (

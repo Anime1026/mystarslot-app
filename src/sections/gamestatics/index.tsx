@@ -46,12 +46,12 @@ import GameStaticsTableToolbar from './table/table-toolbar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    { id: 'orderNumber', label: 'Id', width: 116 },
+    { id: 'orderNumber', label: 'Id' },
     { id: 'name', label: 'Username' },
-    { id: 'totalQuantity', label: 'BET', width: 140 },
-    { id: 'createdAt', label: 'WIN', width: 120, align: 'center' },
-    { id: 'totalAmount', label: 'GGR', width: 140 },
-    { id: '', width: 88 }
+    { id: 'totalQuantity', label: 'BET' },
+    { id: 'createdAt', label: 'WIN' },
+    { id: 'totalAmount', label: 'GGR' },
+    { id: '' }
 ];
 
 const defaultFilters: IOrderTableFilters = {
