@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 // api
-import { getLatestTransactions, getUserCounts } from 'src/api';
+import { getLatestTransactions, getUserCounts, gettopInfos } from 'src/api';
 
 // types
 import { TransactionType } from 'src/types/invoice';
@@ -66,6 +66,8 @@ export default function Dashboard() {
 
     const getLatestTransactionHistory = async () => {
         const result = await getLatestTransactions();
+        const topInfos = await gettopInfos();
+        console.log(topInfos);
         if (result.status) {
             setLatest(result.data);
         }

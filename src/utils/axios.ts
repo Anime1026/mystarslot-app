@@ -34,7 +34,8 @@ export const endpoints = {
         getUserCounts: '/api/get-userCounts',
         getCategories: '/api/get-categories',
         getGameStatics: '/api/game-statics',
-        getProviders: '/api/get-providers'
+        getProviders: '/api/get-providers',
+        getTopInfos: '/api/get-topinfos'
     },
     auth: {
         me: '/api/auth/me',

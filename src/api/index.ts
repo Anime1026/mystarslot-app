@@ -114,6 +114,11 @@ export async function getGameStatics(data: any) {
     return res.data;
 }
 
+export async function gettopInfos() {
+    const res = await axios.get(endpoints.dashboard.getTopInfos);
+    return res.data;
+}
+
 // get select user
 
 export async function getSelectUser(params: any) {
