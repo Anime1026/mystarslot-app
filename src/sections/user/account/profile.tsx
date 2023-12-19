@@ -121,12 +121,10 @@ export default function AccountGeneral() {
             setValue('last_login', format(updateDate, 'yyyy-MM-dd h:mm:ss'));
 
             const result = await getFamily(updateUser.username);
-            console.log(result, '--get family--');
             setFamily(result.data);
             if (result.status) {
                 if (24 - result.difTime.hour <= 0) {
                     const bonusResult = await getBonusSetting();
-                    console.log(bonusResult.data.status, 'bonus');
                     if (bonusResult.data.status === 'Enabled') {
                         setBonus({
                             first: bonusResult.data.first,
@@ -228,22 +226,23 @@ export default function AccountGeneral() {
     };
 
     const withdrawCredit = async () => {
-        if (amountValue > 0) {
-            const result = await changeCredit({
-                balance: amountValue,
-                type: 'withdraw',
-                username: updateUser.username,
-                note: ''
-            });
-            await getMe();
-            setAmountValue(0);
-            enqueueSnackbar(result.message);
+        if (window.confirm('Upon withdrawal, the bonus balance is reset.')) {
+            if (amountValue > 0) {
+                const result = await changeCredit({
+                    balance: amountValue,
+                    type: 'withdraw',
+                    username: updateUser.username,
+                    note: ''
+                });
+                await getMe();
+                setAmountValue(0);
+                enqueueSnackbar(result.message);
+            }
+            init();
         }
-        init();
     };
 
     const handleAmount = (amount: number) => {
-        console.log(bonus, 'bonus');
         if (amount >= 5 && amount < 20) {
             setBonusAvailable(bonus.first);
         } else if (amount >= 20 && amount < 50) {

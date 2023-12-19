@@ -27,7 +27,7 @@ import FormProvider, { RHFTextField, RHFSelect } from 'src/components/hook-form'
 // ----------------------------------------------------------------------
 
 const UpdateUserSchema = Yup.object().shape({
-    status: Yup.string().required('Name is required'),
+    status: Yup.string().optional(),
     FirstBonus: Yup.number().min(0).max(5).required('Bonus Min and Max balance is wrong'),
     TowBonus: Yup.number().min(5).max(10).required('Bonus Min and Max balance is wrong'),
     ThreeBonus: Yup.number().min(10).max(15).required('Bonus Min and Max balance is wrong'),
@@ -63,6 +63,7 @@ export default function AccountGeneral() {
 
     const onSubmit = handleSubmit(async (data) => {
         try {
+            console.log(data, "--data--")
             const reqData = {
                 status: data.status,
                 first: data.FirstBonus,
