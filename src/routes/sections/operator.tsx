@@ -26,6 +26,9 @@ const UserCreate = lazy(() => import('src/pages/user/create'));
 // profile
 const Profile = lazy(() => import('src/pages/profile'));
 
+// bonus system
+const BonusSystem = lazy(() => import('src/pages/bonussystem'));
+
 // ----------------------------------------------------------------------
 
 export const operatorRoutes = [
@@ -119,5 +122,18 @@ export const operatorRoutes = [
             </AuthGuard>
         ),
         children: [{ element: <Profile />, index: true }]
+    },
+    {
+        path: 'bonussystem',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
+        children: [{ element: <BonusSystem />, index: true }]
     }
 ];

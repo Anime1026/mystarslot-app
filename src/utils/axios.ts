@@ -86,5 +86,9 @@ export const endpoints = {
         updatePassword: '/api/update-password',
         updateMany: '/api/update-many-users',
         deleteMany: '/api/delete-many-users'
+    },
+    bonus: {
+        setting: '/api/bonus-setting',
+        getSetting: '/api/get-bonus-setting'
     }
 };

@@ -54,7 +54,6 @@ export default function UserTableRow({
     onDisableRow
 }: Props) {
     const { name, avatar, balance, ipAddress, email, status, bonusbalnace } = row;
-    console.log(bonusbalnace, 'row.row');
 
     const deleteUser = useBoolean();
 

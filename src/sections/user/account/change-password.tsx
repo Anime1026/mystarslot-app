@@ -59,7 +59,11 @@ export default function AccountSecurity() {
     const onSubmit = handleSubmit(async (data) => {
         try {
             // let userInfo = localStorage.getItem('accessToken');
-            const result = await updatePassword({ oldPassword: data.oldPassword, password: data.newPassword, username: params_.id });
+            const result = await updatePassword({
+                oldPassword: data.oldPassword,
+                password: data.newPassword,
+                username: params_.id
+            });
             if (result.status) {
                 enqueueSnackbar(result.message);
             }
@@ -119,7 +123,9 @@ export default function AccountSecurity() {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={confirmPassword.onToggle} edge="end">
-                                    <Iconify icon={confirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                                    <Iconify
+                                        icon={confirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
+                                    />
                                 </IconButton>
                             </InputAdornment>
                         )

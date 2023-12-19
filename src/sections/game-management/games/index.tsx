@@ -191,7 +191,7 @@ export default function Categoreis() {
                     <UserTableToolbar
                         filters={filters}
                         onFilters={handleFilters}
-                    //
+                        //
                     />
 
                     {canReset && (

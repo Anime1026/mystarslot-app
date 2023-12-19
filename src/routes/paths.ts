@@ -7,7 +7,8 @@ const ROOTS = {
     SHOP: '/shop',
     USER: '/user',
     PROFILE: '/profile',
-    GAMES: '/game-management'
+    GAMES: '/game-management',
+    BONUSSYSTEM: '/bonussystem'
 };
 
 // ----------------------------------------------------------------------
@@ -53,9 +54,12 @@ export const paths = {
         index: `${ROOTS.USER}`,
         list: `${ROOTS.USER}/list`,
         edit: (id: string) => `${ROOTS.USER}/account/${id}`,
-        create: `${ROOTS.USER}/create`,
+        create: `${ROOTS.USER}/create`
     },
     profile: {
         index: `${ROOTS.PROFILE}`
+    },
+    bonussystem: {
+        index: `${ROOTS.BONUSSYSTEM}`
     }
 };

@@ -32,7 +32,7 @@ import FormControl from '@mui/material/FormControl';
 import { useAuthContext } from 'src/auth/hooks';
 // utils
 import { fData, fcustomCurrency } from 'src/utils/format-number';
-import { update, getFamily, getSelectUser, changeCredit } from 'src/api';
+import { update, getFamily, getSelectUser, changeCredit, getBonusSetting } from 'src/api';
 // components
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField, RHFUploadAvatar, RHFSelect } from 'src/components/hook-form';
@@ -54,6 +54,21 @@ export default function AccountGeneral() {
     const [bonusCheck, setBonusCheck] = useState(true);
 
     const [updateUser, setUpdateUser] = useState<any>();
+
+    const [depositTime, setDepositTime] = useState({
+        hour: 0,
+        minute: 0,
+        second: 0
+    });
+
+    const [bonus, setBonus] = useState({
+        first: 0,
+        second: 0,
+        third: 0,
+        fourth: 0
+    });
+
+    const [bonusAvailable, setBonusAvailable] = useState(0);
 
     const UpdateUserSchema = Yup.object().shape({
         displayName: Yup.string().required('Name is required'),
@@ -106,11 +121,35 @@ export default function AccountGeneral() {
             setValue('last_login', format(updateDate, 'yyyy-MM-dd h:mm:ss'));
 
             const result = await getFamily(updateUser.username);
+            console.log(result, '--get family--');
+            setFamily(result.data);
             if (result.status) {
-                setFamily(result.data);
+                if (24 - result.difTime.hour <= 0) {
+                    const bonusResult = await getBonusSetting();
+                    console.log(bonusResult.data.status, 'bonus');
+                    if (bonusResult.data.status === 'Enabled') {
+                        setBonus({
+                            first: bonusResult.data.first,
+                            second: bonusResult.data.two,
+                            third: bonusResult.data.three,
+                            fourth: bonusResult.data.four
+                        });
+                    }
+                    setDepositTime({
+                        hour: 0,
+                        minute: 0,
+                        second: 0
+                    });
+                } else {
+                    setDepositTime({
+                        hour: 23 - result.difTime.hour,
+                        minute: 60 - result.difTime.minute,
+                        second: 60 - result.difTime.second
+                    });
+                }
             }
         }
-    }, [updateUser, setValue]);
+    }, [updateUser, setValue, setFamily]);
 
     useEffect(() => {
         getUserFamily();
@@ -177,7 +216,7 @@ export default function AccountGeneral() {
             const result = await changeCredit({
                 balance: amountValue,
                 type: 'deposit',
-                bonus: amountValue * 0.2,
+                bonus: amountValue * (bonusAvailable / 100),
                 username: updateUser.username,
                 note: ''
             });
@@ -201,6 +240,21 @@ export default function AccountGeneral() {
             enqueueSnackbar(result.message);
         }
         init();
+    };
+
+    const handleAmount = (amount: number) => {
+        console.log(bonus, 'bonus');
+        if (amount >= 5 && amount < 20) {
+            setBonusAvailable(bonus.first);
+        } else if (amount >= 20 && amount < 50) {
+            setBonusAvailable(bonus.second);
+        } else if (amount >= 50 && amount < 100) {
+            setBonusAvailable(bonus.third);
+        } else if (amount >= 100) {
+            setBonusAvailable(bonus.fourth);
+        }
+
+        setAmountValue(amount);
     };
 
     return (
@@ -331,7 +385,7 @@ export default function AccountGeneral() {
                             id="filled-adornment-amount"
                             type="number"
                             onChange={(e) => {
-                                setAmountValue(Number(e.target.value));
+                                handleAmount(Number(e.target.value));
                             }}
                             startAdornment={<InputAdornment position="start">$</InputAdornment>}
                         />
@@ -349,11 +403,18 @@ export default function AccountGeneral() {
                         label="BonusBack"
                     />
                     <Box component="span" paddingLeft={2}>
-                        {bonusCheck ? fcustomCurrency(amountValue * 0.2) : 0}
+                        {bonusCheck ? fcustomCurrency(amountValue * (bonusAvailable / 100)) : 0}
                     </Box>
-                    <Stack component="span" direction="row" alignItems="center" sx={{ fontSize: 12, p: 2 }}>
-                        Bonuses are paid once every 24 hours upon deposit.
-                    </Stack>
+                    {depositTime.hour === 0 && depositTime.second === 0 && depositTime.minute === 0 ? (
+                        <Typography sx={{ fontSize: 12, p: 2 }}>
+                            Deposit Bonus Available. You can get Bonus on deposit.
+                        </Typography>
+                    ) : (
+                        <Typography color="error" sx={{ fontSize: 12, p: 2 }}>
+                            The bonus can be received {depositTime.hour} hours {depositTime.minute} minutes{' '}
+                            {depositTime.second} seconds after depositing.
+                        </Typography>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button color="success" variant="outlined" onClick={depositCredit}>

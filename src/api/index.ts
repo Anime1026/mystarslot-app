@@ -137,3 +137,14 @@ export async function changeCategories(data: any) {
     const res = await axios.post(endpoints.games.changeCategory, data);
     return res.data;
 }
+
+// bonus setting
+export async function bonusSetting(data: any) {
+    const res = await axios.post(endpoints.bonus.setting, data);
+    return res.data;
+}
+
+export async function getBonusSetting() {
+    const res = await axios.get(endpoints.bonus.getSetting);
+    return res.data;
+}

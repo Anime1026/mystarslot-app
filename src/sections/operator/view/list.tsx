@@ -227,24 +227,27 @@ export default function UserListView() {
         } catch (error) {
             enqueueSnackbar(error.message, { variant: 'error' });
         }
-    }, [dataFiltered.length, dataInPage.length, table, tableData, enqueueSnackbar])
+    }, [dataFiltered.length, dataInPage.length, table, tableData, enqueueSnackbar]);
 
-    const handleUpdateRows = useCallback(async (status: string) => {
-        try {
-            const updateRows = tableData.filter((row: any) => table.selected.includes(row.id));
-            const ids = [];
-            for (let i = 0; i < updateRows.length; i = 1 + i) {
-                ids.push(updateRows[i].id);
+    const handleUpdateRows = useCallback(
+        async (status: string) => {
+            try {
+                const updateRows = tableData.filter((row: any) => table.selected.includes(row.id));
+                const ids = [];
+                for (let i = 0; i < updateRows.length; i = 1 + i) {
+                    ids.push(updateRows[i].id);
+                }
+                const result = await updateMany({ ids, status });
+                if (result.status) {
+                    operator();
+                    enqueueSnackbar(result.message);
+                }
+            } catch (error) {
+                enqueueSnackbar(error.message, { variant: 'error' });
             }
-            const result = await updateMany({ ids, status });
-            if (result.status) {
-                operator();
-                enqueueSnackbar(result.message);
-            }
-        } catch (error) {
-            enqueueSnackbar(error.message, { variant: 'error' });
-        }
-    }, [tableData, enqueueSnackbar, table])
+        },
+        [tableData, enqueueSnackbar, table]
+    );
 
     const handleFilterStatus = useCallback(
         (event: React.SyntheticEvent, newValue: string) => {

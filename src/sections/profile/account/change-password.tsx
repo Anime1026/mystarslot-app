@@ -60,7 +60,11 @@ export default function AccountChangePassword() {
     const onSubmit = handleSubmit(async (data) => {
         try {
             // let userInfo = localStorage.getItem('accessToken');
-            const result = await updateProfile({ oldPassword: data.oldPassword, password: data.newPassword, id: user?.id });
+            const result = await updateProfile({
+                oldPassword: data.oldPassword,
+                password: data.newPassword,
+                id: user?.id
+            });
             if (result.status) {
                 enqueueSnackbar(result.message);
                 setSession(result.accessToken);
@@ -121,7 +125,9 @@ export default function AccountChangePassword() {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={confirmPassword.onToggle} edge="end">
-                                    <Iconify icon={confirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                                    <Iconify
+                                        icon={confirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'}
+                                    />
                                 </IconButton>
                             </InputAdornment>
                         )

@@ -100,6 +100,11 @@ export function useNavData() {
             title: 'Profile',
             path: paths.profile.index,
             icon: ICONS.job
+        },
+        {
+            title: 'Bonus System',
+            path: paths.bonussystem.index,
+            icon: ICONS.label
         }
     ];
 
