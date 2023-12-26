@@ -63,9 +63,9 @@ export default function AccountGeneral() {
 
     const onSubmit = handleSubmit(async (data) => {
         try {
-            console.log(data, "--data--")
+            console.log(data, '--data--', bonusStatus);
             const reqData = {
-                status: data.status,
+                status: bonusStatus,
                 first: data.FirstBonus,
                 two: data.TowBonus,
                 three: data.ThreeBonus,

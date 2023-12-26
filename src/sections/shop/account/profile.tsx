@@ -69,7 +69,7 @@ export default function AccountGeneral() {
     // add fido
 
     const [fidoAmount, setFidoAmount] = useState(0);
-    const [note, setNote] = useState<0 | string>(0);
+    const [note, setNote] = useState<0 | string>('');
 
     const [updateUser, setUpdateUser] = useState<any>();
 
@@ -176,80 +176,71 @@ export default function AccountGeneral() {
     );
 
     const depositCredit = async () => {
-        if (note === 0 || note === '') {
-            setNote('');
-        } else {
-            if (creditAmount > 0) {
-                const result = await changeCredit({
-                    balance: creditAmount,
-                    type: 'deposit',
-                    bonus: 0,
-                    username: updateUser.username,
-                    note
-                });
-                await getMe();
-                setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
-                setCreditAmount(0);
-                enqueueSnackbar(result.message);
-            }
-            init();
+        // if (note === 0 || note === '') {
+        //     setNote('');
+        // } else {
+        if (creditAmount > 0) {
+            const result = await changeCredit({
+                balance: creditAmount,
+                type: 'deposit',
+                bonus: 0,
+                username: updateUser.username,
+                note
+            });
+            await getMe();
+            setTotalBalance((preTotalbalance) => Number(preTotalbalance) + Number(creditAmount));
+            setCreditAmount(0);
+            enqueueSnackbar(result.message);
         }
+        init();
+        // }
     };
 
     const withdrawCredit = async () => {
-        if (note === 0 || note === '') {
-            setNote('');
-        } else {
-            if (creditAmount > 0) {
-                const result = await changeCredit({
-                    balance: creditAmount,
-                    type: 'withdraw',
-                    username: updateUser.username,
-                    note
-                });
-                await getMe();
-                setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
-                setCreditAmount(0);
-                enqueueSnackbar(result.message);
-            }
-            init();
+
+        if (creditAmount > 0) {
+            const result = await changeCredit({
+                balance: creditAmount,
+                type: 'withdraw',
+                username: updateUser.username,
+                note
+            });
+            await getMe();
+            setTotalBalance((preTotalbalance) => Number(preTotalbalance) - Number(creditAmount));
+            setCreditAmount(0);
+            enqueueSnackbar(result.message);
         }
+        init();
     };
 
     const depositFido = async () => {
-        if (note === 0 || note === '') {
-            setNote('');
-        } else {
-            if (fidoAmount > 0) {
-                const result = await changeFido({
-                    balance: fidoAmount,
-                    type: 'deposit',
-                    username: updateUser.username,
-                    note
-                });
-                enqueueSnackbar(result.message);
-                setFidoAmount(0);
-            }
-            init();
+
+        if (fidoAmount > 0) {
+            const result = await changeFido({
+                balance: fidoAmount,
+                type: 'deposit',
+                username: updateUser.username,
+                note
+            });
+            enqueueSnackbar(result.message);
+            setFidoAmount(0);
         }
+        init();
     };
 
     const withdrawFido = async () => {
-        if (note === 0 || note === '') {
-            setNote('');
-        } else {
-            if (fidoAmount > 0) {
-                const result = await changeFido({
-                    balance: fidoAmount,
-                    type: 'withdraw',
-                    username: updateUser.username,
-                    note
-                });
-                enqueueSnackbar(result.message);
-                setFidoAmount(0);
-            }
-            init();
+
+        if (fidoAmount > 0) {
+            const result = await changeFido({
+                balance: fidoAmount,
+                type: 'withdraw',
+                username: updateUser.username,
+                note
+            });
+            enqueueSnackbar(result.message);
+            setFidoAmount(0);
         }
+        init();
     };
 
     useEffect(() => {
@@ -411,9 +402,7 @@ export default function AccountGeneral() {
                                         <RHFTextField
                                             name="note"
                                             label="Note"
-                                            error={note === ''}
-                                            helperText={note === '' ? 'Note required' : ''}
-                                            value={note === 0 ? '' : note}
+                                            value={note}
                                             onChange={(e) => {
                                                 setNote(e.target.value);
                                             }}

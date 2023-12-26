@@ -1,7 +1,6 @@
-import isEqual from 'lodash/isEqual';
 import { useState, useCallback, useEffect } from 'react';
 // @mui
-
+import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
@@ -9,18 +8,21 @@ import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
-
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 // routes
 import { paths } from 'src/routes/paths';
-// apis
-import { getProviders } from 'src/api';
+import { useRouter } from 'src/routes/hooks';
+// utils
+import { useAuthContext } from 'src/auth/hooks';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
+import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
+import { sportsbookStatics } from 'src/api';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
@@ -34,68 +36,100 @@ import {
     TablePaginationCustom
 } from 'src/components/table';
 // types
-import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
+import { ITableType, IOrderTableFilters, IOrderTableFilterValue } from 'src/types/order';
 //
-import UserTableRow from './table-row';
-import UserTableToolbar from './table-toolbar';
-import UserTableFiltersResult from './table-filters-result';
+import TotalPrice from './table/total-price';
+import GameStaticsTableRow from './table/table-row';
+import GameStaticsTableSearch from './table/order-table-filters-result';
+import GameStaticsTableToolbar from './table/table-toolbar';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    { id: 'categories', label: 'Category' },
-    { id: 'provider', label: 'Provider' },
-    { id: 'service', label: 'Service' },
-    { id: 'createAt', label: 'Create Time' },
-    { id: 'status', label: 'Status' },
+    { id: 'orderNumber', label: 'Id' },
+    { id: 'name', label: 'Username' },
+    { id: 'totalQuantity', label: 'BET' },
+    { id: 'createdAt', label: 'WIN' },
+    { id: 'totalAmount', label: 'GGR' },
     { id: '' }
 ];
 
-const defaultFilters: IUserTableFilters = {
+const defaultFilters: IOrderTableFilters = {
     name: '',
-    role: [],
-    status: 'all'
+    status: 'all',
+    startDate: null,
+    endDate: null,
+    service: [],
+    categories: []
 };
 
 // ----------------------------------------------------------------------
 
-export default function Categoreis() {
-    const table = useTable();
+export default function OrderListView() {
+    const theme = useTheme();
+
+    const { user } = useAuthContext();
+
+    const table = useTable({ defaultOrderBy: 'orderNumber' });
 
     const settings = useSettingsContext();
 
+    const router = useRouter();
+
     const confirm = useBoolean();
 
-    const [tableData, setTableData] = useState<any>([]);
-
+    const [tableData, setTableData] = useState<ITableType[]>([]);
+    const [totalInAmount, setTotalInAmount] = useState(0);
+    const [totalOutAmount, setTotalOutAmount] = useState(0);
     const [filters, setFilters] = useState(defaultFilters);
+
+    const dateError =
+        filters.startDate && filters.endDate ? filters.startDate.getTime() > filters.endDate.getTime() : false;
 
     const dataFiltered = applyFilter({
         inputData: tableData,
         comparator: getComparator(table.order, table.orderBy),
-        filters
+        filters,
+        dateError
     });
+
+    const getGameTransactions = useCallback(async () => {
+        const result = await sportsbookStatics(filters);
+        if (result.status) {
+            const data =
+                result.users.length > 0 && result.users[0]._id === user?._id ? result.users[0].children : result.users;
+            // data = data.filter((item: any) => item.inamount + item.outamount > 0);
+            setTableData(data);
+            setTotalInAmount(result.totalInAmount);
+            setTotalOutAmount(result.totalOutAmount);
+        }
+    }, [filters, user]);
+
+    useEffect(() => {
+        getGameTransactions();
+    }, [getGameTransactions]);
 
     const dataInPage = dataFiltered.slice(
         table.page * table.rowsPerPage,
         table.page * table.rowsPerPage + table.rowsPerPage
     );
 
-    const denseHeight = table.dense ? 52 : 72;
+    const denseHeight = !table.dense ? 52 : 72;
 
-    const canReset = !isEqual(defaultFilters, filters);
+    const canReset = !!filters.name || filters.status !== 'all' || (!!filters.startDate && !!filters.endDate);
 
     const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
     const handleFilters = useCallback(
-        (name: string, value: IUserTableFilterValue) => {
+        (name: string, value: IOrderTableFilterValue) => {
             table.onResetPage();
             setFilters((prevState) => ({
                 ...prevState,
                 [name]: value
             }));
+            getGameTransactions();
         },
-        [table]
+        [table, getGameTransactions]
     );
 
     const handleDeleteRow = useCallback(
@@ -123,42 +157,87 @@ export default function Categoreis() {
         setFilters(defaultFilters);
     }, []);
 
-    const init = useCallback(async () => {
-        const res = await getProviders();
-        setTableData(res.data);
-    }, []);
-
-    useEffect(() => {
-        init();
-    }, [init]);
+    const handleViewRow = useCallback(
+        (id: string) => {
+            router.push(paths.operator.edit(id));
+        },
+        [router]
+    );
 
     return (
         <>
             <Container maxWidth={settings.themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Providers"
+                    heading="SportsBook Statics"
                     links={[
-                        { name: 'Dashboard', href: paths.dashboard.root },
-                        { name: 'Games', href: paths.operator.list },
-                        { name: 'Providers' }
+                        {
+                            name: 'Dashboard',
+                            href: paths.dashboard.root
+                        },
+                        {
+                            name: 'SportsBook Statics',
+                            href: paths.dashboard.sportsstatics
+                        },
+                        { name: 'List' }
                     ]}
                     sx={{
                         mb: { xs: 3, md: 5 }
                     }}
                 />
 
+                <Card
+                    sx={{
+                        mb: { xs: 3, md: 5 }
+                    }}
+                >
+                    <Scrollbar>
+                        <Stack
+                            direction="row"
+                            divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+                            sx={{ py: 2 }}
+                        >
+                            <TotalPrice
+                                title="Total BET"
+                                percent={totalOutAmount}
+                                price={totalOutAmount}
+                                icon="solar:file-check-bold-duotone"
+                                color={theme.palette.success.main}
+                            />
+                            <TotalPrice
+                                title="Total WIN"
+                                percent={totalInAmount}
+                                price={totalInAmount}
+                                icon="solar:bill-list-bold-duotone"
+                                color={theme.palette.info.main}
+                            />
+
+                            <TotalPrice
+                                title="Total GGR"
+                                percent={100}
+                                price={totalOutAmount - totalInAmount}
+                                icon="solar:sort-by-time-bold-duotone"
+                                color={theme.palette.warning.main}
+                            />
+                        </Stack>
+                    </Scrollbar>
+                </Card>
+
                 <Card>
-                    <UserTableToolbar
+                    <GameStaticsTableToolbar
                         filters={filters}
                         onFilters={handleFilters}
                         //
+                        canReset={canReset}
+                        onResetFilters={handleResetFilters}
                     />
 
                     {canReset && (
-                        <UserTableFiltersResult
+                        <GameStaticsTableSearch
                             filters={filters}
                             onFilters={handleFilters}
+                            //
                             onResetFilters={handleResetFilters}
+                            //
                             results={dataFiltered.length}
                             sx={{ p: 2.5, pt: 0 }}
                         />
@@ -166,7 +245,7 @@ export default function Categoreis() {
 
                     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
                         <TableSelectedAction
-                            dense={table.dense}
+                            dense={!table.dense}
                             numSelected={table.selected.length}
                             rowCount={tableData.length}
                             onSelectAllRows={(checked) =>
@@ -176,23 +255,16 @@ export default function Categoreis() {
                                 )
                             }
                             action={
-                                <>
-                                    <Tooltip title="Disable">
-                                        <IconButton color="primary" onClick={confirm.onTrue}>
-                                            <Typography>Disable</Typography>
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="Enable">
-                                        <IconButton color="primary" onClick={confirm.onTrue}>
-                                            <Typography>Enable</Typography>
-                                        </IconButton>
-                                    </Tooltip>
-                                </>
+                                <Tooltip title="Delete">
+                                    <IconButton color="primary" onClick={confirm.onTrue}>
+                                        <Iconify icon="solar:trash-bin-trash-bold" />
+                                    </IconButton>
+                                </Tooltip>
                             }
                         />
 
                         <Scrollbar>
-                            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                            <Table size={!table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                                 <TableHeadCustom
                                     order={table.order}
                                     orderBy={table.orderBy}
@@ -215,13 +287,13 @@ export default function Categoreis() {
                                             table.page * table.rowsPerPage + table.rowsPerPage
                                         )
                                         .map((row, key) => (
-                                            <UserTableRow
-                                                key={key}
+                                            <GameStaticsTableRow
+                                                key={row.id}
                                                 row={row}
-                                                onUpdateData={() => init()}
-                                                rowselected={table.selected.includes(row.id)}
+                                                selected={table.selected.includes(row.id)}
                                                 onSelectRow={() => table.onSelectRow(row.id)}
                                                 onDeleteRow={() => handleDeleteRow(row.id)}
+                                                onViewRow={() => handleViewRow(row.id)}
                                             />
                                         ))}
 
@@ -239,11 +311,11 @@ export default function Categoreis() {
                     <TablePaginationCustom
                         count={dataFiltered.length}
                         page={table.page}
-                        rowsPerPage={table.rowsPerPage}
+                        rowsPerPage={table.rowsPerPage * 5}
                         onPageChange={table.onChangePage}
                         onRowsPerPageChange={table.onChangeRowsPerPage}
                         //
-                        dense={table.dense}
+                        dense={!table.dense}
                         onChangeDense={table.onChangeDense}
                     />
                 </Card>
@@ -280,35 +352,45 @@ export default function Categoreis() {
 function applyFilter({
     inputData,
     comparator,
-    filters
+    filters,
+    dateError
 }: {
-    inputData: IUserItem[];
+    inputData: ITableType[];
     comparator: (a: any, b: any) => number;
-    filters: IUserTableFilters;
+    filters: IOrderTableFilters;
+    dateError: boolean;
 }) {
-    const { name, status, role } = filters;
+    // const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
-    const stabilizedThis = inputData.map((el, index) => [el, index] as const);
+    // stabilizedThis.sort((a, b) => {
+    //     const order = comparator(a[0], b[0]);
+    //     if (order !== 0) return order;
+    //     return a[1] - b[1];
+    // });
 
-    stabilizedThis.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
+    // inputData = stabilizedThis.map((el) => el[0]);
 
-    inputData = stabilizedThis.map((el) => el[0]);
+    // if (name) {
+    //     inputData = inputData.filter(
+    //         (order) =>
+    //             order.id.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+    //             order.username.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+    //             order.email.toLowerCase().indexOf(name.toLowerCase()) !== -1
+    //     );
+    // }
+    // if (status !== 'all') {
+    //     inputData = inputData.filter((order) => order.status === status);
+    // }
 
-    if (name) {
-        inputData = inputData.filter((user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1);
-    }
-
-    if (status !== 'all') {
-        inputData = inputData.filter((user) => user.status === status);
-    }
-
-    if (role.length) {
-        inputData = inputData.filter((user) => role.includes(user.role));
-    }
+    // if (!dateError) {
+    //     if (startDate && endDate) {
+    //         inputData = inputData.filter(
+    //             (order) =>
+    //                 fTimestamp(order.createdAt) >= fTimestamp(startDate) &&
+    //                 fTimestamp(order.createdAt) <= fTimestamp(endDate)
+    //         );
+    //     }
+    // }
 
     return inputData;
 }

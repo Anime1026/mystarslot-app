@@ -123,8 +123,10 @@ export default function AccountGeneral() {
             const result = await getFamily(updateUser.username);
             setFamily(result.data);
             if (result.status) {
+                console.log(result, '---time.result---');
                 if (24 - result.difTime.hour <= 0) {
                     const bonusResult = await getBonusSetting();
+                    console.log(bonusResult.data, 'bonusResult.data.');
                     if (bonusResult.data.status === 'Enabled') {
                         setBonus({
                             first: bonusResult.data.first,
@@ -141,8 +143,8 @@ export default function AccountGeneral() {
                 } else {
                     setDepositTime({
                         hour: 23 - result.difTime.hour,
-                        minute: 60 - result.difTime.minute,
-                        second: 60 - result.difTime.second
+                        minute: 59 - result.difTime.minute,
+                        second: 59 - result.difTime.second
                     });
                 }
             }
@@ -210,17 +212,22 @@ export default function AccountGeneral() {
     // };
 
     const depositCredit = async () => {
+        console.log(amountValue, 'amountValue.amountValue');
         if (amountValue > 0) {
             const result = await changeCredit({
                 balance: amountValue,
                 type: 'deposit',
-                bonus: amountValue * (bonusAvailable / 100),
+                bonus: amountValue * (bonusCheck ? bonusAvailable / 100 : 1),
                 username: updateUser.username,
                 note: ''
             });
-            await getMe();
-            setAmountValue(0);
-            enqueueSnackbar(result.message);
+            if (result.status) {
+                await getMe();
+                setAmountValue(0);
+                enqueueSnackbar(result.message);
+            } else {
+                enqueueSnackbar(result.message, { variant: 'error' });
+            }
         }
         init();
     };
@@ -228,6 +235,7 @@ export default function AccountGeneral() {
     const withdrawCredit = async () => {
         if (window.confirm('Upon withdrawal, the bonus balance is reset.')) {
             if (amountValue > 0) {
+                console.log(amountValue, 'amountValue.withdraw');
                 const result = await changeCredit({
                     balance: amountValue,
                     type: 'withdraw',

@@ -131,6 +131,11 @@ export function useNavData() {
                         icon: ICONS.analytics
                     },
                     {
+                        title: 'Sportsbook Statics',
+                        path: paths.dashboard.sportsstatics,
+                        icon: ICONS.external
+                    },
+                    {
                         title: 'Transaction',
                         path: paths.dashboard.transaction,
                         icon: ICONS.tour

@@ -12,6 +12,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 const IndexPage = lazy(() => import('src/pages/dashboard/dashboard'));
 const UserTree = lazy(() => import('src/pages/dashboard/usertree'));
 const GameStatics = lazy(() => import('src/pages/dashboard/gamestatics'));
+const SportsStatics = lazy(() => import('src/pages/dashboard/sportsstatics'));
 const Transaction = lazy(() => import('src/pages/dashboard/transaction'));
 const CommissionStats = lazy(() => import('src/pages/dashboard/commissionstats'));
 
@@ -33,6 +34,7 @@ export const dashboardRoutes = [
             { element: <IndexPage />, index: true },
             { path: 'usertree', element: <UserTree /> },
             { path: 'gamestatics', element: <GameStatics /> },
+            { path: 'sportsstatics', element: <SportsStatics /> },
             { path: 'transaction', element: <Transaction /> },
             { path: 'commissionstats', element: <CommissionStats /> }
         ]

@@ -114,6 +114,12 @@ export async function getGameStatics(data: any) {
     return res.data;
 }
 
+// get sportsbook statics
+export async function sportsbookStatics(data: any) {
+    const res = await axios.post(endpoints.dashboard.sportsbookStatics, data);
+    return res.data;
+}
+
 export async function gettopInfos() {
     const res = await axios.get(endpoints.dashboard.getTopInfos);
     return res.data;
