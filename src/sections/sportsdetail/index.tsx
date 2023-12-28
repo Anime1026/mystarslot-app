@@ -13,7 +13,6 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 // routes
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
 // utils
 import { useAuthContext } from 'src/auth/hooks';
 // hooks
@@ -22,7 +21,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { getGameStatics } from 'src/api';
+import { getSportsDetail } from 'src/api';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import {
@@ -37,6 +36,7 @@ import {
 } from 'src/components/table';
 // types
 import { ITableType, IOrderTableFilters, IOrderTableFilterValue } from 'src/types/order';
+import { useParams } from 'react-router-dom';
 //
 import TotalPrice from './table/total-price';
 import GameStaticsTableRow from './table/table-row';
@@ -47,11 +47,14 @@ import GameStaticsTableToolbar from './table/table-toolbar';
 
 const TABLE_HEAD = [
     { id: 'orderNumber', label: 'Id' },
-    { id: 'name', label: 'Username' },
-    { id: 'totalQuantity', label: 'BET' },
-    { id: 'createdAt', label: 'WIN' },
-    { id: 'totalAmount', label: 'GGR' },
-    { id: '' }
+    { id: 'createdAt', label: 'Date/Time' },
+    { id: 'type', label: 'Type' },
+    { id: 'name', label: 'Discipline' },
+    { id: 'provider', label: 'Event' },
+    { id: 'market', label: 'Market' },
+    { id: 'outcome', label: 'Outcome' },
+    { id: 'amount', label: 'Amount' },
+    { id: 'credit', label: 'Credit' }
 ];
 
 const defaultFilters: IOrderTableFilters = {
@@ -74,9 +77,9 @@ export default function OrderListView() {
 
     const settings = useSettingsContext();
 
-    const router = useRouter();
-
     const confirm = useBoolean();
+
+    const params_: any = useParams();
 
     const [tableData, setTableData] = useState<ITableType[]>([]);
     const [totalInAmount, setTotalInAmount] = useState(0);
@@ -94,16 +97,19 @@ export default function OrderListView() {
     });
 
     const getGameTransactions = useCallback(async () => {
-        const result = await getGameStatics(filters);
+        // params_
+        const result = await getSportsDetail({ filter: filters, user_id: params_ });
         if (result.status) {
             const data =
-                result.users.length > 0 && result.users[0]._id === user?._id ? result.users[0].children : result.users;
+                result.gameData.gameDetail.length > 0 && result.gameData.gameDetail[0]._id === user?._id
+                    ? result.gameData.gameDetail[0].children
+                    : result.gameData.gameDetail;
             // data = data.filter((item: any) => item.inamount + item.outamount > 0);
             setTableData(data);
             setTotalInAmount(result.totalInAmount);
             setTotalOutAmount(result.totalOutAmount);
         }
-    }, [filters, user]);
+    }, [filters, user, params_]);
 
     useEffect(() => {
         getGameTransactions();
@@ -114,7 +120,7 @@ export default function OrderListView() {
         table.page * table.rowsPerPage + table.rowsPerPage
     );
 
-    const denseHeight = !table.dense ? 52 : 72;
+    const denseHeight = !table.dense ? 72 : 52;
 
     const canReset = !!filters.name || filters.status !== 'all' || (!!filters.startDate && !!filters.endDate);
 
@@ -132,16 +138,6 @@ export default function OrderListView() {
         [table, getGameTransactions]
     );
 
-    const handleDeleteRow = useCallback(
-        (id: string) => {
-            const deleteRow = tableData.filter((row: any) => row.id !== id);
-            setTableData(deleteRow);
-
-            table.onUpdatePageDeleteRow(dataInPage.length);
-        },
-        [dataInPage.length, table, tableData]
-    );
-
     const handleDeleteRows = useCallback(() => {
         const deleteRows = tableData.filter((row: any) => !table.selected.includes(row.id));
         setTableData(deleteRows);
@@ -157,26 +153,19 @@ export default function OrderListView() {
         setFilters(defaultFilters);
     }, []);
 
-    const handleViewRow = useCallback(
-        (id: string) => {
-            router.push(paths.operator.edit(id));
-        },
-        [router]
-    );
-
     return (
         <>
             <Container maxWidth={settings.themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Game Statics"
+                    heading="Sports Detail"
                     links={[
                         {
                             name: 'Dashboard',
                             href: paths.dashboard.root
                         },
                         {
-                            name: 'Game Statics',
-                            href: paths.dashboard.gamestatics
+                            name: 'Sports Statics',
+                            href: paths.dashboard.sportsstatics
                         },
                         { name: 'List' }
                     ]}
@@ -245,7 +234,7 @@ export default function OrderListView() {
 
                     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
                         <TableSelectedAction
-                            dense={!table.dense}
+                            dense={table.dense}
                             numSelected={table.selected.length}
                             rowCount={tableData.length}
                             onSelectAllRows={(checked) =>
@@ -264,7 +253,7 @@ export default function OrderListView() {
                         />
 
                         <Scrollbar>
-                            <Table size={!table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                                 <TableHeadCustom
                                     order={table.order}
                                     orderBy={table.orderBy}
@@ -272,12 +261,6 @@ export default function OrderListView() {
                                     rowCount={tableData.length}
                                     numSelected={table.selected.length}
                                     onSort={table.onSort}
-                                    onSelectAllRows={(checked) =>
-                                        table.onSelectAllRows(
-                                            checked,
-                                            tableData.map((row: any) => row.id)
-                                        )
-                                    }
                                 />
 
                                 <TableBody>
@@ -288,12 +271,9 @@ export default function OrderListView() {
                                         )
                                         .map((row: any, key) => (
                                             <GameStaticsTableRow
-                                                key={row.id}
+                                                key={key}
                                                 row={row}
-                                                selected={table.selected.includes(row.id)}
-                                                onSelectRow={() => table.onSelectRow(row.id)}
-                                                onDeleteRow={() => handleDeleteRow(row.id)}
-                                                onViewRow={() => handleViewRow(row._id)}
+                                                selected={table.selected.includes(row._id)}
                                             />
                                         ))}
 
@@ -311,11 +291,11 @@ export default function OrderListView() {
                     <TablePaginationCustom
                         count={dataFiltered.length}
                         page={table.page}
-                        rowsPerPage={table.rowsPerPage * 5}
+                        rowsPerPage={table.rowsPerPage}
                         onPageChange={table.onChangePage}
                         onRowsPerPageChange={table.onChangeRowsPerPage}
                         //
-                        dense={!table.dense}
+                        dense={table.dense}
                         onChangeDense={table.onChangeDense}
                     />
                 </Card>

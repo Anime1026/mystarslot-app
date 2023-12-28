@@ -29,7 +29,9 @@ export const paths = {
         gamestatics: `${ROOTS.DASHBOARD}/gamestatics`,
         sportsstatics: `${ROOTS.DASHBOARD}/sportsstatics`,
         transaction: `${ROOTS.DASHBOARD}/transaction`,
-        commission: `${ROOTS.DASHBOARD}/commissionstats`
+        commission: `${ROOTS.DASHBOARD}/commissionstats`,
+        gamedetail: (id: string) => `${ROOTS.DASHBOARD}/gamedetail/${id}`,
+        sportsdetail: (id: string) => `${ROOTS.DASHBOARD}/sportsdetail/${id}`
     },
     // game management
     games: {

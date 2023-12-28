@@ -63,11 +63,38 @@ export default function Dashboard() {
     const [operators, setOperators] = useState(0);
     const [shopers, setShopers] = useState(0);
     const [users, setUsers] = useState(0);
+    const [bestInfos, setBestInfos] = useState<any>({
+        topCategory: [],
+        topOperators: [],
+        topProviders: [],
+        topShops: []
+    });
 
     const getLatestTransactionHistory = async () => {
         const result = await getLatestTransactions();
         const topInfos = await gettopInfos();
-        console.log(topInfos);
+        const categoryArray: any = [];
+        const providerArray: any = [];
+        const operatorArray: any = [];
+        const shopArray: any = [];
+
+        topInfos.data.topCategory.map((item: any) =>
+            categoryArray.push({ label: item.category.name, value: item.amount })
+        );
+        topInfos.data.topProviders.map((item: any) =>
+            providerArray.push({ label: item.provider.name, value: item.amount })
+        );
+        topInfos.data.topOperators.map((item: any) => operatorArray.push({ label: 'operator', value: item.amount }));
+        topInfos.data.topShops.map((item: any) => shopArray.push({ label: item._id, value: item.amount }));
+
+        setBestInfos({
+            topCategory: categoryArray,
+            topOperators: operatorArray,
+            topProviders: providerArray,
+            topShops: shopArray
+        });
+
+        console.log(topInfos, 'topInfos.topInfos');
         if (result.status) {
             setLatest(result.data);
         }
@@ -175,7 +202,10 @@ export default function Dashboard() {
                     <BestCharts
                         title="Best Categories"
                         chart={{
-                            series: [{ label: 'No Data', value: 1 }]
+                            series:
+                                bestInfos.topCategory.length === 0
+                                    ? [{ label: 'No Data', value: 1 }]
+                                    : bestInfos.topCategory
                         }}
                     />
                 </Grid>
@@ -183,7 +213,10 @@ export default function Dashboard() {
                     <BestCharts
                         title="Top 5 Providers"
                         chart={{
-                            series: [{ label: 'No Data', value: 1 }]
+                            series:
+                                bestInfos.topProviders.length === 0
+                                    ? [{ label: 'No Data', value: 1 }]
+                                    : bestInfos.topProviders
                         }}
                     />
                 </Grid>
@@ -191,7 +224,10 @@ export default function Dashboard() {
                     <BestCharts
                         title="Top 5 Operators"
                         chart={{
-                            series: [{ label: 'No Data', value: 1 }]
+                            series:
+                                bestInfos.topOperators.length === 0
+                                    ? [{ label: 'No Data', value: 1 }]
+                                    : bestInfos.topOperators
                         }}
                     />
                 </Grid>
@@ -199,7 +235,8 @@ export default function Dashboard() {
                     <BestCharts
                         title="Top 5 Shops"
                         chart={{
-                            series: [{ label: 'No Data', value: 1 }]
+                            series:
+                                bestInfos.topShops.length === 0 ? [{ label: 'No Data', value: 1 }] : bestInfos.topShops
                         }}
                     />
                 </Grid>

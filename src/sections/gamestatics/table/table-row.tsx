@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 // @mui
 import Box from '@mui/material/Box';
 // import Paper from '@mui/material/Paper';
@@ -14,6 +14,10 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { useBoolean } from 'src/hooks/use-boolean';
 // utils
 import { fcustomCurrency } from 'src/utils/format-number';
+
+// routers
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 // components
 import Iconify from 'src/components/iconify';
@@ -37,6 +41,8 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
 
     const [opendList, setOpendList] = useState<any>({});
 
+    const router = useRouter();
+
     const handleOpenChild = (id: string) => {
         if (opendList[id]) {
             setOpendList((pre: any) => ({ ...pre, [id]: false }));
@@ -44,6 +50,13 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
             setOpendList((pre: any) => ({ ...pre, [id]: true }));
         }
     };
+
+    const handleEditRow = useCallback(
+        (id: string) => {
+            router.push(paths.dashboard.gamedetail(id));
+        },
+        [router]
+    );
 
     const renderSecondary = (childrenItem: any) => (
         <>
@@ -56,7 +69,6 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
 
                         <TableCell sx={{ width: 352 }}>
                             <Box
-                                onClick={onViewRow}
                                 sx={{
                                     cursor: 'pointer',
                                     '&:hover': {
@@ -113,7 +125,11 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                 </IconButton>
                             </TableCell>
                         ) : (
-                            <TableCell sx={{ width: 70 }} />
+                            <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap', width: 70 }}>
+                                <IconButton onClick={() => handleEditRow(item._id)}>
+                                    <Iconify icon="bx:show-alt" />
+                                </IconButton>
+                            </TableCell>
                         )}
                     </TableRow>
                     {opendList[item.id] && renderSecondary(item)}
@@ -133,12 +149,8 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
 
                 <TableCell sx={{ width: 352 }}>
                     <Box
-                        onClick={onViewRow}
                         sx={{
-                            cursor: 'pointer',
-                            '&:hover': {
-                                textDecoration: 'underline'
-                            }
+                            cursor: 'pointer'
                         }}
                     >
                         {row._id}
@@ -183,7 +195,11 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                         </IconButton>
                     </TableCell>
                 ) : (
-                    <TableCell sx={{ width: 70 }} />
+                    <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap', width: 70 }}>
+                        <IconButton onClick={() => handleEditRow(row._id)}>
+                            <Iconify icon="bx:show-alt" />
+                        </IconButton>
+                    </TableCell>
                 )}
             </TableRow>
             {opendList[row.id] && renderSecondary(row)}

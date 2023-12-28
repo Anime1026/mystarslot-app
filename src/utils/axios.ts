@@ -36,7 +36,9 @@ export const endpoints = {
         getGameStatics: '/api/game-statics',
         sportsbookStatics: '/api/sports-statics',
         getProviders: '/api/get-providers',
-        getTopInfos: '/api/get-topinfos'
+        getTopInfos: '/api/get-topinfos',
+        getGameDetail: '/api/get-gamedetail',
+        getSportsDetail: '/api/get-sportsdetail'
     },
     auth: {
         me: '/api/auth/me',

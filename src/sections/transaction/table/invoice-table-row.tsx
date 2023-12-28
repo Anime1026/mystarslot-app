@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 // @mui
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import Checkbox from '@mui/material/Checkbox';
 // utils
 import { fcustomCurrency } from 'src/utils/format-number';
 
@@ -25,6 +26,10 @@ export default function InvoiceTableRow({ row, selected, onSelectRow, onViewRow,
     const { id, from, to, type, inAmount, outAmount, date, note, bonus } = row;
     return (
         <TableRow hover selected={selected}>
+            <TableCell padding="checkbox">
+                <Checkbox checked={selected} onClick={onSelectRow} />
+            </TableCell>
+
             <TableCell sx={{ alignItems: 'center' }}>{id}</TableCell>
 
             <TableCell>{from}</TableCell>

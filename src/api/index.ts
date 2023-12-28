@@ -120,6 +120,16 @@ export async function sportsbookStatics(data: any) {
     return res.data;
 }
 
+export async function getGameDetail(data: any) {
+    const res = await axios.post(endpoints.dashboard.getGameDetail, data);
+    return res.data;
+}
+
+export async function getSportsDetail(data: any) {
+    const res = await axios.post(endpoints.dashboard.getSportsDetail, data);
+    return res.data;
+}
+
 export async function gettopInfos() {
     const res = await axios.get(endpoints.dashboard.getTopInfos);
     return res.data;

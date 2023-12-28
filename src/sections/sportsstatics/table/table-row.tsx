@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 // @mui
 import Box from '@mui/material/Box';
 // import Paper from '@mui/material/Paper';
@@ -12,6 +12,11 @@ import ListItemText from '@mui/material/ListItemText';
 // hooks
 import { useResponsive } from 'src/hooks/use-responsive';
 import { useBoolean } from 'src/hooks/use-boolean';
+
+// routers
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 // utils
 import { fcustomCurrency } from 'src/utils/format-number';
 
@@ -35,6 +40,8 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
 
     const collapse = useBoolean();
 
+    const router = useRouter();
+
     const [opendList, setOpendList] = useState<any>({});
 
     const handleOpenChild = (id: string) => {
@@ -44,6 +51,13 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
             setOpendList((pre: any) => ({ ...pre, [id]: true }));
         }
     };
+
+    const handleEditRow = useCallback(
+        (id: string) => {
+            router.push(paths.dashboard.sportsdetail(id));
+        },
+        [router]
+    );
 
     const renderSecondary = (childrenItem: any) => (
         <>
@@ -113,7 +127,11 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                                 </IconButton>
                             </TableCell>
                         ) : (
-                            <TableCell sx={{ width: 70 }} />
+                            <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap', width: 70 }}>
+                                <IconButton onClick={() => handleEditRow(row._id)}>
+                                    <Iconify icon="bx:show-alt" />
+                                </IconButton>
+                            </TableCell>
                         )}
                     </TableRow>
                     {opendList[item.id] && renderSecondary(item)}
@@ -183,7 +201,11 @@ export default function OrderTableRow({ row, selected, onViewRow, onSelectRow, o
                         </IconButton>
                     </TableCell>
                 ) : (
-                    <TableCell sx={{ width: 70 }} />
+                    <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap', width: 70 }}>
+                        <IconButton onClick={() => handleEditRow(row._id)}>
+                            <Iconify icon="bx:show-alt" />
+                        </IconButton>
+                    </TableCell>
                 )}
             </TableRow>
             {opendList[row.id] && renderSecondary(row)}

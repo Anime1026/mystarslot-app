@@ -15,6 +15,8 @@ const GameStatics = lazy(() => import('src/pages/dashboard/gamestatics'));
 const SportsStatics = lazy(() => import('src/pages/dashboard/sportsstatics'));
 const Transaction = lazy(() => import('src/pages/dashboard/transaction'));
 const CommissionStats = lazy(() => import('src/pages/dashboard/commissionstats'));
+const GameDetail = lazy(() => import('src/pages/dashboard/gamedetail'));
+const SportsDetail = lazy(() => import('src/pages/dashboard/sportsdetail'));
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +36,24 @@ export const dashboardRoutes = [
             { element: <IndexPage />, index: true },
             { path: 'usertree', element: <UserTree /> },
             { path: 'gamestatics', element: <GameStatics /> },
+            {
+                path: 'gamedetail',
+                children: [
+                    {
+                        path: ':id',
+                        element: <GameDetail />
+                    }
+                ]
+            },
+            {
+                path: 'sportsdetail',
+                children: [
+                    {
+                        path: ':id',
+                        element: <SportsDetail />
+                    }
+                ]
+            },
             { path: 'sportsstatics', element: <SportsStatics /> },
             { path: 'transaction', element: <Transaction /> },
             { path: 'commissionstats', element: <CommissionStats /> }
