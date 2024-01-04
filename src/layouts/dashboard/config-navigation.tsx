@@ -39,7 +39,8 @@ const ICONS = {
     menuItem: icon('ic_menu_item'),
     ecommerce: icon('ic_ecommerce'),
     analytics: icon('ic_analytics'),
-    dashboard: icon('ic_dashboard')
+    dashboard: icon('ic_dashboard'),
+    jackpot: icon('ic_jackpot')
 };
 
 // ----------------------------------------------------------------------
@@ -89,6 +90,16 @@ export function useNavData() {
             children: [
                 { title: 'List', path: paths.shop.list },
                 { title: 'Create', path: paths.shop.create }
+            ]
+        },
+        {
+            title: 'Jackpot Management',
+            path: paths.jackpot.index,
+            icon: ICONS.jackpot,
+            children: [
+                // { title: 'Categories', path: paths.games.category },
+                { title: 'History', path: paths.jackpot.history },
+                { title: 'Settings', path: paths.jackpot.settings }
             ]
         },
         {

@@ -29,6 +29,10 @@ const Profile = lazy(() => import('src/pages/profile'));
 // bonus system
 const BonusSystem = lazy(() => import('src/pages/bonussystem'));
 
+// jackpot system
+const JackpotHistory = lazy(() => import('src/pages/jackpot/history'));
+const JackpotSettings = lazy(() => import('src/pages/jackpot/settings'));
+
 // ----------------------------------------------------------------------
 
 export const operatorRoutes = [
@@ -135,5 +139,22 @@ export const operatorRoutes = [
             </AuthGuard>
         ),
         children: [{ element: <BonusSystem />, index: true }]
+    },
+    {
+        path: 'jackpot',
+        element: (
+            <AuthGuard>
+                <DashboardLayout>
+                    <Suspense fallback={<LoadingScreen />}>
+                        <Outlet />
+                    </Suspense>
+                </DashboardLayout>
+            </AuthGuard>
+        ),
+        children: [
+            { element: <JackpotHistory />, index: true },
+            { path: 'history', element: <JackpotHistory /> },
+            { path: 'settings', element: <JackpotSettings /> }
+        ]
     }
 ];

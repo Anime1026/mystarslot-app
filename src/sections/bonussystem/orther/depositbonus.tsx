@@ -127,7 +127,7 @@ export default function AccountGeneral() {
                             <Grid xs={12} md={12} lg={12} sx={{ display: 'flex', gap: 3, flexDirection: 'column' }}>
                                 <Stack direction="row" alignItems="center">
                                     <Typography variant="subtitle2" sx={{ flexGrow: 1, whiteSpace: 'nowrap' }}>
-                                        5 ... 19.99
+                                        From 5,00 $ to 19,99 $
                                     </Typography>
 
                                     <RHFTextField
@@ -152,7 +152,7 @@ export default function AccountGeneral() {
 
                                 <Stack direction="row" alignItems="center">
                                     <Typography variant="subtitle2" sx={{ flexGrow: 1, whiteSpace: 'nowrap' }}>
-                                        20 ... 49.99
+                                        From 20 $ to 49.99 $
                                     </Typography>
 
                                     <RHFTextField
@@ -177,7 +177,7 @@ export default function AccountGeneral() {
 
                                 <Stack direction="row" alignItems="center">
                                     <Typography variant="subtitle2" sx={{ flexGrow: 1, whiteSpace: 'nowrap' }}>
-                                        50 ... 99.99
+                                        From 50 $ to 99.99 $
                                     </Typography>
 
                                     <RHFTextField
@@ -202,7 +202,7 @@ export default function AccountGeneral() {
 
                                 <Stack direction="row" alignItems="center">
                                     <Typography variant="subtitle2" sx={{ flexGrow: 1, whiteSpace: 'nowrap' }}>
-                                        100 ... INF
+                                        From 100 to ∞ $
                                     </Typography>
 
                                     <RHFTextField

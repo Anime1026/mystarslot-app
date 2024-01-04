@@ -8,7 +8,8 @@ const ROOTS = {
     USER: '/user',
     PROFILE: '/profile',
     GAMES: '/game-management',
-    BONUSSYSTEM: '/bonussystem'
+    BONUSSYSTEM: '/bonussystem',
+    JACKPOT: '/jackpot'
 };
 
 // ----------------------------------------------------------------------
@@ -46,6 +47,12 @@ export const paths = {
         list: `${ROOTS.OPERATOR}/list`,
         create: `${ROOTS.OPERATOR}/create`,
         edit: (id: string) => `${ROOTS.OPERATOR}/account/${id}`
+    },
+    // jackpot
+    jackpot: {
+        index: `${ROOTS.JACKPOT}`,
+        history: `${ROOTS.JACKPOT}/history`,
+        settings: `${ROOTS.JACKPOT}/settings`
     },
     shop: {
         index: `${ROOTS.SHOP}`,

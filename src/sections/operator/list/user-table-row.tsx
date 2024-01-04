@@ -85,6 +85,11 @@ export default function UserTableRow({ row, selected, onSelectRow, onDeleteRow, 
                             component: 'span',
                             color: 'text.disabled'
                         }}
+                        sx={{
+                            '& span': {
+                                whiteSpace: 'nowrap'
+                            }
+                        }}
                     />
                 </TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{fcustomCurrency(balance)}</TableCell>

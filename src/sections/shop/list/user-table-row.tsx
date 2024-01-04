@@ -94,6 +94,11 @@ export default function UserTableRow({
                             component: 'span',
                             color: 'text.disabled'
                         }}
+                        sx={{
+                            '& span': {
+                                whiteSpace: 'nowrap'
+                            }
+                        }}
                     />
                 </TableCell>
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>{balance.toLocaleString('it-IT')}</TableCell>
