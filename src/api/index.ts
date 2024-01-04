@@ -164,3 +164,19 @@ export async function getBonusSetting() {
     const res = await axios.get(endpoints.bonus.getSetting);
     return res.data;
 }
+
+// jackpot
+export async function jackpotsetting(data: any) {
+    const res = await axios.post(endpoints.jackpot.setting, data);
+    return res.data;
+}
+
+export async function getJackpot() {
+    const res = await axios.get(endpoints.jackpot.get);
+    return res.data;
+}
+
+export async function jackpotregenerate(data: any) {
+    const res = await axios.post(endpoints.jackpot.regenerate, data);
+    return res.data;
+}

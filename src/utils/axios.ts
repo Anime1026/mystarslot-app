@@ -93,5 +93,11 @@ export const endpoints = {
     bonus: {
         setting: '/api/bonus-setting',
         getSetting: '/api/get-bonus-setting'
+    },
+    jackpot: {
+        setting: '/api/jackpot-setting',
+        history: '/api/get-jackpot-history',
+        get: '/api/get-jackpoet',
+        regenerate: '/api/jackpot-regenerate'
     }
 };

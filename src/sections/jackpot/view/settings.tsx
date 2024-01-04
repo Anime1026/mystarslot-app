@@ -1,26 +1,32 @@
-import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useState, useEffect, useCallback } from 'react';
+
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TableContainer from '@mui/material/TableContainer';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import TextField from '@mui/material/TextField';
 // routes
 import { paths } from 'src/routes/paths';
 
 // component
 import { useSettingsContext } from 'src/components/settings';
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, { RHFSwitch, RHFTextField, RHFUploadAvatar } from 'src/components/hook-form';
+
+// utils
+import { fcustomCurrency } from 'src/utils/format-number';
+
+// apis
+import { jackpotsetting, getJackpot, jackpotregenerate } from 'src/api';
 
 function createData(
     level: string,
@@ -28,22 +34,111 @@ function createData(
     startingbalance: number,
     startingpayoutbalance: number,
     endpayoutbalance: number,
-    paysum: number
+    paysum: number,
+    action: string
 ) {
-    return { level, balance, startingbalance, startingpayoutbalance, endpayoutbalance, paysum };
+    return { level, balance, startingbalance, startingpayoutbalance, endpayoutbalance, paysum, action };
 }
-
-const rows = [
-    createData('Bronze', 159, 6.0, 24, 4.0, 6),
-    createData('Silver', 237, 9.0, 37, 4.3, 5),
-    createData('Gold', 262, 16.0, 24, 6.0, 7),
-    createData('Platinum', 305, 3.7, 67, 4.3, 8)
-];
 
 export default function BasicTable() {
     const settings = useSettingsContext();
 
     const { enqueueSnackbar } = useSnackbar();
+
+    const [settingValue, setSettingValue] = useState<any>({
+        silver: {
+            startvalue: 0,
+            startpayoutvalue: 0,
+            endvalue: 0,
+            paysum: 0
+        },
+        gold: {
+            startvalue: 0,
+            startpayoutvalue: 0,
+            endvalue: 0,
+            paysum: 0
+        },
+        platinum: {
+            startvalue: 0,
+            startpayoutvalue: 0,
+            endvalue: 0,
+            paysum: 0
+        }
+    });
+
+    const [fee, setFee] = useState(0);
+
+    const handleSetting = (key: string, subKey: string, value: string) => {
+        setSettingValue((pre: any) => ({ ...pre, [key]: { ...pre[key], [subKey]: value } }));
+    };
+
+    const rows = [
+        createData(
+            'Silver',
+            237,
+            settingValue.silver.startvalue,
+            settingValue.silver.startpayoutvalue,
+            settingValue.silver.endvalue,
+            settingValue.silver.paysum,
+            'silver'
+        ),
+        createData(
+            'Gold',
+            262,
+            settingValue.gold.startvalue,
+            settingValue.gold.startpayoutvalue,
+            settingValue.gold.endvalue,
+            settingValue.gold.paysum,
+            'gold'
+        ),
+        createData(
+            'Platinum',
+            305,
+            settingValue.platinum.startvalue,
+            settingValue.platinum.startpayoutvalue,
+            settingValue.platinum.endvalue,
+            settingValue.platinum.paysum,
+            'platinum'
+        )
+    ];
+
+    const regenerate = async (key: string) => {
+        const result = await jackpotregenerate({ key, data: settingValue[key] });
+
+        if (result.data) {
+            setSettingValue({
+                gold: result.data.gold,
+                silver: result.data.silver,
+                platinum: result.data.platinum
+            });
+            setFee(result.data.fee);
+        }
+
+        enqueueSnackbar('Update Success', { variant: 'success' });
+    };
+
+    const jackpotSave = async () => {
+        const result = await jackpotsetting({ fee, data: settingValue });
+        enqueueSnackbar('Update Success', { variant: 'success' });
+        console.log(settingValue, 'settingValue', result);
+    };
+
+    const init = useCallback(async () => {
+        const result = await getJackpot();
+        if (result.data) {
+            setSettingValue({
+                gold: result.data.gold,
+                silver: result.data.silver,
+                platinum: result.data.platinum
+            });
+            setFee(result.data.fee);
+        }
+        console.log(result, 'init');
+    }, []);
+
+    useEffect(() => {
+        init();
+    }, [init]);
 
     return (
         <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -66,9 +161,9 @@ export default function BasicTable() {
                             <TableRow>
                                 <TableCell>LEVEL</TableCell>
                                 <TableCell>BALANCE</TableCell>
-                                <TableCell>STARTING VALUE</TableCell>
-                                <TableCell>STARTING PAYOUT VALUE</TableCell>
-                                <TableCell>END PAYOUT VALUE</TableCell>
+                                <TableCell sx={{ whiteSpace: 'nowrap' }}>STARTING VALUE</TableCell>
+                                <TableCell sx={{ whiteSpace: 'nowrap' }}>STARTING PAYOUT VALUE</TableCell>
+                                <TableCell sx={{ whiteSpace: 'nowrap' }}>END PAYOUT VALUE</TableCell>
                                 <TableCell>PAYSUM</TableCell>
                                 <TableCell>&nbsp;&nbsp;</TableCell>
                             </TableRow>
@@ -79,39 +174,63 @@ export default function BasicTable() {
                                     <TableCell component="th" scope="row">
                                         {row.level}
                                     </TableCell>
-                                    <TableCell>{row.balance}</TableCell>
+                                    <TableCell>{fcustomCurrency(row.startingbalance)}</TableCell>
                                     <TableCell>
-                                        <TextField id="outlined-number" type="number" size="small" />
+                                        <TextField
+                                            id="outlined-number"
+                                            value={row.startingbalance}
+                                            type="number"
+                                            size="small"
+                                            onChange={(e) => handleSetting(row.action, 'startvalue', e.target.value)}
+                                        />
                                     </TableCell>
                                     <TableCell>
                                         <TextField
                                             type="number"
-                                            // value={row.startingbalance}
-                                            name={`username${index}`}
+                                            value={row.startingpayoutbalance}
                                             size="small"
+                                            onChange={(e) =>
+                                                handleSetting(row.action, 'startpayoutvalue', e.target.value)
+                                            }
                                         />
-                                        {row.startingpayoutbalance}
                                     </TableCell>
                                     <TableCell>
                                         <TextField
                                             type="number"
-                                            // value={row.startingbalance}
-                                            name={`username${index}`}
+                                            value={row.endpayoutbalance}
                                             size="small"
+                                            onChange={(e) => handleSetting(row.action, 'endvalue', e.target.value)}
                                         />
-                                        {row.endpayoutbalance}
                                     </TableCell>
-                                    <TableCell>{row.paysum}</TableCell>
-                                    <TableCell>actions</TableCell>
+                                    <TableCell>{fcustomCurrency(row.paysum)}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="info"
+                                            onClick={() => {
+                                                regenerate(row.action);
+                                            }}
+                                        >
+                                            Regenerate
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Card>
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained">
-                    Save Changes
+            <Stack flexDirection="row" spacing={3} alignItems="center" justifyContent="flex-end" sx={{ mt: 3 }}>
+                <Typography>Global Fee</Typography>
+                <TextField
+                    id="outlined-number"
+                    size="small"
+                    type="number"
+                    value={fee}
+                    onChange={(e) => setFee(Number(e.target.value))}
+                />
+                <LoadingButton type="submit" variant="contained" onClick={jackpotSave}>
+                    save
                 </LoadingButton>
             </Stack>
         </Container>
