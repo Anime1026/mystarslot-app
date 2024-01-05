@@ -180,3 +180,8 @@ export async function jackpotregenerate(data: any) {
     const res = await axios.post(endpoints.jackpot.regenerate, data);
     return res.data;
 }
+
+export async function getJackpotHistory() {
+    const res = await axios.get(endpoints.jackpot.history);
+    return res.data;
+}

@@ -65,16 +65,6 @@ export function useNavData() {
 
     const defaultList = [
         {
-            title: 'Game Management',
-            path: paths.games.index,
-            icon: ICONS.invoice,
-            children: [
-                // { title: 'Categories', path: paths.games.category },
-                { title: 'Providers', path: paths.games.provider },
-                { title: 'Games', path: paths.games.game }
-            ]
-        },
-        {
             title: 'Operators',
             path: paths.operator.index,
             icon: ICONS.kanban,
@@ -93,16 +83,6 @@ export function useNavData() {
             ]
         },
         {
-            title: 'Jackpot Management',
-            path: paths.jackpot.index,
-            icon: ICONS.jackpot,
-            children: [
-                // { title: 'Categories', path: paths.games.category },
-                { title: 'History', path: paths.jackpot.history },
-                { title: 'Settings', path: paths.jackpot.settings }
-            ]
-        },
-        {
             title: 'Users',
             path: paths.user.index,
             icon: ICONS.user
@@ -111,21 +91,76 @@ export function useNavData() {
             title: 'Profile',
             path: paths.profile.index,
             icon: ICONS.job
-        },
-        {
-            title: 'Bonus System',
-            path: paths.bonussystem.index,
-            icon: ICONS.label
         }
     ];
+
+    const superAdminList = useMemo(
+        () => [
+            {
+                title: 'Game Management',
+                path: paths.games.index,
+                icon: ICONS.invoice,
+                children: [
+                    // { title: 'Categories', path: paths.games.category },
+                    { title: 'Providers', path: paths.games.provider },
+                    { title: 'Games', path: paths.games.game }
+                ]
+            },
+            {
+                title: 'Operators',
+                path: paths.operator.index,
+                icon: ICONS.kanban,
+                children: [
+                    { title: 'List', path: paths.operator.list },
+                    { title: 'Create', path: paths.operator.create }
+                ]
+            },
+            {
+                title: 'Shops',
+                path: paths.shop.index,
+                icon: ICONS.order,
+                children: [
+                    { title: 'List', path: paths.shop.list },
+                    { title: 'Create', path: paths.shop.create }
+                ]
+            },
+            {
+                title: 'Jackpot Management',
+                path: paths.jackpot.index,
+                icon: ICONS.jackpot,
+                children: [
+                    // { title: 'Categories', path: paths.games.category },
+                    { title: 'History', path: paths.jackpot.history },
+                    { title: 'Settings', path: paths.jackpot.settings }
+                ]
+            },
+            {
+                title: 'Users',
+                path: paths.user.index,
+                icon: ICONS.user
+            },
+            {
+                title: 'Profile',
+                path: paths.profile.index,
+                icon: ICONS.job
+            },
+            {
+                title: 'Bonus System',
+                path: paths.bonussystem.index,
+                icon: ICONS.label
+            }
+        ],
+        []
+    );
 
     const [realNavBar, setRealNavBar] = useState(defaultList);
     // let realNavBar = defaultList;
 
     useEffect(() => {
         if (user?.roleId === 'shop') setRealNavBar(ShoperList);
+        if (user?.roleId === 'super_admin') setRealNavBar(superAdminList);
         // realNavBar = ShoperList;
-    }, [user, ShoperList]);
+    }, [user, ShoperList, superAdminList]);
 
     const data = useMemo(
         () => [

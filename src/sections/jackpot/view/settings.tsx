@@ -118,9 +118,8 @@ export default function BasicTable() {
     };
 
     const jackpotSave = async () => {
-        const result = await jackpotsetting({ fee, data: settingValue });
+        await jackpotsetting({ fee, data: settingValue });
         enqueueSnackbar('Update Success', { variant: 'success' });
-        console.log(settingValue, 'settingValue', result);
     };
 
     const init = useCallback(async () => {
@@ -133,7 +132,6 @@ export default function BasicTable() {
             });
             setFee(result.data.fee);
         }
-        console.log(result, 'init');
     }, []);
 
     useEffect(() => {
